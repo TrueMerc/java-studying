@@ -4,8 +4,8 @@ public class Barrier {
 
     private int complexity;
 
-    public Barrier( int _complexity ) {
-        complexity = _complexity;
+    public Barrier( int complexity ) {
+        this.complexity = complexity;
     }
 
     public int getComplexity() {

@@ -2,13 +2,12 @@ package ru.ryabtsevvv.se;
 
 public class Course {
 
-
     private Barrier[] barriers;
 
-    public Course( int[] _barrierComplexities ) {
-        barriers = new Barrier[ _barrierComplexities.length ];
-        for( int i = 0; i < _barrierComplexities.length; ++i ) {
-            barriers[i] = new Barrier( _barrierComplexities[ i ] );
+    public Course( int[] barrierComplexities ) {
+        barriers = new Barrier[ barrierComplexities.length ];
+        for( int i = 0; i < barrierComplexities.length; ++i ) {
+            barriers[i] = new Barrier( barrierComplexities[ i ] );
         }
     }
 

@@ -6,11 +6,11 @@ public class Team {
     private String name;
     private TeamMember[] members;
 
-    public Team(String _name, int[] _membersLevel) {
-        name = _name;
-        members = new TeamMember[ _membersLevel.length ];
-        for( int i = 0; i < _membersLevel.length; ++i ) {
-            members[i] = new TeamMember( _membersLevel[ i ] );
+    public Team(String name, int[] membersLevel) {
+        this.name = name;
+        members = new TeamMember[ membersLevel.length ];
+        for( int i = 0; i < membersLevel.length; ++i ) {
+            members[i] = new TeamMember( membersLevel[ i ] );
         }
     }
 

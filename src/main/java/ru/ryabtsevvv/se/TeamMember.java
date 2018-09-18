@@ -4,8 +4,8 @@ public class TeamMember {
     private int level;
     private boolean success;
 
-    public TeamMember( int _level ) {
-        level = _level;
+    public TeamMember( int level ) {
+        this.level = level;
         success = false;
     }
 

@@ -3,7 +3,7 @@ package ru.ryabtsevvv.se;
 /**
  * Основной класс приложения.
  */
-public class Homework1App {
+public class FirstHomeworkApp {
 
     public static void main(String[] args) {
         int barrierComplexities[] = { 5, 10, 15, 20, 30, 35 };
