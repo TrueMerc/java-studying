@@ -1,6 +1,8 @@
 package ru.ryabtsev.se;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import ru.ryabtsev.se.exception.PhoneBookException;
@@ -8,7 +10,7 @@ import ru.ryabtsev.se.exception.PhoneBookException;
 public class PhoneBook {
 
     private int MINIMAL_INITIALIZATION_ROW_LENGTH = 2;
-    private LinkedHashMap<String, ArrayList<String>> phonesMap;
+    private final Map<String, List<String>> phonesMap;
 
     public PhoneBook() {
         phonesMap = new LinkedHashMap<>();
@@ -40,7 +42,7 @@ public class PhoneBook {
             phonesMap.get( surname ).add( number );
         }
         else {
-            ArrayList<String> newList = new ArrayList<>();
+            final List<String> newList = new ArrayList<>();
             newList.add( number );
             phonesMap.put( surname, newList );
         }
@@ -49,7 +51,7 @@ public class PhoneBook {
     public String[] get( String surname ) {
         String[] result = {};
         if( phonesMap.containsKey( surname ) ) {
-            ArrayList<String> phones = phonesMap.get( surname );
+            final List<String> phones = phonesMap.get( surname );
             result = new String[ phones.size() ];
             result = phones.toArray( result );
         }
@@ -63,7 +65,7 @@ public class PhoneBook {
 
     public String[] surnames() {
         String[] result = {};
-        Set<String> surnamesSet = phonesMap.keySet();
+        final Set<String> surnamesSet = phonesMap.keySet();
         if( !( surnamesSet.isEmpty() ) ) {
             result = new String[surnamesSet.size()];
             result = surnamesSet.toArray( result );

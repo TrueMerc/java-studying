@@ -10,7 +10,7 @@ import org.junit.Test;
  */
 public class ThirdHomeworkPhoneBookApplicationTest
 {
-    PhoneBook phoneBook = new PhoneBook();
+    final PhoneBook phoneBook = new PhoneBook();
 
 
     /**

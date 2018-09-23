@@ -22,8 +22,8 @@ public class ThirdHomeworkWordsApplicationTest
 
     @Test
     public void testEveryWordIsUnique() {
-        String[] uniqueWords = { "Cat", "Dog", "Wolf" };
-        WordsMap wordsMap = new WordsMap( uniqueWords );
+        final String[] uniqueWords = { "Cat", "Dog", "Wolf" };
+        final WordsMap wordsMap = new WordsMap( uniqueWords );
 
         wordsMap.printUniqueWords();
         wordsMap.printWordsWithOccurrencesNumber();
@@ -32,7 +32,7 @@ public class ThirdHomeworkWordsApplicationTest
 
     @Test
     public void testWordRepetition() {
-        String[] uniqueWords = { "Cat", "Cat", "Cat" };
+        final String[] uniqueWords = { "Cat", "Cat", "Cat" };
         WordsMap wordsMap = new WordsMap( uniqueWords );
 
         wordsMap.printUniqueWords();
