@@ -6,8 +6,6 @@ package ru.ryabtsev.se;
  */
 public class MessengerApplication
 {
-
-
     public static void main( String[] args )
     {
         final MessengerMainWindow mainWindow =  new MessengerMainWindow();
