@@ -18,7 +18,7 @@ public class MultithreadingApplicationTest
     {
         final int arraySize = 100;
         final float array[] = new float[ arraySize ];
-        final SingleThreadedWorker stWorker = new SingleThreadedWorker();
+        final Worker stWorker = new SingleThreadedWorker();
 
         stWorker.fillWithUnits( array );
 
@@ -35,7 +35,7 @@ public class MultithreadingApplicationTest
     {
         final int arraySize = 100;
         final float array[] = new float[ arraySize ];
-        final MultithreadedWorker mtWorker = new MultithreadedWorker();
+        final Worker mtWorker = new MultithreadedWorker();
 
         mtWorker.fillWithUnits( array );
 
@@ -49,6 +49,4 @@ public class MultithreadingApplicationTest
             }
         }
     }
-
-
 }

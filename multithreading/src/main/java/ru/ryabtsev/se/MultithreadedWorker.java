@@ -70,7 +70,7 @@ public class MultithreadedWorker implements Worker {
         arrays = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
 
         for( int i = 0; i < THREADS_NUMBER; ++i ) {
-            FillWithUnitsTask task = new FillWithUnitsTask( arrays[i] );
+            final FillWithUnitsTask task = new FillWithUnitsTask( arrays[i] );
             threads[i] = new Thread( task );
             threads[i].run();
         }
@@ -86,10 +86,9 @@ public class MultithreadedWorker implements Worker {
         // FIXME This code correctly works only if array.length % THREADS_NUMBER = 0.
         arrays = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
 
-
         for( int i = 0, sourceIndex = 0; i < THREADS_NUMBER; ++i ) {
             System.arraycopy( array, sourceIndex, arrays[i], 0, arrays[i].length );
-            FillWithFunctionValuesTask task = new FillWithFunctionValuesTask( arrays[i], sourceIndex, function );
+            final FillWithFunctionValuesTask task = new FillWithFunctionValuesTask( arrays[i], sourceIndex, function );
             threads[i] = new Thread( task );
             threads[i].run();
             sourceIndex += arrays[i].length;
