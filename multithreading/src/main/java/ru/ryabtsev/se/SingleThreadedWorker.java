@@ -3,7 +3,7 @@ package ru.ryabtsev.se;
 /**
  * Class performs operations with arrays using single thread.
  */
-public class SingleThreadedWorker {
+public class SingleThreadedWorker implements Worker {
     /**
      *
      * @param array - fill all elements of array with unit value.

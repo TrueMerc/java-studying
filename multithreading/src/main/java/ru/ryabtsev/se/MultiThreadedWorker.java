@@ -51,7 +51,7 @@ class FillWithFunctionValuesTask implements Runnable {
     }
 }
 
-public class MultiThreadedWorker {
+public class MultiThreadedWorker implements Worker {
     public final static int THREADS_NUMBER = 2;
 
     public void fillWithUnits( float[] array ) {

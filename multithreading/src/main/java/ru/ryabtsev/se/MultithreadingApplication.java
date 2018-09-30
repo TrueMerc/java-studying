@@ -8,13 +8,13 @@ public class MultithreadingApplication
 {
     final private static int ARRAY_SIZE = 10000000;
     //final private static int ARRAY_SIZE = 1000;
-    final private static int HALF_ARRAY_SIZE = ARRAY_SIZE / 2;
+
 
     public static void main( String[] args )
     {
 
         float stArray[] = new float[ ARRAY_SIZE ];
-        final SingleThreadedWorker stWorker = new SingleThreadedWorker();
+        final Worker stWorker = new SingleThreadedWorker();
         final Function function = new HomeworkFunciton();
 
         System.out.println("Single threaded worker start filling array with unit values.");
@@ -31,7 +31,7 @@ public class MultithreadingApplication
 
 
         float mtArray[] = new float[ ARRAY_SIZE ];
-        final MultiThreadedWorker mtWorker = new MultiThreadedWorker();
+        final Worker mtWorker = new MultiThreadedWorker();
         System.out.println("Multiple threaded worker start filling array with unit values.");
         executionTime = System.currentTimeMillis();
         mtWorker.fillWithUnits( mtArray );
