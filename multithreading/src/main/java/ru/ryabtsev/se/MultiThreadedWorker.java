@@ -53,11 +53,16 @@ class FillWithFunctionValuesTask implements Runnable {
 
 public class MultiThreadedWorker implements Worker {
     public final static int THREADS_NUMBER = 2;
+    private final Thread[] threads;
+    private float arrays[][];
+
+    MultiThreadedWorker() {
+        threads = new Thread[ THREADS_NUMBER ];
+    }
 
     public void fillWithUnits( float[] array ) {
         // FIXME This code correctly works only if array.length % THREADS_NUMBER = 0.
-        float arrays[][] = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
-        Thread threads[] = new Thread[ THREADS_NUMBER ];
+        arrays = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
 
         for( int i = 0; i < THREADS_NUMBER; ++i ) {
             FillWithUnitsTask task = new FillWithUnitsTask( arrays[i] );
@@ -65,24 +70,19 @@ public class MultiThreadedWorker implements Worker {
             threads[i].run();
         }
 
-        for( int i = 0; i < threads.length; ++i ) {
-            try {
-                threads[i].join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+        joinAllThreads();
 
-        for( int i = 0, destinationIndex = 0; i < arrays.length;  ++i) {
-            System.arraycopy( arrays[i], 0, array, destinationIndex, arrays[i].length );
-            destinationIndex = destinationIndex + arrays[i].length;
-        }
+//        for( int i = 0, destinationIndex = 0; i < arrays.length;  ++i) {
+//            System.arraycopy( arrays[i], 0, array, destinationIndex, arrays[i].length );
+//            destinationIndex = destinationIndex + arrays[i].length;
+//        }
+        copyResults( array );
     }
 
     public void fillWithFunction( float[] array, Function function ) {
         // FIXME This code correctly works only if array.length % THREADS_NUMBER = 0.
-        float arrays[][] = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
-        Thread threads[] = new Thread[ THREADS_NUMBER ];
+        arrays = new float[ THREADS_NUMBER ][ array.length / THREADS_NUMBER];
+
 
         for( int i = 0, sourceIndex = 0; i < THREADS_NUMBER; ++i ) {
             System.arraycopy( array, sourceIndex, arrays[i], 0, arrays[i].length );
@@ -92,6 +92,17 @@ public class MultiThreadedWorker implements Worker {
             sourceIndex += arrays[i].length;
         }
 
+        joinAllThreads();
+
+
+//        for( int i = 0, destinationIndex = 0; i < arrays.length;  ++i) {
+//            System.arraycopy( arrays[i], 0, array, destinationIndex, arrays[i].length );
+//            destinationIndex = destinationIndex + arrays[i].length;
+//        }
+        copyResults( array );
+    }
+
+    private void joinAllThreads() {
         for( int i = 0; i < threads.length; ++i ) {
             try {
                 threads[i].join();
@@ -99,20 +110,12 @@ public class MultiThreadedWorker implements Worker {
                 e.printStackTrace();
             }
         }
+    }
 
-//        for( int i = 0; i < arrays.length; ++i ) {
-//            for( int j = 0; j < arrays[i].length; ++j ) {
-//                System.out.println(arrays[i][j]);
-//            }
-//        }
-
+    private void copyResults( float[] array) {
         for( int i = 0, destinationIndex = 0; i < arrays.length;  ++i) {
             System.arraycopy( arrays[i], 0, array, destinationIndex, arrays[i].length );
             destinationIndex = destinationIndex + arrays[i].length;
         }
-
-//        for( int i = 0; i < array.length; ++i ) {
-//            System.out.println( array[i] );
-//        }
     }
 }
