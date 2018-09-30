@@ -15,7 +15,7 @@ public class MultithreadingApplication
 
         float stArray[] = new float[ ARRAY_SIZE ];
         final Worker stWorker = new SingleThreadedWorker();
-        final Function function = new HomeworkFunciton();
+        final Function function = new HomeworkFunction();
 
         System.out.println("Single threaded worker start filling array with unit values.");
         long executionTime = System.currentTimeMillis();

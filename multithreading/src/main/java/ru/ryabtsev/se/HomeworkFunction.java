@@ -3,7 +3,7 @@ package ru.ryabtsev.se;
 /**
  * Class calculates homework function values.
  */
-public class HomeworkFunciton implements Function {
+public class HomeworkFunction implements Function {
     @Override
     public float value(float argument) {
         return argument * argument;
