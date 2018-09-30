@@ -7,47 +7,50 @@ package ru.ryabtsev.se;
 public class MultithreadingApplication
 {
     final private static int ARRAY_SIZE = 10000000;
-    //final private static int ARRAY_SIZE = 1000;
-
 
     public static void main( String[] args )
     {
-
-        float stArray[] = new float[ ARRAY_SIZE ];
+        final float stArray[] = new float[ ARRAY_SIZE ];
         final Worker stWorker = new SingleThreadedWorker();
         final Function function = new HomeworkFunction();
+        processData( stArray, stWorker, function );
 
-        System.out.println("Single threaded worker start filling array with unit values.");
-        long executionTime = System.currentTimeMillis();
-        stWorker.fillWithUnits( stArray );
-        executionTime = System.currentTimeMillis() - executionTime;
-        System.out.println( "Operation execution time " + executionTime  );
+        final float mtArray[] = new float[ ARRAY_SIZE ];
+        final Worker mtWorker = new MultithreadedWorker();
+        processData( mtArray, mtWorker, function );
 
-        System.out.println("Single threaded worker start filling array with function values.");
-        executionTime = System.currentTimeMillis();
-        stWorker.fillWithFunction( stArray, function );
-        executionTime = System.currentTimeMillis() - executionTime;
-        System.out.println( "Operation execution time " + executionTime );
+        compareArrays( stArray, mtArray );
+    }
 
+    private static void processData(float[] array, Worker worker, Function function) {
+        printStartMessage( worker, "filling array with unit values.");
+        long measurementStartTime = System.currentTimeMillis();
+        worker.fillWithUnits( array );
+        long executionTime = System.currentTimeMillis() - measurementStartTime;
+        printExecutionTime( executionTime );
 
-        float mtArray[] = new float[ ARRAY_SIZE ];
-        final Worker mtWorker = new MultiThreadedWorker();
-        System.out.println("Multiple threaded worker start filling array with unit values.");
-        executionTime = System.currentTimeMillis();
-        mtWorker.fillWithUnits( mtArray );
-        executionTime = System.currentTimeMillis() - executionTime;
-        System.out.println( "Operation execution time " + executionTime  );
+        printStartMessage( worker, "filling array with function values.");
+        measurementStartTime = System.currentTimeMillis();
+        worker.fillWithFunction( array, function );
+        executionTime = System.currentTimeMillis() - measurementStartTime;
+        printExecutionTime( executionTime );
+    }
 
-        System.out.println("Multiple threaded worker start filling array with function values.");
-        executionTime = System.currentTimeMillis();
-        mtWorker.fillWithFunction( mtArray, function );
-        executionTime = System.currentTimeMillis() - executionTime;
-        System.out.println( "Operation execution time " + executionTime );
+    private static void printStartMessage( Worker  worker, String workDescription ) {
+        String workerTypeString = (worker instanceof MultithreadedWorker) ? "Multithreaded worker" :
+                                                                            "Single threaded worker";
+        System.out.println( workerTypeString + " starts " + workDescription );
+    }
 
-        if( stArray.length == mtArray.length) {
-            for( int i = 0; i < stArray.length; ++i ) {
-                if( ( new Float( stArray[i] ) ).compareTo( new Float( mtArray[i] ) ) != 0 ) {
-                    System.out.println("Values are different:" + stArray[i] + " " + mtArray[i] + " at index " + i );
+    private static void printExecutionTime( long executionTimeInMilliseconds ) {
+        System.out.println( "Operation execution time " + executionTimeInMilliseconds + " milliseconds." );
+    }
+
+    private static void compareArrays( float[] first, float[] second ) {
+        if( first.length == second.length) {
+            for( int i = 0; i < first.length; ++i ) {
+                if( ( new Float( first[i] ) ).compareTo( new Float( second[i] ) ) != 0 ) {
+                    System.out.println("Values are different:" + first[i] + " " + second[i] + " at index " + i );
                     break;
                 }
             }
