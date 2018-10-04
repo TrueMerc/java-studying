@@ -5,7 +5,6 @@ import ru.ryabtsev.se.server.ServerApplication;
 
 /**
  * Simple 'client-server chat' application main class.
- *
  */
 public class ClientServerChatApplication
 {
