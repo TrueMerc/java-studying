@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NetworkConfiguration {
-    private final Integer port = 8080;
+    private final Integer port = 18080;
     private final String host = "localhost";
 }

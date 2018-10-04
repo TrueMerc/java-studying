@@ -14,7 +14,6 @@ public class ClientTaskMessageSend extends ClientTask {
     @Override
     public void run() {
         try {
-            System.out.println( "Message sending: " + message );
             client.getOutputStream().writeUTF(message);
         }
         catch (IOException exception) {

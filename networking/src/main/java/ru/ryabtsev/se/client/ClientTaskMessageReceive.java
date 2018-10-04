@@ -11,11 +11,10 @@ public class ClientTaskMessageReceive extends ClientTask {
     public void run() {
         try {
             final String message = client.getInputStream().readUTF();
-            System.out.println( "***" + message + "***" );
+            System.out.println("***" + message + "***");
             client.run( new ClientTaskMessageReceive( client ) );
         }
         catch (IOException exception) {
-            exception.printStackTrace();
             client.exit();
         }
     }

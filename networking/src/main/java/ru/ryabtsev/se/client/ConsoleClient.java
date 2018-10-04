@@ -5,7 +5,9 @@ import ru.ryabtsev.se.NetworkConfiguration;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 
 
@@ -47,15 +49,23 @@ public class ConsoleClient implements Client {
     public DataOutputStream getOutputStream() { return outputStream; }
 
     @Override
-    @SneakyThrows
+    @SneakyThrows( IOException.class )
     public void run() {
         final String host = networkConfiguration.getHost();
         final Integer port = networkConfiguration.getPort();
-        socket = new Socket( host, port );
-        inputStream = new DataInputStream( socket.getInputStream() );
+        try {
+            socket = new Socket(host, port);
+        }
+        catch( IOException exception ) { // Process case when server isn't started.
+            System.out.println( "Can't connect to chat server.");
+            System.out.println( "Try to restart chat." );
+            this.exit();
+        }
+        inputStream =  new DataInputStream(  socket.getInputStream() );
         outputStream = new DataOutputStream( socket.getOutputStream() );
-        run( new ClientTaskMessageReceive( this ) );
+
         run( new ClientTaskMessageInput( this ) );
+        run( new ClientTaskMessageReceive( this ) );
     }
 
     @Override
@@ -77,7 +87,9 @@ public class ConsoleClient implements Client {
     @Override
     @SneakyThrows
     public void exit() {
-        socket.close();
+        if( socket != null && socket.isConnected() ) {
+            socket.close();
+        }
         System.exit( 0);
     }
 }
