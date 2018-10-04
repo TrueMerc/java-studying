@@ -24,7 +24,7 @@ public class ServerTaskMessageReceive extends ServerTask {
             server.run( new ServerTaskMessageBroadcast( server, message ) );
         }
         catch ( Exception exception ) {
-            server.remove( socket );
+            server.removeConnection( socket );
             exception.printStackTrace();
         }
     }

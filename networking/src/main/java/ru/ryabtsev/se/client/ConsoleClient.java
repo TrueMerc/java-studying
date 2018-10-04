@@ -10,7 +10,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 
-
+/**
+ * Console client class.
+ */
 public class ConsoleClient implements Client {
 
     private Socket socket;

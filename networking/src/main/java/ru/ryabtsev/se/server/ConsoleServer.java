@@ -9,7 +9,9 @@ import java.util.concurrent.ExecutorService;
 
 import lombok.SneakyThrows;
 
-
+/**
+ * Console server class.
+ */
 public class ConsoleServer implements Server {
 
     private final NetworkConfiguration networkConfiguration;
@@ -40,12 +42,12 @@ public class ConsoleServer implements Server {
     }
 
     @Override
-    public void add(final Socket socket) {
+    public void addConnection(final Socket socket) {
         connections.add( socket );
     }
 
     @Override
-    public void remove(final Socket socket) {
+    public void removeConnection(final Socket socket) {
         connections.remove( socket );
     }
 

@@ -17,6 +17,6 @@ public class ServerTaskConnection extends ServerTask {
         final Socket socket = server.getServerSocket().accept(); // Starts infinite loop while waiting new client.
         server.run( new ServerTaskConnection( server ) );
         server.run( new ServerTaskMessageReceive( server, socket ) );
-        server.add( socket ); // FIXME Try to move this string for two strings upper.
+        server.addConnection( socket );
     }
 }
