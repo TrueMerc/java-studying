@@ -15,6 +15,10 @@ public class ClientServerChatApplication
     public static void main( String[] args )
     {
         final Application application = initializeApplication( args );
+        if( application == null ) {
+            printHelp();
+            return;
+        }
         application.run();
     }
 
@@ -29,10 +33,21 @@ public class ClientServerChatApplication
             return new ClientApplication();
         }
         // FIXME Move if condition to separate boolean function.
-        else if( args.length == 1 || "server".equals( args[0] ) ) {
+        else if( args.length == 1 && "server".equals( args[0] ) ) {
             return new ServerApplication();
         }
         return null;
+    }
+
+    /**
+     * Prints help message.
+     */
+    private static void printHelp() {
+        System.out.println("Usage:");
+        System.out.println();
+        System.out.println("simple-chat [server]");
+        System.out.println();
+        System.out.println("Runs chat client application or char server application (if server option was set)");
     }
 
 }
