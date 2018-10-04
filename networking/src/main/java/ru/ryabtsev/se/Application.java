@@ -1,7 +1,8 @@
 package ru.ryabtsev.se;
 
-import java.util.concurrent.ExecutorService;
-
+/**
+ * Basic interface for application classes.
+ */
 public interface Application extends Runnable {
     void run();
 }

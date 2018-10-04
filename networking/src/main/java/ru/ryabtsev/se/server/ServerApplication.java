@@ -16,9 +16,8 @@ public class ServerApplication implements Application {
 
     public ServerApplication() {
         networkConfiguration = new NetworkConfiguration();
-        //executorService = Executors.newFixedThreadPool( networkConfiguration.getThreadsNumber() );
         executorService = Executors.newCachedThreadPool();
-        server = new ServerRunner( networkConfiguration, executorService );
+        server = new ConsoleServer( networkConfiguration, executorService );
     }
 
     @Override

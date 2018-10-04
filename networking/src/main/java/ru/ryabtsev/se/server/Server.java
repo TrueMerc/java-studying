@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 
-import ru.ryabtsev.se.Connection;
 import ru.ryabtsev.se.NetworkConfiguration;
 
 public interface Server extends Runnable {

@@ -1,4 +1,4 @@
-package ru.ryabtsev.se;
+package ru.ryabtsev.se.server;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import lombok.Getter;
 import lombok.SneakyThrows;
-
-import ru.ryabtsev.se.server.Server;
 
 @Getter
 public class Connection {

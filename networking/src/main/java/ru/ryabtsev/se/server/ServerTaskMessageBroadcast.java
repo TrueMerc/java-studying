@@ -1,7 +1,5 @@
 package ru.ryabtsev.se.server;
 
-import ru.ryabtsev.se.Connection;
-
 public class ServerTaskMessageBroadcast extends ServerTask {
 
     private String message;

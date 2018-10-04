@@ -9,7 +9,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
 
-public class ClientRunner implements Client {
+public class ConsoleClient implements Client {
 
     private Socket socket;
 
@@ -27,7 +27,7 @@ public class ClientRunner implements Client {
      * @param networkConfiguration - network configuration parameters.
      * @param executorService - executor service instance.
      */
-    public ClientRunner(final NetworkConfiguration networkConfiguration, final ExecutorService executorService ) {
+    public ConsoleClient(final NetworkConfiguration networkConfiguration, final ExecutorService executorService ) {
         this.networkConfiguration = networkConfiguration;
         this.executorService = executorService;
     }

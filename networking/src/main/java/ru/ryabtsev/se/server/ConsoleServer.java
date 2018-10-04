@@ -1,33 +1,30 @@
 package ru.ryabtsev.se.server;
 
-import ru.ryabtsev.se.Connection;
 import ru.ryabtsev.se.NetworkConfiguration;
 
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import lombok.Getter;
 import lombok.SneakyThrows;
 
 
-public class ServerRunner implements Server {
+public class ConsoleServer implements Server {
 
     private final NetworkConfiguration networkConfiguration;
 
     private final ExecutorService executorService;
 
-    private final ConnectionService connectionService;
+    private final Connections connections;
 
     private ServerSocket serverSocket;
 
 
-    public ServerRunner( final NetworkConfiguration networkConfiguration, final ExecutorService executorService) {
+    public ConsoleServer(final NetworkConfiguration networkConfiguration, final ExecutorService executorService) {
         this.networkConfiguration = networkConfiguration;
         this.executorService = executorService;
-        this.connectionService = new ConnectionServiceBean( this );
+        this.connections = new Connections();
     }
 
     @Override
@@ -44,12 +41,12 @@ public class ServerRunner implements Server {
 
     @Override
     public void add(final Socket socket) {
-        connectionService.add( socket );
+        connections.add( socket );
     }
 
     @Override
     public void remove(final Socket socket) {
-        connectionService.remove( socket );
+        connections.remove( socket );
     }
 
     @Override
@@ -59,7 +56,7 @@ public class ServerRunner implements Server {
 
     @Override
     public List<Connection> connections() {
-        return connectionService.connections();
+        return connections.connections();
     }
 
     @Override

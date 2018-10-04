@@ -8,9 +8,14 @@ import ru.ryabtsev.se.server.ServerApplication;
  */
 public class ClientServerChatApplication
 {
+    /**
+     * Main method.
+     * @param args - command line arguments.
+     */
     public static void main( String[] args )
     {
-        initializeApplication( args );
+        final Application application = initializeApplication( args );
+        application.run();
     }
 
     /**

@@ -1,7 +1,8 @@
 package ru.ryabtsev.se.client;
 
-import lombok.SneakyThrows;
-
+/**
+ * Base class for all task classes which executes on client side.
+ */
 public abstract class ClientTask extends Thread {
 
     protected Client client;

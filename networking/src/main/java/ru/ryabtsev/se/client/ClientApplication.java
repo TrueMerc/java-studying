@@ -19,7 +19,7 @@ public class ClientApplication implements Application {
     public ClientApplication() {
         networkConfiguration = new NetworkConfiguration();
         executorService = Executors.newFixedThreadPool( MAXIMUM_THREADS );
-        client = new ClientRunner( networkConfiguration, executorService );
+        client = new ConsoleClient( networkConfiguration, executorService );
     }
 
     @Override

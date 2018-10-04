@@ -1,19 +1,13 @@
 package ru.ryabtsev.se.server;
 
-import ru.ryabtsev.se.Connection;
-
 import java.net.Socket;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ConnectionServiceBean implements ConnectionService {
-    private final Server server;
+public class Connections {
 
     private final List<Connection> connections = new ArrayList<>();
 
-    public ConnectionServiceBean( final Server server ) {
-        this.server = server;
-    }
 
     public List<Connection> connections() {
         return connections;
