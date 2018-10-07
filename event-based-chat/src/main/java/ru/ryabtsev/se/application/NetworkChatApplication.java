@@ -2,7 +2,10 @@ package ru.ryabtsev.se;
 
 import ru.ryabtsev.se.client.ClientApplication;
 import ru.ryabtsev.se.server.ConsoleServer;
-import ru.ryabtsev.se.server.ServerApplication;
+
+import javax.enterprise.inject.se.SeContainerInitializer;
+import javax.enterprise.inject.spi.CDI;
+
 
 /**
  * Simple 'client-server chat' application main class.
@@ -15,7 +18,8 @@ public class NetworkChatApplication
      */
     public static void main( String[] args )
     {
-        NetworkConfiguration networkConfiguration;
+        SeContainerInitializer.newInstance().addPackages(NetworkChatApplication.class).initialize();
+        final NetworkConfiguration networkConfiguration = CDI.current().select(NetworkConfiguration.class).get();
         final Application application = initializeApplication( args );
         if( application == null ) {
             printHelp();

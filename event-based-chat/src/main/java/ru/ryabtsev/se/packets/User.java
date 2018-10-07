@@ -1,4 +1,4 @@
-package ru.ryabtsev.se;
+package ru.ryabtsev.se.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
@@ -25,8 +25,8 @@ public class User {
     @Nullable
     private String nickname = "";
 
-    public User(@NotNull final String login, @NotNull final String password) {
-        this.login = login;
-        this.password = password;
-    }
+//    public User(@NotNull final String login, @NotNull final String password) {
+//        this.login = login;
+//        this.password = password;
+//    }
 }

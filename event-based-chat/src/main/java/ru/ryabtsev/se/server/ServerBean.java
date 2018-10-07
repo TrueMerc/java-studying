@@ -1,9 +1,11 @@
 package ru.ryabtsev.se.server;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
-import ru.ryabtsev.se.NetworkConfiguration;
+import ru.ryabtsev.se.application.NetworkConfiguration;
 import ru.ryabtsev.se.server.event.ServerConnectionEvent;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.net.ServerSocket;
@@ -11,7 +13,9 @@ import java.net.ServerSocket;
 /**
  * Chat console server class.
  */
-public final class ConsoleServer implements ServerApplication {
+@Getter
+@ApplicationScoped
+public class ConsoleServer implements ServerApplication {
 
     @Inject
     private NetworkConfiguration networkConfiguration;
@@ -21,10 +25,6 @@ public final class ConsoleServer implements ServerApplication {
 
     private ServerSocket socket;
 
-    @Override
-    public ServerSocket getServerSocket() {
-        return socket;
-    }
 
     @Override
     @SneakyThrows

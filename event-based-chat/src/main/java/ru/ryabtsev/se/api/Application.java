@@ -1,4 +1,6 @@
-package ru.ryabtsev.se;
+package ru.ryabtsev.se.application;
+
+import javax.enterprise.context.ApplicationScoped;
 
 /**
  * Basic interface for application classes.

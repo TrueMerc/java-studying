@@ -1,6 +1,7 @@
-package ru.ryabtsev.se;
+package ru.ryabtsev.se.application;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,6 +13,7 @@ import javax.enterprise.context.ApplicationScoped;
 @Setter
 @ApplicationScoped
 public class NetworkConfiguration {
-    private final Integer port = 16160; // Don't use 8080 port. It's for Jenkins.
-    private final String host = "localhost";
+    private Integer port = 16160; // Don't use 8080 port. It's for Jenkins.
+    private String host = "localhost";
+    private String login;
 }
