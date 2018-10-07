@@ -1,8 +1,8 @@
 package ru.ryabtsev.se.client;
 
 import lombok.SneakyThrows;
-import ru.ryabtsev.se.Application;
-import ru.ryabtsev.se.NetworkConfiguration;
+import ru.ryabtsev.se.api.Application;
+import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
 
