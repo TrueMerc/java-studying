@@ -1,7 +1,7 @@
 package ru.ryabtsev.se.client.event;
 
 import org.jetbrains.annotations.NotNull;
-import ru.ryabtsev.se.client.ClientApplication;
+import ru.ryabtsev.se.client.ClientBean;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -24,7 +24,7 @@ public class ClientMessageInputEvent {
     private static final String CMD_REGISTRY = "registry";
 
     @Inject
-    private ClientApplication client;
+    private ClientBean client;
 
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;

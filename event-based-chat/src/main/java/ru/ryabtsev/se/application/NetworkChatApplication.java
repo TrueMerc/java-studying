@@ -1,7 +1,8 @@
-package ru.ryabtsev.se;
+package ru.ryabtsev.se.application;
 
-import ru.ryabtsev.se.client.ClientApplication;
-import ru.ryabtsev.se.server.ConsoleServer;
+import ru.ryabtsev.se.api.Application;
+import ru.ryabtsev.se.client.ClientBean;
+import ru.ryabtsev.se.server.ServerBean;
 
 import javax.enterprise.inject.se.SeContainerInitializer;
 import javax.enterprise.inject.spi.CDI;
@@ -18,8 +19,6 @@ public class NetworkChatApplication
      */
     public static void main( String[] args )
     {
-        SeContainerInitializer.newInstance().addPackages(NetworkChatApplication.class).initialize();
-        final NetworkConfiguration networkConfiguration = CDI.current().select(NetworkConfiguration.class).get();
         final Application application = initializeApplication( args );
         if( application == null ) {
             printHelp();
@@ -34,13 +33,16 @@ public class NetworkChatApplication
      * @return application instance (client or server).
      */
     private static Application initializeApplication( String[] args ) {
+        SeContainerInitializer.newInstance().addPackages(NetworkChatApplication.class).initialize();
+
         if( args == null || args.length == 0 ) {
-            return new ClientApplication();
+            return CDI.current().select( ClientBean.class ).get();
         }
         else if( args.length == 1 && "server".equals( args[0] ) ) {
-            return new ConsoleServer();
+            return CDI.current().select( ServerBean.class ).get();
         }
-        return null;
+        return CDI.current().select( ServerBean.class ).get();
+        //return null;
     }
 
     /**

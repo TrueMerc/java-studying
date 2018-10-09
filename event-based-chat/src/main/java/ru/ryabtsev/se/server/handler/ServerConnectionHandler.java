@@ -2,9 +2,8 @@ package ru.ryabtsev.se.server.handler;
 
 import lombok.SneakyThrows;
 import ru.ryabtsev.se.server.ConnectionService;
-import ru.ryabtsev.se.server.ConsoleServer;
+import ru.ryabtsev.se.server.Server;
 import ru.ryabtsev.se.server.event.ServerConnectionEvent;
-import ru.ryabtsev.se.server.event.ServerMessageEvent;
 import ru.ryabtsev.se.server.event.ServerMessageReadEvent;
 
 
@@ -21,7 +20,7 @@ import java.net.Socket;
 public class ServerConnectionHandler {
 
     @Inject
-    private ConsoleServer server;
+    private Server server;
 
     @Inject
     private ConnectionService connectionService;
@@ -30,14 +29,14 @@ public class ServerConnectionHandler {
     private Event<ServerConnectionEvent> serverConnectionEvent;
 
     @Inject
-    private Event<ServerMessageReadEvent> serverMessageEvent;
+    private Event<ServerMessageReadEvent> serverMessageReadEvent;
 
     @SneakyThrows
     public void handle( @Observes final ServerConnectionEvent event ) {
         System.out.println( "Server connection handler");
         final Socket socket = server.getServerSocket().accept();
         connectionService.add( socket );
-        serverMessageEvent.fireAsync( new ServerMessageReadEvent( socket, "" ) );
+        serverMessageReadEvent.fireAsync( new ServerMessageReadEvent( socket ) );
         serverConnectionEvent.fire( new ServerConnectionEvent() );
     }
 }

@@ -1,4 +1,4 @@
-package ru.ryabtsev.se.application;
+package ru.ryabtsev.se.api;
 
 import javax.enterprise.context.ApplicationScoped;
 

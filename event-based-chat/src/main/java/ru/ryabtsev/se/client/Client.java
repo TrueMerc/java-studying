@@ -1,4 +1,9 @@
 package ru.ryabtsev.se.client;
 
-public interface Client {
+import ru.ryabtsev.se.api.Application;
+
+/**
+ * Client interface.
+ */
+public interface Client extends Application {
 }

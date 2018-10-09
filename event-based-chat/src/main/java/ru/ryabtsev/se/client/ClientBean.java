@@ -1,28 +1,35 @@
 package ru.ryabtsev.se.client;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
-import ru.ryabtsev.se.api.Application;
 import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
 
-public class ClientApplication implements Application {
+/**
+ * Console client implementation
+ */
+@Getter
+@ApplicationScoped
+@NoArgsConstructor
+public class ClientBean implements Client {
 
+    @Inject
+    NetworkConfiguration networkConfiguration;
 
     @Inject
     private Event<ClientMessageReadEvent> clientMessageReadEvent;
 
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
-
-    @Inject
-    NetworkConfiguration networkConfiguration;
 
     private Socket socket;
 

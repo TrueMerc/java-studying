@@ -6,8 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import java.net.Socket;
 
 @Getter
-public class ServerMessageReadEvent extends ServerMessageEvent {
-    public ServerMessageReadEvent(@NotNull Socket socket, @NotNull String message) {
-        super(socket, message);
+public class ServerMessageReadEvent  {
+
+    private final Socket socket;
+
+    public ServerMessageReadEvent(@NotNull Socket socket) {
+        this.socket = socket;
     }
 }

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class PacketResult extends Packet {
+public class PacketResult extends Packet {
 
     {
         setType( PacketType.RESULT );

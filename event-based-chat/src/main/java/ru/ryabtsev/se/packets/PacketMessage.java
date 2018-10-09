@@ -7,7 +7,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Chat client message packet.
+ * Chat server message packet (sends from server to client).
  */
 @Getter
 @Setter

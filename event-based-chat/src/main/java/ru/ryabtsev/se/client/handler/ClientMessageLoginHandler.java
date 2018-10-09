@@ -3,7 +3,7 @@ package ru.ryabtsev.se.client.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-import ru.ryabtsev.se.client.ClientApplication;
+import ru.ryabtsev.se.client.ClientBean;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageLoginEvent;
 import ru.ryabtsev.se.packets.PacketLogin;
@@ -18,7 +18,7 @@ import java.util.Scanner;
 public class ClientMessageLoginHandler {
 
     @Inject
-    private ClientApplication client;
+    private ClientBean client;
 
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;

@@ -1,7 +1,7 @@
 package ru.ryabtsev.se.server;
 
 import org.jetbrains.annotations.NotNull;
-import ru.ryabtsev.se.User;
+import ru.ryabtsev.se.packets.User;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.LinkedHashMap;
@@ -24,7 +24,9 @@ public class UserService {
             return false;
         }
         else {
-            final User user = new User( login, password );
+            final User user = new User();
+            user.setLogin( login );
+            user.setPassword( password );
             users.put( login, user );
             return true;
         }

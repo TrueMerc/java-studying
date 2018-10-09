@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -16,7 +17,12 @@ import java.util.UUID;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Packet {
 
+    @Nullable
     private String id = UUID.randomUUID().toString();
 
+    @Nullable
     private PacketType type = PacketType.UNKNOWN;
+
+    @Nullable
+    private Long timestamp = System.currentTimeMillis();
 }

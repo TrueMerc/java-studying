@@ -1,4 +1,4 @@
-package ru.ryabtsev.se.application;
+package ru.ryabtsev.se.packets;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
