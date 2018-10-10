@@ -27,5 +27,9 @@ public interface ConnectionService {
 
     void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message);
 
+    void sendUnicast(@Nullable Connection connection, @Nullable String login, @Nullable String message);
+
+    void sendBroadcast(@Nullable String login, @Nullable String message);
+
     void disconnect(@Nullable Socket socket);
 }

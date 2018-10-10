@@ -37,6 +37,7 @@ public enum PacketType {
 
     /** Client 'unicast' command packet */
     UNICAST_REQUEST,
+    UNICAST_MESSAGE,
     UNICAST_RESPONSE,
 
     /** Client 'broadcast' command packet */

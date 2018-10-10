@@ -40,9 +40,12 @@ public class ServerBroadcastHandler {
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         @NotNull final PacketBroadcastRequest packetBroadcastRequest = objectMapper.readValue( message, PacketBroadcastRequest.class );
         @NotNull final String broadcastMessage =  packetBroadcastRequest.getMessage();
-        for( final Connection receiverConnection : connectionService.getConnections() ) {
-            System.out.println("Sending broadcast message.");
-            connectionService.sendMessage( receiverConnection, login,  broadcastMessage );
-        }
+
+        System.out.println("Sending broadcast message.");
+//        for( final Connection receiverConnection : connectionService.getConnections() ) {
+//
+//            connectionService.sendMessage( receiverConnection, login,  broadcastMessage );
+//        }
+        connectionService.sendBroadcast( login, broadcastMessage );
     }
 }

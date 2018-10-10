@@ -9,6 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import ru.ryabtsev.se.packets.PacketResult;
 import ru.ryabtsev.se.packets.PacketType;
 import ru.ryabtsev.se.packets.broadcast.PacketBroadcastResponse;
+import ru.ryabtsev.se.packets.unicast.PacketUnicastMessage;
+import ru.ryabtsev.se.packets.unicast.PacketUnicastResponse;
 import ru.ryabtsev.se.server.Connection;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -141,17 +143,42 @@ public class ConnectionServiceBean implements ConnectionService {
         System.out.println( "Result was sent." );
     }
 
+
+
     @Override
     @SneakyThrows
     public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
         if( connection == null || connection.getLogin() == null ) {
             return;
         }
-        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+
         @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         packet.setLogin( login );
         packet.setMessage( message );
         connection.send( objectMapper.writeValueAsString( packet ) );
+    }
+
+    @Override
+    @SneakyThrows
+    public void sendUnicast(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+        if( connection == null || connection.getLogin() == null ) {
+            return;
+        }
+
+        @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+        //packet.setSenderLogin( login );
+        //packet.setMessage( message );
+        connection.send( objectMapper.writeValueAsString( packet ) );
+
+    }
+
+    @Override
+    public void sendBroadcast(@Nullable String login, @Nullable String message) {
+        for( final Connection receiverConnection : connections ) {
+            sendMessage( receiverConnection, login,  message );
+        }
     }
 
 

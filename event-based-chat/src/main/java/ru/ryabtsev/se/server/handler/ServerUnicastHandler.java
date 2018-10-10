@@ -51,7 +51,7 @@ public class ServerUnicastHandler {
 
         if( result ) {
             System.out.println("Sending unicast message.");
-            connectionService.sendMessage(receiverConnection, login, unicastMessage);
+            connectionService.sendUnicast(receiverConnection, login, unicastMessage);
         }
         connectionService.sendResult( socket, PacketType.UNICAST_RESPONSE, result );
     }
