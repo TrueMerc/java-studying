@@ -3,7 +3,7 @@ package ru.ryabtsev.se.server.handler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.ryabtsev.se.server.Connection;
-import ru.ryabtsev.se.server.ConnectionService;
+import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.event.ServerBroadcastEvent;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,7 +15,7 @@ import java.net.Socket;
 public class ServerBroadcastHandler {
 
     @Inject
-    ConnectionService connectionService;
+    ConnectionServiceBean connectionService;
 
     public void handle(@ObservesAsync final ServerBroadcastEvent event) {
         @NotNull final Socket socket = event.getSocket();

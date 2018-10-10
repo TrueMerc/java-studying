@@ -1,9 +1,17 @@
-package ru.ryabtsev.se.server;
+package ru.ryabtsev.se.server.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import ru.ryabtsev.se.packets.PacketResult;
+import ru.ryabtsev.se.packets.PacketType;
+import ru.ryabtsev.se.packets.broadcast.PacketBroadcastResponse;
+import ru.ryabtsev.se.server.Connection;
 
+import javax.enterprise.context.ApplicationScoped;
+import java.io.DataOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +19,9 @@ import java.util.List;
 /**
  * Manages chat connections.
  */
-public class ConnectionService {
+@NoArgsConstructor
+@ApplicationScoped
+public class ConnectionServiceBean implements ConnectionService {
 
     private final List<Connection> connections = new ArrayList<>();
 
@@ -86,9 +96,41 @@ public class ConnectionService {
      * @param socket - client socket.
      * @param success - operation result login.
      */
-    public void sendResult(@Nullable final Socket socket, @Nullable Boolean success) {
+    @Override
+    public void setResult(@Nullable Socket socket, @Nullable Boolean success) {
 
     }
+
+
+    @Override
+    public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType) {
+
+    }
+
+    @Override
+    @SneakyThrows
+    public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success) {
+        @NotNull final DataOutputStream out = new DataOutputStream( socket.getOutputStream() );
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+        @NotNull final PacketResult packet = new PacketResult(success);
+        packet.setType( packetType );
+        @NotNull final String message = objectMapper.writeValueAsString( packet );
+        out.writeUTF( message );
+    }
+
+    @Override
+    @SneakyThrows
+    public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+        if( connection == null || connection.getLogin() == null ) {
+            return;
+        }
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
+        packet.setLogin( login );
+        packet.setMessage( message );
+        connection.send( objectMapper.writeValueAsString( packet ) );
+    }
+
 
     /**
      * Close connection to specified client socket.
@@ -97,9 +139,5 @@ public class ConnectionService {
     public void disconnect(@Nullable final Socket socket ) {
         socket.close();
         remove( socket );
-    }
-
-
-    public void sendMessage(Connection receiverConnection, String login, String message) {
     }
 }

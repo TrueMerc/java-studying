@@ -1,7 +1,7 @@
 package ru.ryabtsev.se.server.handler;
 
 import lombok.SneakyThrows;
-import ru.ryabtsev.se.server.ConnectionService;
+import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.Server;
 import ru.ryabtsev.se.server.event.ServerConnectionEvent;
 import ru.ryabtsev.se.server.event.ServerMessageReadEvent;
@@ -23,7 +23,7 @@ public class ServerConnectionHandler {
     private Server server;
 
     @Inject
-    private ConnectionService connectionService;
+    private ConnectionServiceBean connectionService;
 
     @Inject
     private Event<ServerConnectionEvent> serverConnectionEvent;

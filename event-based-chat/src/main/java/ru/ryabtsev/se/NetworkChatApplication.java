@@ -1,4 +1,4 @@
-package ru.ryabtsev.se.application;
+package ru.ryabtsev.se;
 
 import ru.ryabtsev.se.api.Application;
 import ru.ryabtsev.se.client.ClientBean;
@@ -42,7 +42,6 @@ public class NetworkChatApplication
             return CDI.current().select( ServerBean.class ).get();
         }
         return CDI.current().select( ServerBean.class ).get();
-        //return null;
     }
 
     /**

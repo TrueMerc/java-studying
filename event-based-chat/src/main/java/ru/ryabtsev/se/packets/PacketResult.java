@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Client 'login' command packet.
+ * Base class for all packets which contains boolean operation result.
  */
 @Getter
 @Setter
@@ -18,8 +18,8 @@ public class PacketResult extends Packet {
         setType( PacketType.RESULT );
     }
 
-    public PacketResult( Boolean result ) {
-        this.success = result;
+    public PacketResult( Boolean success ) {
+        this.success = success;
     }
 
     private Boolean success = true;

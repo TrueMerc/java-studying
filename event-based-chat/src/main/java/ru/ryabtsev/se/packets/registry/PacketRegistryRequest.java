@@ -1,24 +1,23 @@
-package ru.ryabtsev.se.packets;
+package ru.ryabtsev.se.packets.registry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.UUID;
+import ru.ryabtsev.se.packets.Packet;
+import ru.ryabtsev.se.packets.PacketType;
 
 /**
- * Client 'login' command packet.
+ * Client 'registry' command packet.
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public final class PacketLogin extends Packet {
-
+public final class PacketRegistryRequest extends Packet {
     {
-        setType( PacketType.LOGIN );
+        setType( PacketType.REGISTRY_REQUEST );
     }
 
     @Nullable
@@ -27,3 +26,4 @@ public final class PacketLogin extends Packet {
     @Nullable
     private String password = "";
 }
+

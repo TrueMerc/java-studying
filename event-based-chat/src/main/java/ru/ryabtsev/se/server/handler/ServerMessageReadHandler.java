@@ -2,8 +2,7 @@ package ru.ryabtsev.se.server.handler;
 
 
 import org.jetbrains.annotations.NotNull;
-import ru.ryabtsev.se.server.ConnectionService;
-import ru.ryabtsev.se.server.event.ServerConnectionEvent;
+import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.event.ServerMessageInputEvent;
 import ru.ryabtsev.se.server.event.ServerMessageReadEvent;
 
@@ -20,7 +19,7 @@ import java.net.Socket;
 public class ServerMessageReadHandler {
 
     @Inject
-    private ConnectionService connectionService;
+    private ConnectionServiceBean connectionService;
 
     @Inject
     private Event<ServerMessageReadEvent> serverMessageReadEvent;
@@ -36,8 +35,8 @@ public class ServerMessageReadHandler {
             @NotNull final InputStream inputStream = socket.getInputStream();
             @NotNull final DataInputStream in = new DataInputStream( inputStream );
             @NotNull final String message = in.readUTF();
-            serverMessageReadEvent.fireAsync( new ServerMessageReadEvent( socket ) );
-            serverMessageInputEvent.fire( new ServerMessageInputEvent( socket, message ) );
+            serverMessageInputEvent.fireAsync( new ServerMessageInputEvent( socket, message ) );
+            serverMessageReadEvent.fire( new ServerMessageReadEvent( socket ) );
         }
         catch (@NotNull final Exception exception) {
             connectionService.remove( socket );

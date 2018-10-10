@@ -12,6 +12,7 @@ import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -49,9 +50,23 @@ public class ClientBean implements Client {
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 
+    @Override
     @SneakyThrows
     public void send( final String message ) {
         out.writeUTF( message );
+    }
+
+    @Override
+    public String receive() {
+        String result = null;
+        try {
+            result = in.readUTF();
+        }
+        catch (IOException e) {
+            System.out.println("Client receive() exception");
+        }
+
+        return result;
     }
 
     @SneakyThrows

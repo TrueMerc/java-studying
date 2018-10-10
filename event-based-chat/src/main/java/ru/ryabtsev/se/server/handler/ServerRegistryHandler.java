@@ -3,9 +3,10 @@ package ru.ryabtsev.se.server.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
-import ru.ryabtsev.se.packets.PacketRegistry;
-import ru.ryabtsev.se.server.ConnectionService;
-import ru.ryabtsev.se.server.UserService;
+import ru.ryabtsev.se.packets.PacketType;
+import ru.ryabtsev.se.packets.registry.PacketRegistryRequest;
+import ru.ryabtsev.se.server.service.ConnectionService;
+import ru.ryabtsev.se.server.service.UserServiceBean;
 import ru.ryabtsev.se.server.event.ServerRegistryEvent;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -17,7 +18,7 @@ import java.net.Socket;
 public class ServerRegistryHandler {
 
     @Inject
-    UserService userService;
+    UserServiceBean userService;
 
     @Inject
     ConnectionService connectionService;
@@ -27,8 +28,11 @@ public class ServerRegistryHandler {
         @NotNull final Socket socket = event.getSocket();
         @NotNull final String message = event.getMessage();
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        @NotNull final PacketRegistry packet = objectMapper.readValue( message, PacketRegistry.class );
-        final boolean result = userService.registry( packet.getLogin(), packet.getPassword() );
-        connectionService.sendResult( socket, result );
+        @NotNull final PacketRegistryRequest packet = objectMapper.readValue( message, PacketRegistryRequest.class );
+        boolean result = userService.registry( packet.getLogin(), packet.getPassword() );
+        if( result ) {
+            System.out.println("User " + packet.getLogin() + " registered successfully.");
+        }
+        connectionService.sendResult( socket, PacketType.REGISTRY_RESPONSE, result );
     }
 }

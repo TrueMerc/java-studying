@@ -1,23 +1,18 @@
-package ru.ryabtsev.se.packets;
+package ru.ryabtsev.se.packets.login;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.ryabtsev.se.packets.PacketResult;
+import ru.ryabtsev.se.packets.PacketType;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PacketLogoutResponse extends PacketResult {
-
+public class PacketLoginResponse extends PacketResult {
     {
-        setType( PacketType.LOGOUT )
+        setType( PacketType.LOGIN_RESPONSE );
     }
-
-    public PacketLogoutResponse(Boolean result) {
-        super(result);
-    }
-
-
 }

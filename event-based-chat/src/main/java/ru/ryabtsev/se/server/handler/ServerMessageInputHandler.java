@@ -45,25 +45,27 @@ public class ServerMessageInputHandler {
         @NotNull final Packet packet = objectMapper.readValue( message, Packet.class );
 
         switch( packet.getType() ) {
-            case PING:
+            case PING_REQUEST:
                 serverPingEvent.fireAsync( new ServerPingEvent(socket, message) );
                 break;
 
-            case REGISTRY:
+            case REGISTRY_REQUEST:
                 serverRegistryEvent.fireAsync( new ServerRegistryEvent( socket, message) );
                 break;
 
-            case LOGIN:
+            case LOGIN_REQUEST:
                 serverLoginEvent.fireAsync( new ServerLoginEvent( socket, message ) );
                 break;
 
-            case LOGOUT:
+            case LOGOUT_REQUEST:
                 serverLogoutEvent.fireAsync( new ServerLogoutEvent( socket, message ) );
                 break;
 
-            case BROADCAST:
+            case BROADCAST_REQUEST:
                 serverBroadcastEvent.fireAsync( new ServerBroadcastEvent( socket, message ) );
                 break;
+            case UNICAST_REQUEST:
+                throw  new RuntimeException("Unicast request doesn't handle.");
         }
 
         serverMessageInputEvent.fire( new ServerMessageInputEvent( socket, message ) );
