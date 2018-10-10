@@ -15,7 +15,6 @@ import static ru.ryabtsev.se.client.ChatCommands.*;
 @ApplicationScoped
 public class ClientMessageInputHandler {
 
-
     @Inject
     private ClientBean client;
 

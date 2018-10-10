@@ -8,8 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.ryabtsev.se.packets.Packet;
 import ru.ryabtsev.se.packets.PacketType;
 
-import java.util.UUID;
-
 /**
  * Client 'login' command packet.
  */
@@ -18,7 +16,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public final class PacketLoginRequest extends Packet {
-
     {
         setType( PacketType.LOGIN_REQUEST );
     }

@@ -112,15 +112,6 @@ public class ConnectionServiceBean implements ConnectionService {
         }
     }
 
-    /**
-     * Sends operation result to client which specified by its socket.
-     * @param socket - client socket.
-     * @param success - operation result login.
-     */
-    @Override
-    public void setResult(@Nullable Socket socket, @Nullable Boolean success) {
-
-    }
 
     @Override
     public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success) {
@@ -136,22 +127,6 @@ public class ConnectionServiceBean implements ConnectionService {
         }
 
         System.out.println( "Result was sent." );
-    }
-
-
-
-    @Override
-    @SneakyThrows
-    public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
-        if( connection == null || connection.getLogin() == null ) {
-            return;
-        }
-
-        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
-        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        packet.setLogin( login );
-        packet.setMessage( message );
-        connection.send( objectMapper.writeValueAsString( packet ) );
     }
 
     @Override
@@ -174,6 +149,19 @@ public class ConnectionServiceBean implements ConnectionService {
         }
     }
 
+    @Override
+    @SneakyThrows
+    public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+        if( connection == null || connection.getLogin() == null ) {
+            return;
+        }
+
+        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+        packet.setLogin( login );
+        packet.setMessage( message );
+        connection.send( objectMapper.writeValueAsString( packet ) );
+    }
 
     /**
      * Close connection to specified client socket.

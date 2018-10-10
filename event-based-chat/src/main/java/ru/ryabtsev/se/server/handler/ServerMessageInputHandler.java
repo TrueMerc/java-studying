@@ -9,8 +9,6 @@ import ru.ryabtsev.se.server.event.*;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
-import java.io.DataInputStream;
-import java.io.InputStream;
 import java.net.Socket;
 
 import static ru.ryabtsev.se.packets.PacketType.*;

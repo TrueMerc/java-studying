@@ -7,12 +7,11 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.ryabtsev.se.packets.PacketType;
-import ru.ryabtsev.se.packets.broadcast.PacketBroadcastRequest;
 import ru.ryabtsev.se.packets.unicast.PacketUnicastRequest;
 import ru.ryabtsev.se.server.Connection;
 import ru.ryabtsev.se.server.event.ServerUnicastEvent;
 import ru.ryabtsev.se.server.service.ConnectionServiceBean;
-import ru.ryabtsev.se.server.event.ServerBroadcastEvent;
+
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.ObservesAsync;

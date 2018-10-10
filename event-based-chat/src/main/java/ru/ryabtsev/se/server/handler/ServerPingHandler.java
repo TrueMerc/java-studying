@@ -3,7 +3,6 @@ package ru.ryabtsev.se.server.handler;
 import ru.ryabtsev.se.packets.PacketType;
 import ru.ryabtsev.se.server.Connection;
 import ru.ryabtsev.se.server.service.ConnectionService;
-import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.event.ServerPingEvent;
 
 import javax.enterprise.context.ApplicationScoped;

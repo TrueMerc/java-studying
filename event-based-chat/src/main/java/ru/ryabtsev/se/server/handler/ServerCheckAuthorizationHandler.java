@@ -5,7 +5,6 @@ import ru.ryabtsev.se.server.event.ServerCheckAuthorizationEvent;
 import ru.ryabtsev.se.server.service.ConnectionService;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Observes;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import javax.enterprise.event.Event;

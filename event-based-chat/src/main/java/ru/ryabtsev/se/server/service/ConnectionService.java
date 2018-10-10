@@ -19,10 +19,6 @@ public interface ConnectionService {
 
     void setLogin(@Nullable Socket socket, @Nullable String login);
 
-    void setResult(@Nullable Socket socket, @Nullable Boolean success);
-
-    //void sendResult(@Nullable Socket socket, @Nullable PacketType packetType);
-
     void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success);
 
     void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message);
