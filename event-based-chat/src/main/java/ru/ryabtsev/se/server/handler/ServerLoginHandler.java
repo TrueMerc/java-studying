@@ -21,7 +21,7 @@ public class ServerLoginHandler {
     private UserServiceBean userService;
 
     @Inject
-    ConnectionServiceBean connectionService;
+    private ConnectionServiceBean connectionService;
 
     @SneakyThrows
     public void handle(@ObservesAsync final ServerLoginEvent event) {

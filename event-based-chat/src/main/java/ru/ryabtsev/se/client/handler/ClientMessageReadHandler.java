@@ -20,15 +20,13 @@ public class ClientMessageReadHandler {
     private Event<ClientMessageReadEvent> clientMessageReadEvent;
 
     public void handle(@ObservesAsync ClientMessageReadEvent event) {
-        System.out.println("Client message read.");
-
         try {
             final String message = client.getIn().readUTF();
             System.out.println("New message: " + message );
             clientMessageReadEvent.fireAsync( new ClientMessageReadEvent() );
         }
         catch (final IOException exception) {
-            System.out.println("Exception!!!");
+            exception.printStackTrace();
         }
     }
 }

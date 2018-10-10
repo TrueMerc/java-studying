@@ -15,7 +15,7 @@ import ru.ryabtsev.se.packets.PacketType;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PacketUnicastResponse extends PacketResult {
     {
-        setType(PacketType.REGISTRY_RESPONSE);
+        setType(PacketType.UNICAST_RESPONSE);
     }
 
     PacketUnicastResponse( Boolean success ) {

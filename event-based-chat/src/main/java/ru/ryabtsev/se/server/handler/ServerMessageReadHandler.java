@@ -35,8 +35,9 @@ public class ServerMessageReadHandler {
             @NotNull final InputStream inputStream = socket.getInputStream();
             @NotNull final DataInputStream in = new DataInputStream( inputStream );
             @NotNull final String message = in.readUTF();
+            System.out.println("Input message: " + message);
             serverMessageInputEvent.fireAsync( new ServerMessageInputEvent( socket, message ) );
-            serverMessageReadEvent.fire( new ServerMessageReadEvent( socket ) );
+            serverMessageReadEvent.fireAsync( new ServerMessageReadEvent( socket ) );
         }
         catch (@NotNull final Exception exception) {
             connectionService.remove( socket );

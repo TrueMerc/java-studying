@@ -32,7 +32,10 @@ public class ServerMessageInputHandler {
     @Inject
     private Event<ServerLogoutEvent> serverLogoutEvent;
 
-    @Inject Event<ServerBroadcastEvent> serverBroadcastEvent;
+    @Inject
+    private Event<ServerBroadcastEvent> serverBroadcastEvent;
+
+    @Inject Event<ServerUnicastEvent> serverUnicastEvent;
 
 
     @SneakyThrows
@@ -64,8 +67,10 @@ public class ServerMessageInputHandler {
             case BROADCAST_REQUEST:
                 serverBroadcastEvent.fireAsync( new ServerBroadcastEvent( socket, message ) );
                 break;
+
             case UNICAST_REQUEST:
-                throw  new RuntimeException("Unicast request doesn't handle.");
+                serverUnicastEvent.fireAsync( new ServerUnicastEvent( socket, message ) );
+                break;
         }
 
         serverMessageInputEvent.fire( new ServerMessageInputEvent( socket, message ) );

@@ -1,5 +1,6 @@
 package ru.ryabtsev.se.server.service;
 
+import lombok.NoArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.ryabtsev.se.packets.User;
@@ -12,6 +13,7 @@ import java.util.Map;
 /**
  * Manages chat users.
  */
+@NoArgsConstructor
 @ApplicationScoped
 public class UserServiceBean implements UserService {
     private Map<String, User> users = new LinkedHashMap<>();

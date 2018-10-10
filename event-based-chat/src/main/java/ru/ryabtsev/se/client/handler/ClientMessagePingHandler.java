@@ -27,9 +27,9 @@ public class ClientMessagePingHandler {
 
     @SneakyThrows
     public void handle(@ObservesAsync final ClientMessagePingEvent event) {
-        @NotNull ObjectMapper objectMapper = new ObjectMapper();
-        @NotNull PacketPingRequest packet = new PacketPingRequest();
+        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+        @NotNull final PacketPingRequest packet = new PacketPingRequest();
         client.send( objectMapper.writeValueAsString(packet) );
-        //clientMessageInputEvent.fireAsync( new ClientMessageInputEvent() );
+        System.out.println("Ping message was sent.");
     }
 }

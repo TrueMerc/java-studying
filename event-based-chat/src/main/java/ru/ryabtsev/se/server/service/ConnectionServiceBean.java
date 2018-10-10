@@ -1,5 +1,6 @@
 package ru.ryabtsev.se.server.service;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -12,6 +13,7 @@ import ru.ryabtsev.se.server.Connection;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.List;
  */
 @NoArgsConstructor
 @ApplicationScoped
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionServiceBean implements ConnectionService {
 
     private final List<Connection> connections = new ArrayList<>();
@@ -46,6 +49,24 @@ public class ConnectionServiceBean implements ConnectionService {
         }
         for(final Connection connection : connections) {
             if( connection.getSocket().equals( socket ) ) {
+                return connection;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns connection with specified client login.
+     * @param login - client login.
+     * @return Connection matches specified client socket.
+     */
+    @Nullable
+    public Connection getByLogin( String login ) {
+        if( login == null ) {
+            return null;
+        }
+        for(final Connection connection : connections) {
+            if( connection.getLogin().equals( login ) ) {
                 return connection;
             }
         }
@@ -88,7 +109,10 @@ public class ConnectionServiceBean implements ConnectionService {
      * @param login - client login.
      */
     public void setLogin(@Nullable final Socket socket, @Nullable final String login) {
-
+        Connection connection = get(socket);
+        if( connection != null ) {
+            connection.setLogin( login );
+        }
     }
 
     /**
@@ -101,21 +125,20 @@ public class ConnectionServiceBean implements ConnectionService {
 
     }
 
-
     @Override
-    public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType) {
-
-    }
-
-    @Override
-    @SneakyThrows
     public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success) {
-        @NotNull final DataOutputStream out = new DataOutputStream( socket.getOutputStream() );
-        @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        @NotNull final PacketResult packet = new PacketResult(success);
-        packet.setType( packetType );
-        @NotNull final String message = objectMapper.writeValueAsString( packet );
-        out.writeUTF( message );
+        try {
+            @NotNull final DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+            @NotNull final ObjectMapper objectMapper = new ObjectMapper();
+            @NotNull final PacketResult packet = new PacketResult(success);
+            packet.setType( packetType );
+            out.writeUTF( objectMapper.writeValueAsString(packet) );
+        }
+        catch (IOException exception) {
+            System.out.println( "Socket exception.");
+        }
+
+        System.out.println( "Result was sent." );
     }
 
     @Override

@@ -13,30 +13,29 @@ import javax.enterprise.event.Event;
 import java.util.Scanner;
 
 import ru.ryabtsev.se.client.Client;
-import ru.ryabtsev.se.client.event.ClientMessageBroadcastEvent;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
-import ru.ryabtsev.se.packets.broadcast.PacketBroadcastRequest;
+import ru.ryabtsev.se.client.event.ClientMessageUnicastEvent;
+import ru.ryabtsev.se.packets.unicast.PacketUnicastRequest;
 
 @NoArgsConstructor
 @ApplicationScoped
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClientMessageBroadcastHandler {
+public class ClientMessageUnicastHandler {
     @Inject
     private Client client;
-
-    @Inject
-    private Event<ClientMessageBroadcastEvent> clientMessageBroadcastEvent;
 
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
 
     @SneakyThrows
-    public void handle(@Observes ClientMessageBroadcastEvent event) {
-        System.out.println("Enter your message");
+    public void handle(@Observes ClientMessageUnicastEvent event) {
+        System.out.println("Enter recipient (by login):");
         @NotNull final Scanner in = new Scanner(System.in);
+        @NotNull final String recipient = in.nextLine();
+        System.out.println("Enter message text");
         @NotNull final String message = in.nextLine();
-        @NotNull final PacketBroadcastRequest packet = new PacketBroadcastRequest();
-        packet.setMessage( message );
+        @NotNull final PacketUnicastRequest packet = new PacketUnicastRequest( recipient, message);
+
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         client.send( objectMapper.writeValueAsString( packet ) );
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );

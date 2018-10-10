@@ -5,15 +5,17 @@ import java.net.Socket;
 import java.util.UUID;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 @Getter
+@Setter
 public class Connection {
     private final String id = UUID.randomUUID().toString();
 
     private final Socket socket;
     
-    private final String login;
+    private String login;
 
     public Connection( Socket socket ) {
         this.socket = socket;

@@ -48,20 +48,20 @@ public class ClientMessageInputHandler {
 
         switch( message ) {
             case CMD_PING:
-                clientMessagePingEvent.fireAsync(new ClientMessagePingEvent());
+                clientMessagePingEvent.fireAsync( new ClientMessagePingEvent());
                 clientMessageInputEvent.fire( new ClientMessageInputEvent() );
                 return;
             case CMD_REGISTRY:
-                clientMessageRegistryEvent.fire(new ClientMessageRegistryEvent());
+                clientMessageRegistryEvent.fire( new ClientMessageRegistryEvent());
                 return;
             case CMD_LOGIN:
-                clientMessageLoginEvent.fire(new ClientMessageLoginEvent() );
+                clientMessageLoginEvent.fire( new ClientMessageLoginEvent() );
                 return;
             case CMD_BROADCAST:
-                clientMessageBroadcastEvent.fire(new ClientMessageBroadcastEvent() );
+                clientMessageBroadcastEvent.fire( new ClientMessageBroadcastEvent() );
                 return;
             case CMD_UNICAST:
-                clientMessageUnicastEvent.fire(new ClientMessageUnicastEvent() );
+                clientMessageUnicastEvent.fire( new ClientMessageUnicastEvent() );
                 return;
             case CMD_EXIT:
                 client.exit();

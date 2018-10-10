@@ -18,8 +18,13 @@ public class PacketUnicastRequest extends Packet {
         setType(PacketType.UNICAST_REQUEST);
     }
 
-    @Nullable
-    private String login = "";
+
+    public PacketUnicastRequest( final String receiverLogin, final String message ) {
+        this.receiverLogin = receiverLogin;
+        this.message = message;
+    }
+
+    @Nullable String receiverLogin = "";
 
     @Nullable
     private String message = "";
