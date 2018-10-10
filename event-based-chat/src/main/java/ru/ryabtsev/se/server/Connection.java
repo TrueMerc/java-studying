@@ -17,9 +17,15 @@ public class Connection {
     
     private String login;
 
+    private long startTime;
+
+    private boolean authorized;
+
     public Connection( Socket socket ) {
         this.socket = socket;
         login = "";
+        startTime = System.currentTimeMillis();
+        authorized = false;
     }
 
     /**

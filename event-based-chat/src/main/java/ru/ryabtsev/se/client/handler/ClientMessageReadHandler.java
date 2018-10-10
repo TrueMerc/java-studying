@@ -26,7 +26,9 @@ public class ClientMessageReadHandler {
             clientMessageReadEvent.fireAsync( new ClientMessageReadEvent() );
         }
         catch (final IOException exception) {
-            exception.printStackTrace();
+            //exception.printStackTrace();
+            System.out.println("Connection stopped by server.");
+            client.exit();
         }
     }
 }

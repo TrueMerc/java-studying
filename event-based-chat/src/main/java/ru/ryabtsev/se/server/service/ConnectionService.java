@@ -32,4 +32,6 @@ public interface ConnectionService {
     void sendBroadcast(@Nullable String login, @Nullable String message);
 
     void disconnect(@Nullable Socket socket);
+
+    void kickByTimeout();
 }

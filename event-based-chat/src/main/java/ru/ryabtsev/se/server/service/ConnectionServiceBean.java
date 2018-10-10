@@ -10,7 +10,6 @@ import ru.ryabtsev.se.packets.PacketResult;
 import ru.ryabtsev.se.packets.PacketType;
 import ru.ryabtsev.se.packets.broadcast.PacketBroadcastResponse;
 import ru.ryabtsev.se.packets.unicast.PacketUnicastMessage;
-import ru.ryabtsev.se.packets.unicast.PacketUnicastResponse;
 import ru.ryabtsev.se.server.Connection;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -18,7 +17,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Manages chat connections.
@@ -28,14 +29,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionServiceBean implements ConnectionService {
 
-    private final List<Connection> connections = new ArrayList<>();
+    private final static long AUTHORIZATION_TIMEOUT = 15000;
+
+    private final Map<Socket, Connection> connections = new LinkedHashMap<>();
 
     /**
      * Returns connection list.
      * @return Connection list.
      */
     @NotNull
-    public List<Connection> getConnections() {
+    public Map<Socket, Connection> getConnections() {
         return connections;
     }
 
@@ -49,12 +52,8 @@ public class ConnectionServiceBean implements ConnectionService {
         if( socket == null ) {
             return null;
         }
-        for(final Connection connection : connections) {
-            if( connection.getSocket().equals( socket ) ) {
-                return connection;
-            }
-        }
-        return null;
+
+        return connections.get( socket );
     }
 
     /**
@@ -67,9 +66,9 @@ public class ConnectionServiceBean implements ConnectionService {
         if( login == null ) {
             return null;
         }
-        for(final Connection connection : connections) {
-            if( connection.getLogin().equals( login ) ) {
-                return connection;
+        for(final Map.Entry<Socket, Connection> connection : connections.entrySet() ) {
+            if( connection.getValue().getLogin().equals( login ) ) {
+                return connection.getValue();
             }
         }
         return null;
@@ -84,7 +83,7 @@ public class ConnectionServiceBean implements ConnectionService {
             return;
         }
         final Connection connection = new Connection( socket );
-        connections.add( connection );
+        connections.put( socket, connection );
         System.out.println("Added connection with id = " + connection.getId() + "...");
     }
 
@@ -97,12 +96,7 @@ public class ConnectionServiceBean implements ConnectionService {
         if( socket == null ) {
             return;
         }
-        for(final Connection connection : connections) {
-            if( connection.getSocket().equals( socket ) ) {
-                connections.remove( socket );
-                System.out.println("Removed connection with id = " + connection.getId() + "...");
-            }
-        }
+        connections.remove( socket );
     }
 
     /**
@@ -114,6 +108,7 @@ public class ConnectionServiceBean implements ConnectionService {
         Connection connection = get(socket);
         if( connection != null ) {
             connection.setLogin( login );
+            connection.setAuthorized( true );
         }
     }
 
@@ -168,16 +163,14 @@ public class ConnectionServiceBean implements ConnectionService {
 
         @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        //packet.setSenderLogin( login );
-        //packet.setMessage( message );
         connection.send( objectMapper.writeValueAsString( packet ) );
 
     }
 
     @Override
     public void sendBroadcast(@Nullable String login, @Nullable String message) {
-        for( final Connection receiverConnection : connections ) {
-            sendMessage( receiverConnection, login,  message );
+        for( final Map.Entry<Socket, Connection> receiverConnection : connections.entrySet() ) {
+            sendMessage( receiverConnection.getValue(), login,  message );
         }
     }
 
@@ -189,5 +182,21 @@ public class ConnectionServiceBean implements ConnectionService {
     public void disconnect(@Nullable final Socket socket ) {
         socket.close();
         remove( socket );
+    }
+
+    @Override
+    public void kickByTimeout() {
+        final long currentTime = System.currentTimeMillis();
+        final List<Socket> removedSockets = new ArrayList<>();
+        for(final Map.Entry<Socket, Connection> connectionEntry : connections.entrySet() ) {
+            final Connection connection = connectionEntry.getValue();
+            if( ( connection.isAuthorized()  == false) && ((currentTime - connection.getStartTime()) > AUTHORIZATION_TIMEOUT) ) {
+                removedSockets.add( connectionEntry.getKey() );
+            }
+        }
+        System.out.println(removedSockets.size() + " connection(s) will be closed.");
+        for(final Socket socket : removedSockets ) {
+            disconnect( socket );
+        }
     }
 }

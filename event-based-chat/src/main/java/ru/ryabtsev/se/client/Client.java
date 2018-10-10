@@ -14,4 +14,6 @@ public interface Client extends Application {
     String receive();
 
     DataInputStream getIn();
+
+    void exit();
 }

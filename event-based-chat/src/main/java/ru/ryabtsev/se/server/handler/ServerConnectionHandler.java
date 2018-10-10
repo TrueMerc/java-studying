@@ -1,6 +1,7 @@
 package ru.ryabtsev.se.server.handler;
 
 import lombok.SneakyThrows;
+import ru.ryabtsev.se.server.event.ServerCheckAuthorizationEvent;
 import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.Server;
 import ru.ryabtsev.se.server.event.ServerConnectionEvent;
