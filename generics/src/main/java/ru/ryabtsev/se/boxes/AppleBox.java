@@ -1,4 +1,6 @@
 package ru.ryabtsev.se.boxes;
 
-public class AppleBox {
+import ru.ryabtsev.se.fruits.Apple;
+
+public class AppleBox extends Box<Apple> {
 }

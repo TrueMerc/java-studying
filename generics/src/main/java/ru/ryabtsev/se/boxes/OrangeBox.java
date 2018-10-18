@@ -1,4 +1,6 @@
 package ru.ryabtsev.se.boxes;
 
-public class OrangeBox {
+import ru.ryabtsev.se.fruits.Orange;
+
+public class OrangeBox extends Box<Orange>  {
 }
