@@ -6,6 +6,7 @@ import ru.ryabtsev.se.fruits.Apple;
 import ru.ryabtsev.se.fruits.Orange;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GenericsOperationsApplication
 {
@@ -39,7 +40,7 @@ public class GenericsOperationsApplication
     }
 
     private static void doTaskTwo() {
-        final ArrayList<Integer> arrayList = toArrayList( intArray );
+        final List<Integer> arrayList = toArrayList( intArray );
         System.out.println( "List from integer array: " );
         System.out.println( arrayList );
     }
@@ -84,8 +85,8 @@ public class GenericsOperationsApplication
         System.out.print("\n");
     }
 
-    private static <T> ArrayList<T> toArrayList(final T[] array) {
-        final ArrayList<T> result = new ArrayList<>(0);
+    private static <T> List<T> toArrayList(final T[] array) {
+        final List<T> result = new ArrayList<>(0);
 
         for( T element : array ) {
             result.add( element );

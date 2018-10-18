@@ -3,9 +3,10 @@ package ru.ryabtsev.se.boxes;
 import ru.ryabtsev.se.interfaces.Weightable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Box <T extends Weightable> implements Weightable {
-    private final ArrayList<T> items = new ArrayList<>(0);
+    private final List<T> items = new ArrayList<>(0);
 
     public void add(T item) {
         items.add( item );
