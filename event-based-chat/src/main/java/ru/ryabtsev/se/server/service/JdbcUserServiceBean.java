@@ -15,30 +15,35 @@ import java.sql.ResultSet;
 @ApplicationScoped
 public class JdbcUserServiceBean implements UserService {
 
+    private static final String DEFAULT_SELECT_QUERY = "SELECT * FROM users WHERE login = ?";
     private final JdbcConnectionManager connectionManager = new JdbcConnectionManager();
 
     @Override
     @SneakyThrows
     public @Nullable User find(@Nullable String login) {
-        final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        //final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        final String query = DEFAULT_SELECT_QUERY;
         connectionManager.connect();
-        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
+        User user = result.first() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
         connectionManager.disconnect();
-        return result.first() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
+        return user;
     }
 
     @Override
     @SneakyThrows
     public boolean check(@Nullable String login, @Nullable String password) {
-        final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        //final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        final String query = DEFAULT_SELECT_QUERY;
         connectionManager.connect();
-        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
+        boolean equality = password.equals( result.getString("password") );
         connectionManager.disconnect();
-        return password.equals( result.getString("password") );
+        return equality;
     }
 
     @Override
@@ -48,17 +53,15 @@ public class JdbcUserServiceBean implements UserService {
             return false;
         }
         else {
-            final UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO( login, password, "");
+            final UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO( login, password, "Default");
             connectionManager.connect();
-            final String loginQuery = "INSERT INTO '" +
-                                       connectionManager.getConfiguration().getDatabaseName() +
-                                       "' ('id', 'login', 'password', 'nickname') VALUES(?, ?, ?, ?)";
+            final String loginQuery = "INSERT INTO users (`id`, `login`, `password`, `nickname`) VALUES(?, ?, ?, ?)";
             PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
             statement.setString( 1, userRegistrationDTO.getId() );
             statement.setString( 2, userRegistrationDTO.getLogin() );
             statement.setString( 3, userRegistrationDTO.getPassword() );
             statement.setString( 4, userRegistrationDTO.getNickname() );
-            boolean result = statement.execute();
+            boolean result = statement.executeUpdate() > 0;
             connectionManager.disconnect();
             return result;
         }
@@ -67,24 +70,28 @@ public class JdbcUserServiceBean implements UserService {
     @Override
     @SneakyThrows
     public boolean exists(@Nullable String login) {
-        final String loginQuery = "SELECT '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        //final String query = "SELECT * FROM " + connectionManager.getConfiguration().getDatabaseName() + " WHERE login = ?";
+        //final String query = "SELECT * FROM users WHERE login = ?";
+        final String query = DEFAULT_SELECT_QUERY;
+        System.out.println("Exists query: " + query);
         connectionManager.connect();
-        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, login );
-        boolean result = statement.execute();
+        ResultSet result = statement.executeQuery();
+        boolean exists = result.next();
         connectionManager.disconnect();
-        return result;
+        return exists;
     }
 
     @Override
     @SneakyThrows
     public boolean setNickname(@Nullable String login, @Nullable String nick) {
-        final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'nickname' = ? WHERE 'login' = ?";
+        final String query = "UPDATE users SET nickname = ? WHERE login = ?";
         connectionManager.connect();
-        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, nick );
         statement.setString( 2, login );
-        boolean result = statement.execute();
+        boolean result = statement.executeUpdate() > 0;
         connectionManager.disconnect();
         return result;
     }
@@ -93,12 +100,12 @@ public class JdbcUserServiceBean implements UserService {
     @SneakyThrows
     public boolean setPassword(@Nullable String login, @Nullable String oldPassword, @Nullable String newPassword) {
         if( check( login, oldPassword ) ) {
-            final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'password' = ? WHERE 'login' = ?";
+            final String query = "UPDATE users SET password = ? WHERE login = ?";
             connectionManager.connect();
-            PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+            PreparedStatement statement = connectionManager.createPreparedStatement(query);
             statement.setString( 1, newPassword );
             statement.setString( 2, login );
-            boolean result = statement.execute();
+            boolean result = statement.executeUpdate() > 0;
             connectionManager.disconnect();
             return result;
         }
