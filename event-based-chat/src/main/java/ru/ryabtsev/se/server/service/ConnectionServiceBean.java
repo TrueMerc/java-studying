@@ -29,7 +29,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionServiceBean implements ConnectionService {
 
-    private final static long AUTHORIZATION_TIMEOUT = 15000;
+    private final static long AUTHORIZATION_TIMEOUT = 1500000;
 
     private final Map<Socket, Connection> connections = new LinkedHashMap<>();
 
@@ -139,7 +139,6 @@ public class ConnectionServiceBean implements ConnectionService {
         @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         connection.send( objectMapper.writeValueAsString( packet ) );
-
     }
 
     @Override
@@ -172,6 +171,9 @@ public class ConnectionServiceBean implements ConnectionService {
         remove( socket );
     }
 
+    /**
+     * Kick unauthorized users by timeout.
+     */
     @Override
     public void kickByTimeout() {
         final long currentTime = System.currentTimeMillis();

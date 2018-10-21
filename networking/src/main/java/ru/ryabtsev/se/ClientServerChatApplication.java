@@ -49,5 +49,4 @@ public class ClientServerChatApplication
         System.out.println();
         System.out.println("Runs chat client application or char server application (if server option was set)");
     }
-
 }

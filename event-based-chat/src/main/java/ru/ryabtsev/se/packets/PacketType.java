@@ -33,6 +33,11 @@ public enum PacketType {
     REGISTRY_RESPONSE,
 
 
+    /** Client 'registry' command packet */
+    SETNICKNAME_REQUEST,
+    SETNICKNAME_RESPONSE,
+
+
     // Message packets
 
     /** Client 'unicast' command packet */
