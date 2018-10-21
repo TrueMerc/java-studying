@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.ryabtsev.se.packets.PacketType;
 import ru.ryabtsev.se.packets.login.PacketLoginRequest;
 import ru.ryabtsev.se.server.service.ConnectionServiceBean;
+import ru.ryabtsev.se.server.service.UserService;
 import ru.ryabtsev.se.server.service.UserServiceBean;
 import ru.ryabtsev.se.server.event.ServerLoginEvent;
 
@@ -18,7 +19,7 @@ import java.net.Socket;
 public class ServerLoginHandler {
 
     @Inject
-    private UserServiceBean userService;
+    private UserService userService;
 
     @Inject
     private ConnectionServiceBean connectionService;

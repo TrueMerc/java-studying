@@ -139,7 +139,6 @@ public class ConnectionServiceBean implements ConnectionService {
         @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         connection.send( objectMapper.writeValueAsString( packet ) );
-
     }
 
     @Override
@@ -172,6 +171,9 @@ public class ConnectionServiceBean implements ConnectionService {
         remove( socket );
     }
 
+    /**
+     * Kick unauthorized users by timeout.
+     */
     @Override
     public void kickByTimeout() {
         final long currentTime = System.currentTimeMillis();
