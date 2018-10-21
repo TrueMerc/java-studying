@@ -33,7 +33,11 @@ public class ServerMessageInputHandler {
     @Inject
     private Event<ServerBroadcastEvent> serverBroadcastEvent;
 
-    @Inject Event<ServerUnicastEvent> serverUnicastEvent;
+    @Inject
+    private Event<ServerUnicastEvent> serverUnicastEvent;
+
+    @Inject
+    private Event<ServerSetNicknameEvent> serverSetNicknameEvent;
 
 
     @SneakyThrows
@@ -68,6 +72,9 @@ public class ServerMessageInputHandler {
 
             case UNICAST_REQUEST:
                 serverUnicastEvent.fireAsync( new ServerUnicastEvent( socket, message ) );
+                break;
+            case SETNICKNAME_REQUEST:
+                serverSetNicknameEvent.fireAsync( new ServerSetNicknameEvent( socket, message) );
                 break;
         }
 
