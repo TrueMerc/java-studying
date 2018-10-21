@@ -6,11 +6,13 @@ import ru.ryabtsev.se.packets.User;
 import ru.ryabtsev.se.server.jdbc.JdbcConnectionManager;
 import ru.ryabtsev.se.server.jdbc.dto.UserRegistrationDTO;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.Dependent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
+//@Dependent
+@ApplicationScoped
 public class JdbcUserServiceBean implements UserService {
 
     private final JdbcConnectionManager connectionManager = new JdbcConnectionManager();
