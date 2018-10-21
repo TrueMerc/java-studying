@@ -39,6 +39,9 @@ public class ClientMessageInputHandler {
     @Inject
     private Event<ClientMessageRegistryEvent> clientMessageRegistryEvent;
 
+    @Inject
+    private Event<ClientMessageSetNicknameEvent> clientMessageSetNicknameEvent;
+
 
     public void handle(@Observes final ClientMessageInputEvent event) {
         System.out.println("Enter cmd (message or exit)");
@@ -62,6 +65,8 @@ public class ClientMessageInputHandler {
             case CMD_UNICAST:
                 clientMessageUnicastEvent.fire( new ClientMessageUnicastEvent() );
                 return;
+            case CMD_SET_NICKNAME:
+                clientMessageSetNicknameEvent.fire( new ClientMessageSetNicknameEvent() );
             case CMD_EXIT:
                 client.exit();
                 return;

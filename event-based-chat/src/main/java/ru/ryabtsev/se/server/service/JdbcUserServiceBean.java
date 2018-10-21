@@ -7,7 +7,6 @@ import ru.ryabtsev.se.server.jdbc.JdbcConnectionManager;
 import ru.ryabtsev.se.server.jdbc.dto.UserRegistrationDTO;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
@@ -27,7 +26,7 @@ public class JdbcUserServiceBean implements UserService {
         PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
-        User user = result.first() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
+        User user = result.next() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
         connectionManager.disconnect();
         return user;
     }
@@ -35,15 +34,14 @@ public class JdbcUserServiceBean implements UserService {
     @Override
     @SneakyThrows
     public boolean check(@Nullable String login, @Nullable String password) {
-        //final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
         final String query = DEFAULT_SELECT_QUERY;
         connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(query);
         statement.setString( 1, login );
-        ResultSet result = statement.executeQuery();
-        boolean equality = password.equals( result.getString("password") );
+        ResultSet resultSet = statement.executeQuery();
+        boolean result = resultSet.next() ? password.equals( resultSet.getString("password") ) : false;
         connectionManager.disconnect();
-        return equality;
+        return result;
     }
 
     @Override
