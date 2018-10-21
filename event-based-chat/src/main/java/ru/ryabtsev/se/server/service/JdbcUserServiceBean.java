@@ -22,7 +22,7 @@ public class JdbcUserServiceBean implements UserService {
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
-        return result.getBoolean("login") ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
+        return result.first() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
     }
 
     @Override
@@ -51,28 +51,40 @@ public class JdbcUserServiceBean implements UserService {
             statement.setString( 2, userRegistrationDTO.getLogin() );
             statement.setString( 3, userRegistrationDTO.getPassword() );
             statement.setString( 4, userRegistrationDTO.getNickname() );
-            ResultSet result = statement.executeQuery();
-            return result.getBoolean("login");
+            return statement.execute();
         }
     }
 
     @Override
     @SneakyThrows
     public boolean exists(@Nullable String login) {
-        final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        final String loginQuery = "SELECT '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, login );
-        ResultSet result = statement.executeQuery();
-        return result.getBoolean("login");
+        return statement.execute();
     }
 
     @Override
+    @SneakyThrows
     public boolean setNickname(@Nullable String login, @Nullable String nick) {
-        return false;
+        final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'nickname' = ? WHERE 'login' = ?";
+        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        statement.setString( 1, nick );
+        statement.setString( 2, login );
+        return statement.execute();
     }
 
     @Override
+    @SneakyThrows
     public boolean setPassword(@Nullable String login, @Nullable String oldPassword, @Nullable String newPassword) {
+        if( check( login, oldPassword ) ) {
+            final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'password' = ? WHERE 'login' = ?";
+            PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+            statement.setString( 1, newPassword );
+            statement.setString( 2, login );
+            return statement.execute();
+
+        }
         return false;
     }
 }
