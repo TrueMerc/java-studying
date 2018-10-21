@@ -21,9 +21,11 @@ public class JdbcUserServiceBean implements UserService {
     @SneakyThrows
     public @Nullable User find(@Nullable String login) {
         final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
+        connectionManager.disconnect();
         return result.first() ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
     }
 
@@ -31,9 +33,11 @@ public class JdbcUserServiceBean implements UserService {
     @SneakyThrows
     public boolean check(@Nullable String login, @Nullable String password) {
         final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, login );
         ResultSet result = statement.executeQuery();
+        connectionManager.disconnect();
         return password.equals( result.getString("password") );
     }
 
@@ -45,6 +49,7 @@ public class JdbcUserServiceBean implements UserService {
         }
         else {
             final UserRegistrationDTO userRegistrationDTO = new UserRegistrationDTO( login, password, "");
+            connectionManager.connect();
             final String loginQuery = "INSERT INTO '" +
                                        connectionManager.getConfiguration().getDatabaseName() +
                                        "' ('id', 'login', 'password', 'nickname') VALUES(?, ?, ?, ?)";
@@ -53,7 +58,9 @@ public class JdbcUserServiceBean implements UserService {
             statement.setString( 2, userRegistrationDTO.getLogin() );
             statement.setString( 3, userRegistrationDTO.getPassword() );
             statement.setString( 4, userRegistrationDTO.getNickname() );
-            return statement.execute();
+            boolean result = statement.execute();
+            connectionManager.disconnect();
+            return result;
         }
     }
 
@@ -61,19 +68,25 @@ public class JdbcUserServiceBean implements UserService {
     @SneakyThrows
     public boolean exists(@Nullable String login) {
         final String loginQuery = "SELECT '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, login );
-        return statement.execute();
+        boolean result = statement.execute();
+        connectionManager.disconnect();
+        return result;
     }
 
     @Override
     @SneakyThrows
     public boolean setNickname(@Nullable String login, @Nullable String nick) {
         final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'nickname' = ? WHERE 'login' = ?";
+        connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
         statement.setString( 1, nick );
         statement.setString( 2, login );
-        return statement.execute();
+        boolean result = statement.execute();
+        connectionManager.disconnect();
+        return result;
     }
 
     @Override
@@ -81,11 +94,13 @@ public class JdbcUserServiceBean implements UserService {
     public boolean setPassword(@Nullable String login, @Nullable String oldPassword, @Nullable String newPassword) {
         if( check( login, oldPassword ) ) {
             final String loginQuery = "UPDATE '" + connectionManager.getConfiguration().getDatabaseName() + "' SET 'password' = ? WHERE 'login' = ?";
+            connectionManager.connect();
             PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
             statement.setString( 1, newPassword );
             statement.setString( 2, login );
-            return statement.execute();
-
+            boolean result = statement.execute();
+            connectionManager.disconnect();
+            return result;
         }
         return false;
     }
