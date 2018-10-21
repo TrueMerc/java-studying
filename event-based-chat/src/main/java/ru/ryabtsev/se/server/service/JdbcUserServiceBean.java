@@ -10,7 +10,6 @@ import javax.enterprise.context.ApplicationScoped;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-//@Dependent
 @ApplicationScoped
 public class JdbcUserServiceBean implements UserService {
 
@@ -20,7 +19,6 @@ public class JdbcUserServiceBean implements UserService {
     @Override
     @SneakyThrows
     public @Nullable User find(@Nullable String login) {
-        //final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
         final String query = DEFAULT_SELECT_QUERY;
         connectionManager.connect();
         PreparedStatement statement = connectionManager.createPreparedStatement(query);
@@ -68,8 +66,6 @@ public class JdbcUserServiceBean implements UserService {
     @Override
     @SneakyThrows
     public boolean exists(@Nullable String login) {
-        //final String query = "SELECT * FROM " + connectionManager.getConfiguration().getDatabaseName() + " WHERE login = ?";
-        //final String query = "SELECT * FROM users WHERE login = ?";
         final String query = DEFAULT_SELECT_QUERY;
         System.out.println("Exists query: " + query);
         connectionManager.connect();
