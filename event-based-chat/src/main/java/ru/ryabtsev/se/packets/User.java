@@ -18,9 +18,15 @@ public class User {
     @Nullable
     private String password = "";
 
-    @Nullable
-    private String email = "";
+//    @Nullable
+//    private String email = "";
 
     @Nullable
     private String nickname = "";
+
+    public User( String login, String password, String nickname ) {
+        this.login = login;
+        this.password = password;
+        this.nickname = nickname;
+    }
 }

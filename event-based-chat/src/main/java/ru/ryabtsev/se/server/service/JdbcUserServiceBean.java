@@ -13,20 +13,26 @@ import java.util.Map;
 
 public class JdbcUserServiceBean implements UserService {
 
-
-    //private static final String FIND_BY_LOGIN_QUERY = "SELECT * FROM 'users_registration'  WHERE login '' = ?";
-
     private final JdbcConnectionManager connectionManager = new JdbcConnectionManager();
-    private final Map<String, User> registeredUsers = new LinkedHashMap<>();
 
     @Override
+    @SneakyThrows
     public @Nullable User find(@Nullable String login) {
-        return null;
+        final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        statement.setString( 1, login );
+        ResultSet result = statement.executeQuery();
+        return result.getBoolean("login") ? new User( result.getString("login"), result.getString("password"), result.getString("nickname") ) : null;
     }
 
     @Override
+    @SneakyThrows
     public boolean check(@Nullable String login, @Nullable String password) {
-        return false;
+        final String loginQuery = "SELECT * FROM '" + connectionManager.getConfiguration().getDatabaseName() + "' WHERE 'login' = ?";
+        PreparedStatement statement = connectionManager.createPreparedStatement(loginQuery);
+        statement.setString( 1, login );
+        ResultSet result = statement.executeQuery();
+        return password.equals( result.getString("password") );
     }
 
     @Override
