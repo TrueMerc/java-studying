@@ -35,6 +35,10 @@ public class JdbcConnectionManager {
         connection = DriverManager.getConnection( configuration.toString(), configuration.getUsername(), configuration.getPassword() );
     }
 
+    public Configuration getConfiguration() {
+        return configuration;
+    }
+
     public void disconnect() throws Exception {
         connection.close();
     }
