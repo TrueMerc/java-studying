@@ -47,6 +47,7 @@ public class ConnectionServiceBean implements ConnectionService {
      * @param socket - client socket.
      * @return Connection matches specified client socket.
      */
+    @Override
     @Nullable
     public Connection get(@Nullable final Socket socket ) {
         if( socket == null ) {
@@ -61,8 +62,9 @@ public class ConnectionServiceBean implements ConnectionService {
      * @param login - client login.
      * @return Connection matches specified client socket.
      */
+    @Override
     @Nullable
-    public Connection get(String login ) {
+    public Connection get( String login ) {
         if( login == null ) {
             return null;
         }
@@ -77,6 +79,7 @@ public class ConnectionServiceBean implements ConnectionService {
     /**
      * @inheritDoc
      */
+    @Override
     public void add(@Nullable final Socket socket ) {
         if( socket == null ) {
             return;
@@ -86,11 +89,10 @@ public class ConnectionServiceBean implements ConnectionService {
         System.out.println("Added connection with id = " + connection.getId() + "...");
     }
 
-
     /**
-     * Removes connection with specified socket.
-     * @param socket - client socket.
+     * @inheritDoc
      */
+    @Override
     public void remove(@Nullable final Socket socket ) {
         if( socket == null ) {
             return;
@@ -101,6 +103,7 @@ public class ConnectionServiceBean implements ConnectionService {
     /**
      * @inheritDoc
      */
+    @Override
     public void authorize(@Nullable final Socket socket, @Nullable final String login) {
         Connection connection = get(socket);
         if( connection != null ) {
@@ -109,7 +112,9 @@ public class ConnectionServiceBean implements ConnectionService {
         }
     }
 
-
+    /**
+     * @inheritDoc
+     */
     @Override
     public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success) {
         try {
@@ -126,6 +131,9 @@ public class ConnectionServiceBean implements ConnectionService {
         System.out.println( "Result was sent." );
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @SneakyThrows
     public boolean sendUnicast(@NotNull final String sender, @NotNull final String receiver, @NotNull final String message) {
@@ -140,6 +148,9 @@ public class ConnectionServiceBean implements ConnectionService {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void sendBroadcast(@NotNull final String sender, @NotNull final String message) {
         for( final Map.Entry<Socket, Connection> receiverConnection : connections.entrySet() ) {
@@ -147,7 +158,12 @@ public class ConnectionServiceBean implements ConnectionService {
         }
     }
 
-
+    /**
+     * Sends broadcast message to specified connection.
+     * @param connection - connection.
+     * @param login - sender login.
+     * @param message - message text.
+     */
     @SneakyThrows
     private void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
         if( connection == null || connection.getLogin() == null ) {
@@ -160,8 +176,9 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Close connection to specified client socket.
+     * @inheritDoc
      */
+    @Override
     @SneakyThrows
     public void disconnect(@Nullable final Socket socket ) {
         socket.close();
@@ -169,7 +186,7 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Kick unauthorized users by timeout.
+     * @inheritDoc
      */
     @Override
     public void kickByTimeout() {
