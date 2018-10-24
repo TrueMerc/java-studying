@@ -30,7 +30,7 @@
 //        }
 //        else {
 //            final User user = new User();
-//            user.setLogin( login );
+//            user.authorize( login );
 //            user.setPassword( password );
 //            users.put( login, user );
 //            return true;

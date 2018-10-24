@@ -62,7 +62,7 @@ public class ConnectionServiceBean implements ConnectionService {
      * @return Connection matches specified client socket.
      */
     @Nullable
-    public Connection getByLogin( String login ) {
+    public Connection get(String login ) {
         if( login == null ) {
             return null;
         }
@@ -75,8 +75,7 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Adds connection with specified socket.
-     * @param socket - client socket.
+     * @inheritDoc
      */
     public void add(@Nullable final Socket socket ) {
         if( socket == null ) {
@@ -100,11 +99,9 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Sets login for specified socket.
-     * @param socket - client socket.
-     * @param login - client login.
+     * @inheritDoc
      */
-    public void setLogin(@Nullable final Socket socket, @Nullable final String login) {
+    public void authorize(@Nullable final Socket socket, @Nullable final String login) {
         Connection connection = get(socket);
         if( connection != null ) {
             connection.setLogin( login );
@@ -131,26 +128,28 @@ public class ConnectionServiceBean implements ConnectionService {
 
     @Override
     @SneakyThrows
-    public void sendUnicast(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+    public boolean sendUnicast(@NotNull final String sender, @NotNull final String receiver, @NotNull final String message) {
+        Connection connection = get( receiver );
         if( connection == null || connection.getLogin() == null ) {
-            return;
+            return false;
         }
 
-        @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
+        @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( sender, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         connection.send( objectMapper.writeValueAsString( packet ) );
+        return true;
     }
 
     @Override
-    public void sendBroadcast(@Nullable String login, @Nullable String message) {
+    public void sendBroadcast(@NotNull final String sender, @NotNull final String message) {
         for( final Map.Entry<Socket, Connection> receiverConnection : connections.entrySet() ) {
-            sendBroadcastToConnection( receiverConnection.getValue(), login,  message );
+            sendBroadcastToConnection( receiverConnection.getValue(), sender,  message );
         }
     }
 
-    @Override
+
     @SneakyThrows
-    public void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+    private void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
         if( connection == null || connection.getLogin() == null ) {
             return;
         }
