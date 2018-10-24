@@ -2,7 +2,7 @@ package ru.ryabtsev.se.server.service;
 
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.Nullable;
-import ru.ryabtsev.se.packets.User;
+import ru.ryabtsev.se.User;
 import ru.ryabtsev.se.server.jdbc.JdbcConnectionManager;
 import ru.ryabtsev.se.server.jdbc.dto.UserRegistrationDTO;
 

@@ -1,6 +1,5 @@
 package ru.ryabtsev.se.client.handler;
 
-import lombok.SneakyThrows;
 import ru.ryabtsev.se.client.Client;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
 
@@ -21,7 +20,7 @@ public class ClientMessageReadHandler {
 
     public void handle(@ObservesAsync ClientMessageReadEvent event) {
         try {
-            final String message = client.getIn().readUTF();
+            final String message = client.getInputStream().readUTF();
             System.out.println("New message: " + message );
             clientMessageReadEvent.fireAsync( new ClientMessageReadEvent() );
         }

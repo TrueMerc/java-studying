@@ -3,6 +3,7 @@ package ru.ryabtsev.se.client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import ru.ryabtsev.se.User;
 import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
@@ -16,15 +17,18 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * Console client implementation
+ * Console client implementation.
  */
 @Getter
 @ApplicationScoped
 @NoArgsConstructor
 public class ClientBean implements Client {
 
+    /**
+     * Network configuration.
+     */
     @Inject
-    NetworkConfiguration networkConfiguration;
+    private NetworkConfiguration networkConfiguration;
 
     @Inject
     private Event<ClientMessageReadEvent> clientMessageReadEvent;
@@ -32,12 +36,21 @@ public class ClientBean implements Client {
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
 
+
+    /**
+     * User data like login, password, e.t.c.
+     */
+    private User userData;
+
     private Socket socket;
 
     private DataInputStream in;
 
     private DataOutputStream out;
 
+    /**
+     * @InheritDoc
+     */
     @Override
     @SneakyThrows
     public void run() {
@@ -50,12 +63,20 @@ public class ClientBean implements Client {
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 
+
+    /**
+     * @InheritDoc
+     */
     @Override
     @SneakyThrows
     public void send( final String message ) {
         out.writeUTF( message );
     }
 
+
+    /**
+     * @InheritDoc
+     */
     @Override
     public String receive() {
         String result = null;
@@ -69,6 +90,10 @@ public class ClientBean implements Client {
         return result;
     }
 
+    /**
+     * @InheritDoc
+     */
+    @Override
     @SneakyThrows
     public void exit( ) {
         socket.close();

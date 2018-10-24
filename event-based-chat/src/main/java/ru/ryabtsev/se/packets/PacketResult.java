@@ -14,6 +14,8 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PacketResult extends Packet {
 
+    private Boolean success = false;
+
     {
         setType( PacketType.RESULT );
     }
@@ -21,7 +23,5 @@ public class PacketResult extends Packet {
     public PacketResult( Boolean success ) {
         this.success = success;
     }
-
-    private Boolean success = true;
 }
 
