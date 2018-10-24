@@ -144,21 +144,19 @@ public class ConnectionServiceBean implements ConnectionService {
     @Override
     public void sendBroadcast(@Nullable String login, @Nullable String message) {
         for( final Map.Entry<Socket, Connection> receiverConnection : connections.entrySet() ) {
-            sendMessage( receiverConnection.getValue(), login,  message );
+            sendBroadcastToConnection( receiverConnection.getValue(), login,  message );
         }
     }
 
     @Override
     @SneakyThrows
-    public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+    public void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
         if( connection == null || connection.getLogin() == null ) {
             return;
         }
 
-        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
+        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse( login, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        packet.setLogin( login );
-        packet.setMessage( message );
         connection.send( objectMapper.writeValueAsString( packet ) );
     }
 

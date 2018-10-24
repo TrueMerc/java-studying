@@ -21,7 +21,7 @@ public interface ConnectionService {
 
     void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success);
 
-    void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message);
+    void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message);
 
     void sendUnicast(@Nullable Connection connection, @Nullable String login, @Nullable String message);
 
