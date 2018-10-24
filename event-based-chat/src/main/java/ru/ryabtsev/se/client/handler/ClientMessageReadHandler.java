@@ -20,12 +20,11 @@ public class ClientMessageReadHandler {
 
     public void handle(@ObservesAsync ClientMessageReadEvent event) {
         try {
-            final String message = client.getInputStream().readUTF();
+            final String message = client.receive();
             System.out.println("New message: " + message );
             clientMessageReadEvent.fireAsync( new ClientMessageReadEvent() );
         }
         catch (final IOException exception) {
-            //exception.printStackTrace();
             System.out.println("Connection stopped by server.");
             client.exit();
         }

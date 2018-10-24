@@ -19,7 +19,6 @@ import java.net.Socket;
 /**
  * Console client implementation.
  */
-@Getter
 @ApplicationScoped
 @NoArgsConstructor
 public class ClientBean implements Client {
@@ -35,7 +34,6 @@ public class ClientBean implements Client {
 
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
-
 
     /**
      * User data like login, password, e.t.c.
@@ -63,7 +61,6 @@ public class ClientBean implements Client {
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 
-
     /**
      * @InheritDoc
      */
@@ -73,21 +70,18 @@ public class ClientBean implements Client {
         out.writeUTF( message );
     }
 
-
     /**
      * @InheritDoc
      */
     @Override
-    public String receive() {
-        String result = null;
+    public String receive() throws IOException {
         try {
-            result = in.readUTF();
+            return in.readUTF();
         }
-        catch (IOException e) {
+        catch (IOException exception) {
             System.out.println("Client receive() exception");
+            throw exception;
         }
-
-        return result;
     }
 
     /**
@@ -100,5 +94,4 @@ public class ClientBean implements Client {
         System.out.println( "Client disconnected." );
         System.exit( 0 );
     }
-
 }

@@ -3,6 +3,7 @@ package ru.ryabtsev.se.client;
 import ru.ryabtsev.se.api.Application;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * Client application interface.
@@ -19,13 +20,7 @@ public interface Client extends Application {
      * Receives message from server.
      * @return server message.
      */
-    String receive();
-
-    /**
-     * Returns client application input stream.
-     * @return input stream.
-     */
-    DataInputStream getInputStream();
+    String receive() throws IOException;
 
     /**
      * Stops application execution and releases all application resources.

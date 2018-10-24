@@ -38,9 +38,7 @@ public class ClientMessageRegistryHandler {
         @NotNull final String password = in.nextLine();
 
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        @NotNull final PacketRegistryRequest packet = new PacketRegistryRequest();
-        packet.setLogin( login );
-        packet.setPassword( password );
+        @NotNull final PacketRegistryRequest packet = new PacketRegistryRequest( login, password );
 
         client.send( objectMapper.writeValueAsString(packet) );
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
