@@ -44,7 +44,7 @@ public class ServerBroadcastHandler {
         System.out.println("Sending broadcast message.");
 //        for( final Connection receiverConnection : connectionService.getConnections() ) {
 //
-//            connectionService.sendMessage( receiverConnection, login,  broadcastMessage );
+//            connectionService.sendBroadcastToConnection( receiverConnection, login,  broadcastMessage );
 //        }
         connectionService.sendBroadcast( login, broadcastMessage );
     }

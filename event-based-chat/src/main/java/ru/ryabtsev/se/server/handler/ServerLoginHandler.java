@@ -33,7 +33,7 @@ public class ServerLoginHandler {
         boolean check = userService.check( login, packet.getPassword() );
         if( check ) {
             System.out.println("User " + login + " successfully logged in.");
-            connectionService.setLogin( socket, login );
+            connectionService.authorize( socket, login );
         }
         else {
             System.out.println( "Incorrect password for login " + login);

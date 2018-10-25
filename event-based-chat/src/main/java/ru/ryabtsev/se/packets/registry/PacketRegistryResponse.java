@@ -20,6 +20,10 @@ public class PacketRegistryResponse extends PacketResult {
         setType(PacketType.REGISTRY_RESPONSE);
     }
 
+    /**
+     * Constructs server registry response packet.
+     * @param success - registration success.
+     */
     PacketRegistryResponse( Boolean success ) {
         super( success );
     }

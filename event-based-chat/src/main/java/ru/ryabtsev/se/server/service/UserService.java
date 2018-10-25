@@ -1,7 +1,7 @@
 package ru.ryabtsev.se.server.service;
 
 import org.jetbrains.annotations.Nullable;
-import ru.ryabtsev.se.packets.User;
+import ru.ryabtsev.se.User;
 
 public interface UserService {
 

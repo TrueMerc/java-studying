@@ -15,4 +15,6 @@ public class ChatCommands {
     public static final String CMD_REGISTRY = "--registry";
 
     public static final String CMD_SET_NICKNAME = "--set-nickname";
+
+    public static final String CMD_HISTORY = "--history";
 }

@@ -73,6 +73,7 @@ public class ServerMessageInputHandler {
             case UNICAST_REQUEST:
                 serverUnicastEvent.fireAsync( new ServerUnicastEvent( socket, message ) );
                 break;
+
             case SETNICKNAME_REQUEST:
                 serverSetNicknameEvent.fireAsync( new ServerSetNicknameEvent( socket, message) );
                 break;
