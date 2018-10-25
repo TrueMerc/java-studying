@@ -5,9 +5,7 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import ru.ryabtsev.se.client.ClientBean;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
-import ru.ryabtsev.se.client.event.ClientMessageLoginEvent;
 import ru.ryabtsev.se.client.event.ClientMessageRegistryEvent;
-import ru.ryabtsev.se.packets.login.PacketLoginRequest;
 import ru.ryabtsev.se.packets.registry.PacketRegistryRequest;
 
 import javax.enterprise.context.ApplicationScoped;

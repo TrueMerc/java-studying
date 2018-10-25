@@ -29,7 +29,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionServiceBean implements ConnectionService {
 
-    private final static long AUTHORIZATION_TIMEOUT = 1500000;
+    private final static long AUTHORIZATION_TIMEOUT = 150000;
 
     private final Map<Socket, Connection> connections = new LinkedHashMap<>();
 

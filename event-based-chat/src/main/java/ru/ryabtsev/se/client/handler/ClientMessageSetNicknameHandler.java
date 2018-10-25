@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
 import ru.ryabtsev.se.client.ClientBean;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
-import ru.ryabtsev.se.client.event.ClientMessageLoginEvent;
 import ru.ryabtsev.se.client.event.ClientMessageSetNicknameEvent;
 import ru.ryabtsev.se.packets.nickname.PacketSetNicknameRequest;
 

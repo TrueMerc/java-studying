@@ -7,12 +7,22 @@ import lombok.Setter;
 import ru.ryabtsev.se.packets.PacketResult;
 import ru.ryabtsev.se.packets.PacketType;
 
+/**
+ * Login response packet.
+ */
 @Getter
-@Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PacketLoginResponse extends PacketResult {
     {
         setType( PacketType.LOGIN_RESPONSE );
+    }
+
+    /**
+     * Constructs login response packet.
+     * @param success - login procedure success sign.
+     */
+    PacketLoginResponse( boolean success ) {
+        super( success );
     }
 }

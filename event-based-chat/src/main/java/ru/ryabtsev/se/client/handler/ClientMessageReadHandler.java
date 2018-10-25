@@ -3,6 +3,7 @@ package ru.ryabtsev.se.client.handler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import ru.ryabtsev.se.client.Client;
+import ru.ryabtsev.se.client.event.ClientMessageLoginResponseEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
 import ru.ryabtsev.se.packets.Packet;
 import ru.ryabtsev.se.server.event.ServerBroadcastEvent;
@@ -26,6 +27,10 @@ public class ClientMessageReadHandler {
     @Inject
     private Client client;
 
+
+    @Inject
+    private Event<ClientMessageLoginResponseEvent> clientMessageLoginResponseEvent;
+
     @Inject
     private Event<ClientMessageReadEvent> clientMessageReadEvent;
 
@@ -46,8 +51,7 @@ public class ClientMessageReadHandler {
                     break;
 
                 case LOGIN_RESPONSE:
-                    //serverLogoutEvent.fireAsync( new ServerLogoutEvent( socket, message ) );
-                    System.out.println("Login response received.");
+                    clientMessageLoginResponseEvent.fireAsync( new ClientMessageLoginResponseEvent( message ) );
                     break;
 
                 case LOGOUT_RESPONSE:

@@ -39,6 +39,7 @@ public class ClientMessageBroadcastHandler {
         packet.setMessage( message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         client.send( objectMapper.writeValueAsString( packet ) );
+        client.write( "Me to all: " + message );
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 }

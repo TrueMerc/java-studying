@@ -7,6 +7,8 @@ import ru.ryabtsev.se.User;
 import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
+import ru.ryabtsev.se.logging.LogFile;
+import ru.ryabtsev.se.logging.Logable;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -15,6 +17,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
  * Console client implementation.
@@ -35,16 +38,21 @@ public class ClientBean implements Client {
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
 
-    /**
-     * User data like login, password, e.t.c.
-     */
-    private User userData;
 
     private Socket socket;
 
     private DataInputStream in;
 
     private DataOutputStream out;
+
+    /**
+     * User data like login, password, e.t.c.
+     */
+    private User userData;
+
+    private Logable log;
+
+    private boolean isAuthorized = false;
 
     /**
      * @InheritDoc
@@ -71,6 +79,40 @@ public class ClientBean implements Client {
     }
 
     /**
+     * @inheritDoc
+     */
+    @Override
+    public boolean isAuthorized() {
+        return isAuthorized;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setAuthorized(boolean isAuthorized) {
+        final String logFileSuffix = "-messages.txt";
+        this.isAuthorized = isAuthorized;
+        log = new LogFile(userData.getLogin() + logFileSuffix);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public User getUser() {
+        return userData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setUser(User user) {
+        userData = user;
+    }
+
+    /**
      * @InheritDoc
      */
     @Override
@@ -93,5 +135,25 @@ public class ClientBean implements Client {
         socket.close();
         System.out.println( "Client disconnected." );
         System.exit( 0 );
+    }
+
+    @Override
+    public void clear() {
+        log.clear();
+    }
+
+    @Override
+    public void write(String string) {
+        log.write( string );
+    }
+
+    @Override
+    public List<String> readAll() {
+        return log.readAll();
+    }
+
+    @Override
+    public List<String> readLast(int stringsNumber) {
+        return log.readLast( stringsNumber );
     }
 }
