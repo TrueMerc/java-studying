@@ -54,6 +54,10 @@ public class LogFile implements Logable {
 
     @Override
     public List<String> readLast(int stringsNumber) {
-        return null;
+        List<String> result = readAll();
+        while( result.size() > stringsNumber ) {
+            result.remove( 0 );
+        }
+        return result;
     }
 }

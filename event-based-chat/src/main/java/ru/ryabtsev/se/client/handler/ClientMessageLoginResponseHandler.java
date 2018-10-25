@@ -10,6 +10,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
 import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
+import java.util.List;
 
 /**
  * Handles login response events on client side.
@@ -34,5 +35,16 @@ public class ClientMessageLoginResponseHandler {
 
         final String messageToUser = loginResult ? "Successfully logged in." : "Log in failed.";
         System.out.println( messageToUser );
+
+        if( loginResult ) {
+            final int PRINT_LAST_MESSAGES_NUMBER = 100;
+            List<String> lastMessages = client.readLast( PRINT_LAST_MESSAGES_NUMBER );
+            if(lastMessages != null) {
+                System.out.println( "Last messages:" );
+                for( String logMessage : lastMessages ) {
+                    System.out.println( logMessage );
+                }
+            }
+        }
     }
 }
