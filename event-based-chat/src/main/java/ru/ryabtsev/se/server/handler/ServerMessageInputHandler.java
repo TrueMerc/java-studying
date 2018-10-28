@@ -13,6 +13,9 @@ import java.net.Socket;
 
 import static ru.ryabtsev.se.packets.PacketType.*;
 
+/**
+ * Handles clients requests.
+ */
 public class ServerMessageInputHandler {
 
     @Inject
@@ -39,7 +42,10 @@ public class ServerMessageInputHandler {
     @Inject
     private Event<ServerSetNicknameEvent> serverSetNicknameEvent;
 
-
+    /**
+     * Handles input message event.
+     * @param event - input message event.
+     */
     @SneakyThrows
     public void handle( @ObservesAsync final ServerMessageInputEvent event ) {
         System.out.println( "Server message input handler");
