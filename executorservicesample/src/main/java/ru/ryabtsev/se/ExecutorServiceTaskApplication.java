@@ -45,7 +45,7 @@ public class ExecutorServiceTaskApplication
         final NumberValue numberValue = new NumberValue(); // numberValue.value == 0
         final ExecutorService executor = Executors.newCachedThreadPool();
         executor.submit( new TaskSecond( numberValue ) ); // change numberValue.value to 1 if starts first.
-        Thread.currentThread().sleep(1); // this string delays start of TaskFirst so 
+        Thread.currentThread().sleep(1); // this string delays start of TaskFirst so only '1' symbols will be printed
         executor.submit( new TaskFirst( numberValue ) );
         System.out.println(numberValue.value);
         executor.shutdown();
