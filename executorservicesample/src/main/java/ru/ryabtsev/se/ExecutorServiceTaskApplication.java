@@ -32,7 +32,7 @@ class TaskSecond extends Thread {
 
     @Override
     public void run() {
-        numberValue.value = 2;
+        numberValue.value = 1;
     }
 }
 
@@ -41,17 +41,17 @@ class TaskSecond extends Thread {
  */
 public class ExecutorServiceTaskApplication
 {
-    public static void testCall() {
+    public static void testCall() throws InterruptedException {
         final NumberValue numberValue = new NumberValue(); // numberValue.value == 0
         final ExecutorService executor = Executors.newCachedThreadPool();
-        executor.submit( new TaskSecond( numberValue ) );
+        executor.submit( new TaskSecond( numberValue ) ); // change numberValue.value to 1 if starts first.
+        Thread.currentThread().sleep(1); // this string delays start of TaskFirst so 
         executor.submit( new TaskFirst( numberValue ) );
-        //System.out.println(numberValue.value);
+        System.out.println(numberValue.value);
         executor.shutdown();
     }
 
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws InterruptedException {
         for(int i = 0; i < 100; ++i) {
             testCall();
         }
