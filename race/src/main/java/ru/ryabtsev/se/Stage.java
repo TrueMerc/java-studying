@@ -1,7 +1,7 @@
 package ru.ryabtsev.se;
 
 /**
- * Race stage.
+ * Race stage. It is a base class for all race stage types.
  */
 public abstract class Stage {
 

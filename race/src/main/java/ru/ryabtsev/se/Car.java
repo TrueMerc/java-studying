@@ -2,6 +2,9 @@ package ru.ryabtsev.se;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Racing car.
+ */
 public class Car implements Runnable {
     private static int CARS_COUNT;
 

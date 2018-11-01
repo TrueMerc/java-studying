@@ -1,8 +1,10 @@
 package ru.ryabtsev.se;
 
-import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Finish stage.
+ */
 public class Finish extends Stage {
 
     private final ReentrantLock reentrantLock;

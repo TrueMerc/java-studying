@@ -3,7 +3,7 @@ package ru.ryabtsev.se;
 import java.util.concurrent.Semaphore;
 
 /**
- * Tunnel stage.
+ * Tunnel stage. Some cars may wait while tunnel will be free for ride.
  */
 public class Tunnel extends Stage {
 

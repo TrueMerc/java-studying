@@ -1,7 +1,5 @@
 package ru.ryabtsev.se;
 
-import com.sun.org.apache.xalan.internal.xsltc.cmdline.Compile;
-
 import java.util.concurrent.CountDownLatch;
 
 /**
