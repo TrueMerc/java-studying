@@ -19,12 +19,12 @@ public class Tunnel extends Stage {
     public void go(Car c) {
         try {
             try {
+                System.out.println(c.getName() + " готовится к этапу(ждет): " + description);
                 if( semaphore.hasQueuedThreads() ) {
                     System.out.println("ОЖИДАЕТ ОСВОБОЖДЕНИЯ ТОННЕЛЯ " + semaphore.getQueueLength() + " УЧАСТНИКОВ");
                 }
-                System.out.println(c.getName() + " готовится к этапу(ждет): " + description);
-                System.out.println(c.getName() + " начал этап: " + description);
                 semaphore.acquire();
+                System.out.println(c.getName() + " начал этап: " + description);
                 Thread.sleep(length / c.getSpeed() * 1000);
                 semaphore.release();
             } catch (InterruptedException e) {
