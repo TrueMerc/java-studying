@@ -15,7 +15,7 @@ public class RaceApplication {
 
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
 
-        Race race = new Race(new Road(60), new Tunnel( TUNNEL_CAPACITY ), new Road(40));
+        Race race = new Race(new Road(60), new Tunnel( TUNNEL_CAPACITY ), new Road(40), new Finish() );
 
         CountDownLatch countDownLatch = new CountDownLatch( CARS_COUNT );
         Car[] cars = new Car[CARS_COUNT];
