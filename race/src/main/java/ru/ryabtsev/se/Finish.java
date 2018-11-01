@@ -1,39 +1,32 @@
 package ru.ryabtsev.se;
 
-import java.lang.invoke.SwitchPoint;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class Finish extends Stage {
 
-    private final Semaphore semaphore;
+    private final ReentrantLock reentrantLock;
 
-    private static boolean HAS_WINNER;
-
-    static {
-        HAS_WINNER = false;
-    }
+    private static boolean hasWinner;
 
     public Finish() {
         this.length = 0;
         this.description = "Финиш";
-        this.semaphore = new Semaphore(1);
+        this.reentrantLock = new ReentrantLock();
+        this.hasWinner = false;
     }
 
 
     @Override
     public void go(Car c) {
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        if( !HAS_WINNER ) {
+        reentrantLock.lock();
+        if( !hasWinner ) {
             System.out.println( c.getName() + " ПОБЕДИЛ!!!");
-            HAS_WINNER = true;
+            hasWinner = true;
         }
         else {
             System.out.println( c.getName() + " финишировал.");
         }
-        semaphore.release();
+        reentrantLock.unlock();
     }
 }
