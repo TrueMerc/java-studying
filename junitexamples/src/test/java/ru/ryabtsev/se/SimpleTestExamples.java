@@ -10,6 +10,7 @@ import org.junit.Test;
  */
 public class SimpleTestExamples
 {
+    // Test for task 2.
     @Test(expected = RuntimeException.class)
     public void arrayWithoutTerminationDigit()
     {
@@ -18,6 +19,7 @@ public class SimpleTestExamples
         ArrayProcessor.removeAllBeforeLastTerminationNumber( array );
     }
 
+    // Test for task 2.
     @Test
     public void terminationDigitInTheMiddle() {
         int[] array = { 1, 3, 4, 5, 7 };
@@ -30,6 +32,7 @@ public class SimpleTestExamples
         }
     }
 
+    // Test for task 2.
     @Test
     public void terminationDigitAtTheEnd() {
         int[] array = { 4, 4, 4, 5, 4 };
@@ -38,6 +41,7 @@ public class SimpleTestExamples
         Assert.assertTrue( newArray.length == 0 );
     }
 
+    // Test for task 2.
     @Test
     public void homeworkDataTest() {
         int[] array = {  1, 2, 4, 4, 2, 3, 4, 1, 7 };
@@ -46,5 +50,40 @@ public class SimpleTestExamples
         Assert.assertTrue( newArray.length == 2);
         Assert.assertTrue( newArray[0] == 1);
         Assert.assertTrue( newArray[1] == 7);
+    }
+
+    // Test for task 3.
+    @Test(expected = RuntimeException.class)
+    public void arrayContainsUnexpectedNumber() {
+        int[] array = { 1, 4, 5, 4, 1 };
+        ArrayProcessor.checkThatArrayContainsUnitsAndFours( array );
+    }
+
+    // Test for task 3.
+    @Test
+    public void arrayContainsOnlyUnits() {
+        int[] array = { 1, 1, 1, 1, 1 };
+        Assert.assertFalse( ArrayProcessor.checkThatArrayContainsUnitsAndFours( array ) );
+    }
+
+    // Test for task 3.
+    @Test
+    public void arrayContainsOnlyFours() {
+        int[] array = { 4, 4, 4, 4, 4 };
+        Assert.assertFalse( ArrayProcessor.checkThatArrayContainsUnitsAndFours( array ) );
+    }
+
+    // Test for task 3.
+    @Test
+    public void arrayContainsOneUnitAndFours() {
+        int[] array = { 4, 1, 4, 4, 4 };
+        Assert.assertTrue( ArrayProcessor.checkThatArrayContainsUnitsAndFours( array ) );
+    }
+
+    // Test for task 3.
+    @Test
+    public void arrayContainsOneFourAndUnits() {
+        int[] array = { 1, 1, 1, 4, 1 };
+        Assert.assertTrue( ArrayProcessor.checkThatArrayContainsUnitsAndFours( array ) );
     }
 }
