@@ -3,6 +3,7 @@ package ru.ryabtsev.se.server;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.logging.log4j.Logger;
 import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.server.event.ServerCheckAuthorizationEvent;
 import ru.ryabtsev.se.server.event.ServerConnectionEvent;
@@ -29,6 +30,9 @@ public class ServerBean implements Server {
     @Inject
     private Event<ServerCheckAuthorizationEvent> serverCheckAuthorizationEvent;
 
+    @Inject
+    private transient Logger logger;
+
     private ServerSocket serverSocket;
 
     @Override
@@ -37,5 +41,6 @@ public class ServerBean implements Server {
         serverCheckAuthorizationEvent.fireAsync( new ServerCheckAuthorizationEvent() );
         serverSocket = new ServerSocket( networkConfiguration.getPort() );
         serverConnectionEvent.fire( new ServerConnectionEvent() );
+        logger.info( "Server started.");
     }
 }
