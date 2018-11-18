@@ -41,6 +41,6 @@ public class ServerBean implements Server {
         serverCheckAuthorizationEvent.fireAsync( new ServerCheckAuthorizationEvent() );
         serverSocket = new ServerSocket( networkConfiguration.getPort() );
         serverConnectionEvent.fire( new ServerConnectionEvent() );
-        logger.info( "Server started.");
+        logger.debug( "Server started.");
     }
 }
