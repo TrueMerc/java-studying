@@ -38,9 +38,10 @@ public class ServerBean implements Server {
     @Override
     @SneakyThrows
     public void run() {
+        logger.warn( "Server started.");
         serverCheckAuthorizationEvent.fireAsync( new ServerCheckAuthorizationEvent() );
         serverSocket = new ServerSocket( networkConfiguration.getPort() );
         serverConnectionEvent.fire( new ServerConnectionEvent() );
-        logger.debug( "Server started.");
+
     }
 }

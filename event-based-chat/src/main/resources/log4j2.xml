@@ -6,17 +6,23 @@
             <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
         <File name="ServerTraceFileLog" filename="server_trace_file.log" bufferedIO = "true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
     <Loggers>
-        <Logger name="log4j.test.Log4jTest" level="trace">
+        <Logger name="log4j.test.Log4jTest" level="debug">
             <AppenderRef ref="Console"/>
         </Logger>
         <!--<Root level="trace">-->
             <!--<AppenderRef ref="Console"/>-->
         <!--</Root>-->
-        <Root level="trace">
+        <Logger name="org.apache.logging.log4j.Logger" level="debug">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Root level="warn">
             <AppenderRef ref="ServerTraceFileLog"/>
+            <AppenderRef ref="Console"/>
         </Root>
     </Loggers>
 </Configuration>
+
