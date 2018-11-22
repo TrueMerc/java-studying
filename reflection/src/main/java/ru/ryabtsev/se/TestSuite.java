@@ -5,35 +5,27 @@ import ru.ryabtsev.se.annotation.BeforeSuite;
 import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
 
+/**
+ * Test suite example.
+ */
 public class TestSuite {
+
+    @BeforeSuite
+    public void initialization() {
+        System.out.println("Initialization called.");
+    }
+
+    @AfterSuite
+    public void finalization() {
+        System.out.println("Finalization called.");
+    }
 
     @Test
     @Priority(value = 10)
     public void firstTest() {
         System.out.println("First test.");
+
     }
-
-    @BeforeSuite
-    public void initialization() {
-        System.out.println("Initialization called!");
-    }
-
-//    @BeforeSuite
-//    public void initializationTwo() {
-//        System.out.println("Initialization called!");
-//    }
-
-//    @AfterSuite
-//    public void finalization() {
-//        System.out.println("Finalization called!");
-//    }
-
-//    @AfterSuite
-//    public void finalizationTwo() {
-//        System.out.println("Finalization called!");
-//    }
-
-
 
     @Test
     public void secondTest() {

@@ -4,10 +4,10 @@ import ru.ryabtsev.se.annotation.AfterSuite;
 import ru.ryabtsev.se.annotation.BeforeSuite;
 import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
-import ru.ryabtsev.se.exception.AnnotationErrorTestSuiteException;
-import ru.ryabtsev.se.exception.FinalizationFailureTestSuiteException;
+import ru.ryabtsev.se.exception.AnnotationErrorException;
+import ru.ryabtsev.se.exception.FinalizationException;
 import ru.ryabtsev.se.exception.TestSuiteException;
-import ru.ryabtsev.se.exception.UninitializedTestSuiteException;
+import ru.ryabtsev.se.exception.InitializationException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -29,7 +29,10 @@ import java.util.List;
  */
 public class TestExecutor {
 
-    enum TestSuiteMethodType {
+    /**
+     * General types of methods in test suite.
+     */
+    private enum TestSuiteMethodType {
 
         BEFORE_SUITE_METHOD(0),
         AFTER_SUITE_METHOD(1),
@@ -38,10 +41,17 @@ public class TestExecutor {
 
         private int value;
 
+        /**
+         * Constructor.
+         * @param value - integer value which corresponding method type.
+         */
         TestSuiteMethodType(final int value) {
             this.value = value;
         }
 
+        /**
+         * @return Integer value which corresponding method type.
+         */
         int getValue() {
             return value;
         }
@@ -49,7 +59,7 @@ public class TestExecutor {
 
     /**
      * Executes test suite.
-     * @param testSuiteName - test suite class name.
+     * @param testSuiteName test suite class name.
      * @return Test suite execution result.
      * @throws ClassNotFoundException if class with specified name doesn't exist.
      */
@@ -60,12 +70,12 @@ public class TestExecutor {
 
     /**
      * Executes test suite.
-     * @param testSuite - test suite class.
+     * @param testSuite test suite class.
      * @return Test suite execution result.
      */
     public static TestSuiteExecutionResult start( Class testSuite ) throws TestSuiteException {
 
-        List<Method> executionList = new ArrayList<>();
+        final List<Method> executionList = new ArrayList<>();
         Method beforeSuiteMethod = null;
         Method afterSuiteMethod = null;
         Method[] methods = testSuite.getMethods();
@@ -112,7 +122,7 @@ public class TestExecutor {
     /**
      * Returns test suite method type.
      */
-    private static TestSuiteMethodType getMethodType( Method method ) throws AnnotationErrorTestSuiteException {
+    private static TestSuiteMethodType getMethodType( Method method ) throws AnnotationErrorException {
 
         boolean annotationChecks[] = { false, false, false };
 
@@ -133,7 +143,7 @@ public class TestExecutor {
             counter += annotationChecks[i] ? 1 : 0;
             index = annotationChecks[i] ? i : index;
             if( counter > 1) {
-                throw new AnnotationErrorTestSuiteException( "Different annotation applied to one method." );
+                throw new AnnotationErrorException( "Different annotation applied to one method." );
             }
         }
 
@@ -142,23 +152,28 @@ public class TestExecutor {
 
     /**
      * Initializes test suite.
-     * @param method - initialization method.
-     * @param testSuite - test suite class.
-     * @throws UninitializedTestSuiteException
+     * @param method initialization method.
+     * @param testSuite test suite class.
+     * @throws InitializationException
      */
-    private static void initialize(final Method method, final Class testSuite) throws UninitializedTestSuiteException {
+    private static void initialize(final Method method, final Class testSuite) throws InitializationException {
         try {
             if (method == null) {
-                throw new UninitializedTestSuiteException();
+                throw new InitializationException();
             }
-            TestSuite testSuiteInstance = new TestSuite();
-            method.invoke( testSuiteInstance );
+            method.invoke( testSuite.getConstructor().newInstance() );
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new UninitializedTestSuiteException();
+            throw new InitializationException();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            throw new UninitializedTestSuiteException();
+            throw new InitializationException();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new InitializationException();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new InitializationException();
         }
     }
 
@@ -191,21 +206,25 @@ public class TestExecutor {
      * Finalizes test suite.
      * @param method - finalization method.
      * @param testSuite - test suite class.
-     * @throws FinalizationFailureTestSuiteException
+     * @throws FinalizationException
      */
-    private static void finalize(final Method method, final Class testSuite) throws FinalizationFailureTestSuiteException {
+    private static void finalize(final Method method, final Class testSuite) throws FinalizationException {
         try {
             if (method == null) {
-                throw new FinalizationFailureTestSuiteException();
+                throw new FinalizationException();
             }
-            TestSuite testSuiteInstance = new TestSuite();
-            method.invoke( testSuiteInstance );
+            method.invoke( testSuite.getConstructor().newInstance() );
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            throw new FinalizationFailureTestSuiteException();
+            throw new FinalizationException();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
-            throw new FinalizationFailureTestSuiteException();
+            throw new FinalizationException();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            throw new InitializationException();
         }
     }
 

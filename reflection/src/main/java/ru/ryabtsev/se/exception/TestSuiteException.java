@@ -5,8 +5,12 @@ package ru.ryabtsev.se.exception;
  */
 public class TestSuiteException extends RuntimeException {
 
-    public TestSuiteException( String description ) {
-        super( description );
+    /**
+     * Constructor.
+     * @param message - exception message.
+     */
+    public TestSuiteException( String message) {
+        super( message );
     }
 
 
