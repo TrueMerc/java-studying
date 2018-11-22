@@ -77,7 +77,7 @@ public class TestExecutor {
                         beforeSuiteMethod = method;
                     }
                     else {
-                        throw new TestSuiteException( "There is should be only one @BeforeSuite annotated method." );
+                        throw new TestSuiteException( "There should be only one @BeforeSuite annotated method." );
                     }
                     break;
                 case AFTER_SUITE_METHOD:
@@ -85,7 +85,7 @@ public class TestExecutor {
                         afterSuiteMethod = method;
                     }
                     else {
-                        throw new TestSuiteException( "There is should be only one @AfterSuite annotated method." );
+                        throw new TestSuiteException( "There should be only one @AfterSuite annotated method." );
                     }
                     break;
                 case TEST_METHOD:
@@ -169,9 +169,8 @@ public class TestExecutor {
      * @return Test result.
      */
     private static boolean executeTest(final Method testMethod, final Class testSuite) {
-        TestSuite testSuiteInstance = new TestSuite();
         try {
-            testMethod.invoke(testSuiteInstance);
+            testMethod.invoke(  testSuite.getConstructor().newInstance() );
             return true;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -179,7 +178,11 @@ public class TestExecutor {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
             return false;
-        } finally {
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            return false;
+        } catch (InstantiationException e) {
+            e.printStackTrace();
             return false;
         }
     }

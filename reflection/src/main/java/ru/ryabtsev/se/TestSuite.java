@@ -18,10 +18,22 @@ public class TestSuite {
         System.out.println("Initialization called!");
     }
 
-    @AfterSuite
-    public void finalization() {
-        System.out.println("Finalization called!");
-    }
+//    @BeforeSuite
+//    public void initializationTwo() {
+//        System.out.println("Initialization called!");
+//    }
+
+//    @AfterSuite
+//    public void finalization() {
+//        System.out.println("Finalization called!");
+//    }
+
+//    @AfterSuite
+//    public void finalizationTwo() {
+//        System.out.println("Finalization called!");
+//    }
+
+
 
     @Test
     public void secondTest() {
