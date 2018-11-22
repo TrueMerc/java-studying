@@ -6,11 +6,18 @@ package ru.ryabtsev.se.exception;
 public class FinalizationException extends TestSuiteException {
     private static final String DEFAULT_DESCRIPTION = "Test suite finalization was failed!";
 
+    /**
+     * Constructor.
+     */
     public FinalizationException() {
         super(DEFAULT_DESCRIPTION);
     }
 
-    public FinalizationException(String description) {
-        super(description);
+    /**
+     * Constructor.
+     * @param message exception message.
+     */
+    public FinalizationException(String message) {
+        super(message);
     }
 }

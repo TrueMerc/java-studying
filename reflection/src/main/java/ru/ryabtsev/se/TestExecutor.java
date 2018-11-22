@@ -4,10 +4,7 @@ import ru.ryabtsev.se.annotation.AfterSuite;
 import ru.ryabtsev.se.annotation.BeforeSuite;
 import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
-import ru.ryabtsev.se.exception.AnnotationErrorException;
-import ru.ryabtsev.se.exception.FinalizationException;
-import ru.ryabtsev.se.exception.TestSuiteException;
-import ru.ryabtsev.se.exception.InitializationException;
+import ru.ryabtsev.se.exception.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -187,7 +184,11 @@ public class TestExecutor {
         try {
             testMethod.invoke(  testSuite.getConstructor().newInstance() );
             return true;
-        } catch (IllegalAccessException e) {
+        } catch (AssertionFailureException e) {
+            e.getMessage();
+            return false;
+        }
+        catch (IllegalAccessException e) {
             e.printStackTrace();
             return false;
         } catch (InvocationTargetException e) {
