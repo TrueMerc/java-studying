@@ -6,6 +6,7 @@ import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
 import ru.ryabtsev.se.exception.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -106,10 +107,7 @@ public class TestExecutor {
 
         initialize(beforeSuiteMethod, testSuite);
         sortByPriority(executionList);
-        int succeeded = 0;
-        for (Method testMethod : executionList) {
-            succeeded += executeTest(testMethod, testSuite) ? 1 : 0;
-        }
+        int succeeded = execute( executionList, testSuite );
         finalize(afterSuiteMethod, testSuite);
 
         return new TestSuiteExecutionResult(succeeded, executionList.size() - succeeded);
@@ -149,7 +147,6 @@ public class TestExecutor {
 
     /**
      * Initializes test suite.
-     *
      * @param method    initialization method.
      * @param testSuite test suite class.
      * @throws InitializationException
@@ -162,6 +159,28 @@ public class TestExecutor {
             e.printStackTrace();
             throw new InitializationException();
         }
+    }
+
+
+    /**
+     * Executes
+     * @param methods
+     * @param testSuite
+     * @return
+     */
+    private static int execute(final List<Method> methods, final Class testSuite) {
+        int succeeded = 0;
+        for (Method testMethod : methods) {
+            System.out.println("Executing method: " + testMethod.getName() );
+            if( executeTest(testMethod, testSuite) ) {
+                succeeded += 1;
+                System.out.println("Test passed!");
+            }
+            else {
+                System.out.println("Test failed!");
+            }
+        }
+        return succeeded;
     }
 
     /**
@@ -178,9 +197,12 @@ public class TestExecutor {
         } catch (AssertionFailureException e) {
             e.getMessage();
             return false;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
             return false;
+        } catch (InvocationTargetException e) {
+            Test annotation = testMethod.getAnnotation( Test.class );
+            return annotation.expected() == e.getCause().getClass();
         }
     }
 
