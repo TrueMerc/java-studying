@@ -4,6 +4,8 @@ import ru.ryabtsev.se.annotation.AfterSuite;
 import ru.ryabtsev.se.annotation.BeforeSuite;
 import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
+import ru.ryabtsev.se.exception.AssertionFailureException;
+import ru.ryabtsev.se.exception.TestSuiteException;
 
 /**
  * Test suite example.
@@ -39,4 +41,12 @@ public class TestSuite {
         System.out.println("Third test.");
         Assert.assertFalse( false );
     }
+
+    @Test(expected = AssertionFailureException.class)
+    @Priority(value = 7)
+    public void fourthTest() {
+        System.out.println("Fourth test.");
+        throw new TestSuiteException("Test suite exception.");
+    }
+
 }

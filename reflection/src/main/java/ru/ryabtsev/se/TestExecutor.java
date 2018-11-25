@@ -6,6 +6,7 @@ import ru.ryabtsev.se.annotation.Priority;
 import ru.ryabtsev.se.annotation.Test;
 import ru.ryabtsev.se.exception.*;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,7 +51,7 @@ public class TestExecutor {
         /**
          * @return Integer value which corresponding method type.
          */
-        int getValue() {
+        public int getValue() {
             return value;
         }
     }
@@ -106,10 +107,7 @@ public class TestExecutor {
 
         initialize(beforeSuiteMethod, testSuite);
         sortByPriority(executionList);
-        int succeeded = 0;
-        for (Method testMethod : executionList) {
-            succeeded += executeTest(testMethod, testSuite) ? 1 : 0;
-        }
+        int succeeded = execute( executionList, testSuite );
         finalize(afterSuiteMethod, testSuite);
 
         return new TestSuiteExecutionResult(succeeded, executionList.size() - succeeded);
@@ -123,18 +121,19 @@ public class TestExecutor {
         boolean annotationChecks[] = {false, false, false};
 
         if (method.getAnnotation(BeforeSuite.class) != null) {
-            annotationChecks[0] = true;
+            annotationChecks[TestSuiteMethodType.BEFORE_SUITE_METHOD.getValue()] = true;
         }
 
         if (method.getAnnotation(AfterSuite.class) != null) {
-            annotationChecks[1] = true;
+            annotationChecks[TestSuiteMethodType.AFTER_SUITE_METHOD.getValue()] = true;
         }
 
         if (method.getAnnotation(Test.class) != null) {
-            annotationChecks[2] = true;
+            annotationChecks[TestSuiteMethodType.TEST_METHOD.getValue()] = true;
         }
 
-        int index = 3;
+        final int POSSIBLE_TEST_SUITE_METHOD_TYPES_NUMBER = 3;
+        int index = POSSIBLE_TEST_SUITE_METHOD_TYPES_NUMBER;
         for (int i = 0, counter = 0; i < annotationChecks.length; ++i) {
             counter += annotationChecks[i] ? 1 : 0;
             index = annotationChecks[i] ? i : index;
@@ -148,7 +147,6 @@ public class TestExecutor {
 
     /**
      * Initializes test suite.
-     *
      * @param method    initialization method.
      * @param testSuite test suite class.
      * @throws InitializationException
@@ -161,6 +159,28 @@ public class TestExecutor {
             e.printStackTrace();
             throw new InitializationException();
         }
+    }
+
+
+    /**
+     * Executes
+     * @param methods
+     * @param testSuite
+     * @return
+     */
+    private static int execute(final List<Method> methods, final Class testSuite) {
+        int succeeded = 0;
+        for (Method testMethod : methods) {
+            System.out.println("Executing method: " + testMethod.getName() );
+            if( executeTest(testMethod, testSuite) ) {
+                succeeded += 1;
+                System.out.println("Test passed!");
+            }
+            else {
+                System.out.println("Test failed!");
+            }
+        }
+        return succeeded;
     }
 
     /**
@@ -177,9 +197,12 @@ public class TestExecutor {
         } catch (AssertionFailureException e) {
             e.getMessage();
             return false;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException e) {
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException e) {
             e.printStackTrace();
             return false;
+        } catch (InvocationTargetException e) {
+            Test annotation = testMethod.getAnnotation( Test.class );
+            return annotation.expected() == e.getCause().getClass();
         }
     }
 

@@ -11,4 +11,16 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Test {
+    /**
+     * @return Expected exception class.
+     */
+    Class<? extends Throwable> expected() default Test.None.class;
+
+    /**
+     * Dummy type which using when no any exception expected.
+     */
+    class None extends Throwable {
+         private None() {
+        }
+    }
 }

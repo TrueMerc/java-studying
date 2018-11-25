@@ -20,7 +20,6 @@ public class Assert {
         }
     }
 
-
     /**
      * Asserts that condition equals true.
      * If it isn't throws AssertionFailure exception.
