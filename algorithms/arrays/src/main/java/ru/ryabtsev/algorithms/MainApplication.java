@@ -5,23 +5,17 @@ package ru.ryabtsev.algorithms;
  */
 public class MainApplication
 {
-    private static final int DEFAULT_LENGTH = 10;
+    private static final int DEFAULT_LENGTH = 1000000;
     private static final int MAX_PRINTABLE_ELEMENTS = 50;
-
 
     private static final float MIN_ELEMENT = -1000f;
     private static final float MAX_ELEMENT = 1000f;
-
-
 
     public static void main( String[] args )
     {
         final float[] array = new float[DEFAULT_LENGTH];
 
-        // Fill array with random numbers.
-        for( int i = 0; i < array.length; ++i) {
-            array[i] = getRandom();
-        }
+        fill( array );
 
         print( array );
 
@@ -61,6 +55,13 @@ public class MainApplication
         millis = System.currentTimeMillis() - millis;
         System.out.println("Insertion sorting time = " + millis + " milliseconds.");
         print( insertedElementArray );
+    }
+
+    static void fill( float[] array) {
+        // Fill array with random numbers.
+        for( int i = 0; i < array.length; ++i) {
+            array[i] = getRandom();
+        }
     }
 
     static float getRandom() {
@@ -110,7 +111,7 @@ public class MainApplication
         return -1;
     }
 
-    static void change(float[] array, int index1, int index2) {
+    static void swap(float[] array, int index1, int index2) {
         float temp = array[index1];
         array[index1] = array[index2];
         array[index2] = temp;
@@ -120,8 +121,8 @@ public class MainApplication
         int out, in;
         for ( out = array.length - 1; out >= 1; --out) {
             for(in = 0; in < out; ++in){
-                if (array[in] > array[in+1]) {
-                    change(array, in, in+1);
+                if (array[in] > array[in + 1]) {
+                    swap(array, in, in + 1);
                 }
             }
         }
@@ -136,13 +137,13 @@ public class MainApplication
                     mark = in;
                 }
             }
-            change(array, out, mark);
+            swap(array, out, mark);
         }
     }
 
     static void insertionSorting(float[] array) {
         int in, out;
-        for(out = 1;out < array.length; out++){
+        for(out = 1; out < array.length; ++out){
             float temp = array[out];
             in = out;
             while(in > 0 && array[in - 1] >=temp){
