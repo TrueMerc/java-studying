@@ -1,5 +1,6 @@
 package ru.ryabtsev.algorithms;
 
+import ru.ryabtsev.algorithms.collections.PriorityQueue;
 import ru.ryabtsev.algorithms.collections.Queue;
 import ru.ryabtsev.algorithms.collections.Stack;
 
@@ -18,6 +19,7 @@ public class MainApplication
     private static void processHomeworkFirstPart() {
         processStack();
         processQueue();
+        processPriorityQueue();
     }
 
     private static void processStack() {
@@ -103,6 +105,54 @@ public class MainApplication
         }
         else {
             System.out.println(queue);
+        }
+
+        System.out.println("...COMPLETE");
+    }
+
+    private static void processPriorityQueue() {
+        System.out.println("PRIORITY QUEUE STRUCTURE TESTING...");
+
+        final int depth = 4;
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(depth);
+
+        if(!priorityQueue.isEmpty()) {
+            System.out.println("Priority queue construction error.");
+        }
+
+        System.out.println("Testing 'insert'....");
+
+        for( int i = 0; !priorityQueue.isFull() && i < depth; ++i ) {
+            int priority = (i % 2 == 0) ? 2 * (i + 1) : i;
+            System.out.println(priorityQueue);
+            priorityQueue.insert(priority);
+        }
+
+        if(!priorityQueue.isFull()) {
+            System.out.println("Priority queue 'insert' error.");
+        }
+        else {
+            System.out.println(priorityQueue);
+        }
+
+        System.out.println("Testing 'peek'....");
+        if( priorityQueue.peek() != 6 ) {
+            System.out.println("Queue 'peek' error.");
+        }
+
+
+        System.out.println("Testing 'remove'....");
+
+        while( !priorityQueue.isEmpty() ) {
+            System.out.println(priorityQueue);
+            priorityQueue.remove();
+        }
+
+        if(!priorityQueue.isEmpty()) {
+            System.out.println("Priority queue 'remove' error.");
+        }
+        else {
+            System.out.println(priorityQueue);
         }
 
         System.out.println("...COMPLETE");
