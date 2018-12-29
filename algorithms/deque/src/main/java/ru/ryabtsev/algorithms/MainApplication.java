@@ -160,7 +160,35 @@ public class MainApplication
 
 
     private static void processHomeworkSecondPart() {
+        System.out.println("STRING REVERSION STARTED.");
+        String initialString = "My homework 3, part 2, test string";
+        final int length = initialString.length();
+        Stack<Character> stack = new Stack<>( length );
 
+        for( int i = 0; i < length; ++i ) {
+            stack.push(initialString.charAt(i));
+        }
+
+        StringBuilder revertedStringBuilder = new StringBuilder();
+
+        while( !stack.isEmpty() ) {
+            revertedStringBuilder.append(stack.pop());
+        }
+
+        String revertedString = revertedStringBuilder.toString();
+
+        if( revertedString.length() != length ) {
+            System.out.println("String length error!");
+            return;
+        }
+
+        for( int i = 0; i < length; ++i) {
+            if(initialString.charAt(i) != revertedString.charAt(length - 1 - i)) {
+                System.out.println("Reversion error at position " + i);
+                return;
+            }
+        }
+        System.out.println("STRING REVERSION COMPLETED.");
     }
 
     private static void processHomeworkThirdPart() {
