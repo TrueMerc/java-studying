@@ -2,12 +2,12 @@ package ru.ryabtsev.algorithms.collections;
 
 /**
  * Implements simple 'stack' structure with fixed depth.
+ * @param <T> stack element type.
  */
-public class Stack<T> {
+public class Stack<T> extends Buffer<T> {
 
     private static int EMPTY_INDEX = -1;
 
-    private Object[] buffer;
     private int top;
 
     /**
@@ -16,6 +16,13 @@ public class Stack<T> {
     public Stack(int depth) {
         top = EMPTY_INDEX;
         buffer = new Object[depth];
+    }
+
+    /**
+     * Returns stack depth.
+     */
+    public int depth() {
+        return super.size();
     }
 
     /**
@@ -49,31 +56,13 @@ public class Stack<T> {
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Stack (top)-->(bottom):\n");
+        stringBuilder.append("Stack [depth:" + depth() + "] (top)-->(bottom):\n");
         for(int i = top; i > EMPTY_INDEX; --i) {
             stringBuilder.append(getElement(i)).append(' ');
         }
-        if( top == EMPTY_INDEX) {
+        if( isEmpty() ) {
             stringBuilder.append("(empty)");
         }
         return stringBuilder.toString();
-    }
-
-    /**
-     * Returns buffer element by index.
-     * @param index
-     * @return element with given index.
-     */
-    private T getElement(int index) {
-        return (T)buffer[index];
-    }
-
-    /**
-     * Sets buffer element by index.
-     * @param element value.
-     * @param index element index.
-     */
-    private void setElement(T element, int index) {
-        buffer[index] = element;
     }
 }

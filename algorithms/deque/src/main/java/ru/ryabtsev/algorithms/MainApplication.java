@@ -27,7 +27,7 @@ public class MainApplication
             System.out.println(stack);
             stack.push(i);
         }
-        
+
         if(!stack.isFull()) {
             System.out.println("Stack 'push' error.");
         }
