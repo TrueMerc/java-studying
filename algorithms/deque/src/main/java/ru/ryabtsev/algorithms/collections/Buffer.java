@@ -9,9 +9,16 @@ class Buffer<T> {
     protected Object[] buffer;
 
     /**
-     * Returns buffer size.
+     * Constructs buffer.
      */
-    protected int size() {
+    protected Buffer(int size) {
+        buffer = new Object[size];
+    }
+
+    /**
+     * Returns buffer length.
+     */
+    protected int length() {
         return buffer.length;
     }
 

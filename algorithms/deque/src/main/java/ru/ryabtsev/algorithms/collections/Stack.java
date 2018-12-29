@@ -14,15 +14,15 @@ public class Stack<T> extends Buffer<T> {
      * Constructs new empty stack.
      */
     public Stack(int depth) {
+        super(depth);
         top = EMPTY_INDEX;
-        buffer = new Object[depth];
     }
 
     /**
      * Returns stack depth.
      */
     public int depth() {
-        return super.size();
+        return super.length();
     }
 
     /**
@@ -55,7 +55,7 @@ public class Stack<T> extends Buffer<T> {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Stack [depth:" + depth() + "] (top)-->(bottom):\n");
         for(int i = top; i > EMPTY_INDEX; --i) {
             stringBuilder.append(getElement(i)).append(' ');
