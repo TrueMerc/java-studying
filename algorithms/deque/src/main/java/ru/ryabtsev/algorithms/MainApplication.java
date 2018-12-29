@@ -1,5 +1,6 @@
 package ru.ryabtsev.algorithms;
 
+import ru.ryabtsev.algorithms.collections.Deque;
 import ru.ryabtsev.algorithms.collections.PriorityQueue;
 import ru.ryabtsev.algorithms.collections.Queue;
 import ru.ryabtsev.algorithms.collections.Stack;
@@ -192,7 +193,63 @@ public class MainApplication
     }
 
     private static void processHomeworkThirdPart() {
+        processDeque();
+    }
 
+    private static void processDeque() {
+        System.out.println("DEQUE STRUCTURE TESTING...");
+
+        final int depth = 6;
+        Deque<Integer> deque = new Deque<>(depth);
+
+        if(!deque.isEmpty()) {
+            System.out.println("Queue construction error.");
+        }
+
+        System.out.println("Testing 'insert'....");
+
+        for( int i = 0; !deque.isFull() && i < depth; ++i ) {
+            System.out.println(deque);
+            if( i % 2 == 0 ) {
+                deque.insertLeft(i);
+            }
+            else {
+                deque.insertRight(i);
+            }
+        }
+
+        if(!deque.isFull()) {
+            System.out.println("Queue 'insert' error.");
+        }
+        else {
+            System.out.println(deque);
+        }
+
+        System.out.println("Testing 'peek'....");
+        if( deque.peekLeft() != 4 ) {
+            System.out.println("Deque 'peek' error.");
+        }
+        if( deque.peekRight() != 5) {
+            System.out.println("Deque 'peek' error.");
+        }
+
+
+        System.out.println("Testing 'remove'....");
+
+        while( !deque.isEmpty() ) {
+            System.out.println(deque);
+            deque.removeLeft();
+            deque.removeRight();
+        }
+
+        if(!deque.isEmpty()) {
+            System.out.println("Queue 'remove' error.");
+        }
+        else {
+            System.out.println(deque);
+        }
+
+        System.out.println("...COMPLETE");
     }
 }
 
