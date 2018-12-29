@@ -22,7 +22,7 @@ public class Stack<T> {
      * Returns true if stack is empty or false in the another case.
      */
     public boolean isEmpty() {
-        return top < 0;
+        return top == EMPTY_INDEX;
     }
 
     /**
@@ -46,13 +46,15 @@ public class Stack<T> {
         setElement(element, ++top);
     }
 
-
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Stack (top)-->(bottom):\n");
         for(int i = top; i > EMPTY_INDEX; --i) {
             stringBuilder.append(getElement(i)).append(' ');
+        }
+        if( top == EMPTY_INDEX) {
+            stringBuilder.append("(empty)");
         }
         return stringBuilder.toString();
     }
