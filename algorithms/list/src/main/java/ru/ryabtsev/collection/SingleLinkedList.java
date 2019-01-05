@@ -18,7 +18,7 @@ public class SingleLinkedList<T> implements List<T> {
      */
     SingleLinkedList() {
         this.size = 0;
-        this.first = new Node(null);
+        this.first = null;
     }
 
     @Override
@@ -33,6 +33,11 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean contains(Object o) {
+       for( Node<T> current = first; current != null; current = current.next ) {
+            if(o.equals(current.item)) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -43,7 +48,12 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] array = new Object[this.size];
+        int index = 0;
+        for( Node<T> current = first; current != null; current = current.next) {
+            array[index++] = current.item;
+        }
+        return array;
     }
 
     @Override
@@ -53,13 +63,13 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        if(size != 0) {
+        if( !isEmpty() ) {
             Node<T> last = getLast();
             Node<T> newNode = new Node(t);
             last.next = newNode;
         }
         else {
-            first.item = t;
+            first = new Node(t);
         }
         ++this.size;
         return true;
