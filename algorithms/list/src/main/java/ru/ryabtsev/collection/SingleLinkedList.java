@@ -10,14 +10,25 @@ import java.util.ListIterator;
  * @param <T> type of objects in the list.
  */
 public class SingleLinkedList<T> implements List<T> {
+    private transient int size;
+    private transient Node<T> first;
+
+    /**
+     * Constructs empty single-linked list.
+     */
+    SingleLinkedList() {
+        this.size = 0;
+        this.first = new Node(null);
+    }
+
     @Override
     public int size() {
-        return 0;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return (0 == size);
     }
 
     @Override
@@ -42,7 +53,24 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        return false;
+        if(size != 0) {
+            Node<T> last = getLast();
+            Node<T> newNode = new Node(t);
+            last.next = newNode;
+        }
+        else {
+            first.item = t;
+        }
+        ++this.size;
+        return true;
+    }
+
+    private Node<T> getLast() {
+        Node<T> node = first;
+        while( node.next != null ) {
+            node = node.next;
+        }
+        return node;
     }
 
     @Override
@@ -123,5 +151,20 @@ public class SingleLinkedList<T> implements List<T> {
     @Override
     public List<T> subList(int i, int i1) {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return new String();
+    }
+
+    private static class Node<T> {
+        T item;
+        Node<T> next;
+
+        Node(T item) {
+            this.item = item;
+            this.next = null;
+        }
     }
 }
