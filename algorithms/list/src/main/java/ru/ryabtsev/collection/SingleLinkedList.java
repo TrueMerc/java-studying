@@ -186,7 +186,19 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public T remove(int i) {
-        return null;
+        T result;
+        if( i != 0 ) {
+            Node<T> previousNode = getNode(i - 1);
+            Node<T> removedNode = getNode(i);
+            result = removedNode.item;
+            previousNode.next = removedNode.next;
+        }
+        else {
+            result = first.item;
+            first = first.next;
+        }
+        --this.size;
+        return result;
     }
 
     @Override
