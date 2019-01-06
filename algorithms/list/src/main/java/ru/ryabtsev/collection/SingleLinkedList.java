@@ -1,5 +1,6 @@
 package ru.ryabtsev.collection;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -57,8 +58,21 @@ public class SingleLinkedList<T> implements List<T> {
     }
 
     @Override
-    public <T1> T1[] toArray(T1[] t1s) {
-        return null;
+    public <T1> T1[] toArray(T1[] array) {
+        if( array.length < this.size ) {
+            array = (T1[])(Array.newInstance(array.getClass().getComponentType(), this.size));
+        }
+
+        int i = 0;
+        for(Node<T> current = first; current != null; current = current.next) {
+            array[i++] = (T1)(current.item);
+        }
+
+        if( array.length > this.size ) {
+            array[i] = null;
+        }
+
+        return array;
     }
 
     @Override

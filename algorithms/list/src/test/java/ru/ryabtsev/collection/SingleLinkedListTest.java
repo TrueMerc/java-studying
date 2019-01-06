@@ -2,6 +2,7 @@ package ru.ryabtsev.collection;
 
 import static org.junit.Assert.assertTrue;
 
+import com.sun.xml.internal.ws.policy.AssertionSet;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,17 +14,23 @@ import java.util.List;
  */
 public class SingleLinkedListTest
 {
+    private List<Integer> integerList;
+
     @Test
     public void emptyListCreationTest()
     {
-        List<Integer> integerList = new SingleLinkedList<>();
+        resetList();
         Assert.assertTrue( 0 == integerList.size() );
         Assert.assertTrue( integerList.isEmpty() );
     }
 
+    private void resetList() {
+        integerList = new SingleLinkedList<>();
+    }
+
     @Test
     public void addMethodTest() {
-        List<Integer> integerList = new SingleLinkedList<>();
+        resetList();
         integerList.add(1);
         Assert.assertTrue( 1 == integerList.size() );
         integerList.add(3);
@@ -32,7 +39,7 @@ public class SingleLinkedListTest
 
     @Test
     public void containsMethodTest() {
-        List<Integer> integerList = new SingleLinkedList<>();
+        resetList();
         Assert.assertFalse( integerList.contains(0) );
         integerList.add(1);
         integerList.add(3);
@@ -43,12 +50,30 @@ public class SingleLinkedListTest
 
     @Test
     public void toArrayMethodTest() {
-        List<Integer> integerList = new SingleLinkedList<>();
+        resetList();
         integerList.add(1);
         integerList.add(3);
         Object[] array = integerList.toArray();
         Assert.assertTrue(2 == array.length );
         Assert.assertTrue( 1 == (Integer) array[0]);
         Assert.assertTrue( 3 == (Integer) array[1]);
+    }
+
+    @Test
+    public void toArrayInPlaceMethodTest() {
+        resetList();
+        Integer[] array = new Integer[2];
+        integerList.add(1);
+        array = integerList.toArray(array);
+        Assert.assertTrue(array.length == 2 );
+        Assert.assertTrue(new Integer(1).equals(array[0]));
+        Assert.assertTrue( null == array[1]);
+        integerList.add(2);
+        integerList.add(3);
+        array = integerList.toArray(array);
+        Assert.assertTrue(array.length == 3 );
+        Assert.assertTrue(new Integer(1).equals(array[0]));
+        Assert.assertTrue(new Integer(2).equals(array[1]));
+        Assert.assertTrue(new Integer(3).equals(array[2]));
     }
 }
