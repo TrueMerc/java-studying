@@ -104,6 +104,25 @@ public class SingleLinkedListTest {
     }
 
     @Test
+    public void addAllToPositionMethodTest() {
+        resetList();
+        List<Integer> arrayList = new ArrayList<>();
+        for(int i = 0; i < 5; ++i) {
+            arrayList.add(i);
+        }
+        integerList.addAll(0, arrayList);
+        Assert.assertEquals(5, integerList.size() );
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertEquals(i, integerList.get(i).intValue());
+        }
+        integerList.addAll( 5 , integerList);
+        Assert.assertEquals( 10, integerList.size() );
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertEquals(i % 5, integerList.get(i).intValue());
+        }
+    }
+
+    @Test
     public void clearMethodTest() {
         resetList();
         sequentiallyFillList();

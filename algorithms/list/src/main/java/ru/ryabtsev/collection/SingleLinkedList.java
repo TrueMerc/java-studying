@@ -46,7 +46,7 @@ public class SingleLinkedList<T> implements List<T> {
     public Object[] toArray() {
         Object[] array = new Object[this.size];
         int index = 0;
-        for( Node<T> current = first; current != null; current = current.next) {
+        for( Node<T> current = first; current != null && index < size; current = current.next) {
             array[index++] = current.item;
         }
         return array;
@@ -122,7 +122,7 @@ public class SingleLinkedList<T> implements List<T> {
         add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
         Node<T> last = getLast();
         for(int i = 1; i < array.length; ++i) {
-            last.next = new Node<>((T)array[i]);
+            last.next = new Node<>((T) array[i]);
             last = last.next;
             ++this.size;
         }
@@ -131,24 +131,20 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {
-//        Object[] array = collection.toArray();
-//        if(array.length == 0) {
-//            return false;
-//        }
-//        if(i < size && i > 0) {
-//            Node<T> previous = getNode(i - 1  );
-//            Node<T> current = previous.next;
-//        }
-//        else if(0 == i) {
-//
-//        }
-//        else if(size == i) {
-//
-//        }
-//        else {
-//            throw new IndexOutOfBoundsException();
-//        }
-        return false;
+        Object[] array = collection.toArray();
+        if(array.length == 0) {
+            return false;
+        }
+        add(i, (T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
+        Node<T> previous = getNode(i);
+        Node<T> next = getNode(i + 1);
+        for(int j = 1; j < array.length; ++j) {
+            previous.next = new Node<>((T) array[j]);
+            previous = previous.next;
+            ++this.size;
+        }
+        previous.next = next;
+        return true;
     }
 
     @Override
