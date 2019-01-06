@@ -35,12 +35,7 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean contains(Object o) {
-       for( Node<T> current = first; current != null; current = current.next ) {
-            if(o.equals(current.item)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(o) != -1;
     }
 
     @Override
@@ -204,7 +199,14 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        int result = -1, currentIndex = 0;
+        for( Node<T> current = first; current != null; current = current.next, ++currentIndex ) {
+            if(o.equals(current.item)) {
+                result = currentIndex;
+                break;
+            }
+        }
+        return result;
     }
 
     @Override

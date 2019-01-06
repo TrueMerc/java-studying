@@ -50,7 +50,7 @@ public class SingleLinkedListTest {
         Object[] array = integerList.toArray();
         Assert.assertEquals(2, array.length);
         Assert.assertEquals(1, ((Integer) array[0]).intValue());
-        Assert.assertEquals(3, ((Integer) array[0]).intValue());
+        Assert.assertEquals(3, ((Integer) array[1]).intValue());
     }
 
     @Test
@@ -142,6 +142,15 @@ public class SingleLinkedListTest {
         resetList();
         sequentiallyFillList(3, 1);
         Assert.assertEquals("0 1 2", integerList.toString());
+    }
+
+    @Test
+    public void indexOfMethodTest() {
+        resetList();
+        sequentiallyFillList( 3, 1);
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertEquals(i, integerList.indexOf(i));
+        }
     }
 }
 
