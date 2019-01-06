@@ -136,6 +136,13 @@ public class SingleLinkedListTest {
         Assert.assertEquals(1, integerList.size());
         Assert.assertEquals( 2, integerList.get(0).intValue() );
     }
+
+    @Test
+    public void toStringMethodTest() {
+        resetList();
+        sequentiallyFillList(3, 1);
+        Assert.assertEquals("0 1 2", integerList.toString());
+    }
 }
 
 

@@ -1,5 +1,6 @@
 package ru.ryabtsev.collection;
 
+import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
@@ -228,7 +229,14 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public String toString() {
-        return new String();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < this.size; ++i) {
+            stringBuilder.append(get(i));
+            if(i < this.size - 1) {
+                stringBuilder.append(' ');
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private static class Node<T> {
