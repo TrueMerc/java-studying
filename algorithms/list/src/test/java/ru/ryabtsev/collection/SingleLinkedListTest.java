@@ -117,5 +117,17 @@ public class SingleLinkedListTest
         }
     }
 
+    @Test
+    public void addToPositionMethodTest() {
+        resetList();
+        integerList.add(2);
+        integerList.add(0, 0);
+        integerList.add( 1, 1);
+        Assert.assertEquals( 3, integerList.size() );
+            for(int i = 0; i < integerList.size(); ++i) {
+                Assert.assertEquals(i, integerList.get(i).intValue() );
+            }
+        }
+
 
 }

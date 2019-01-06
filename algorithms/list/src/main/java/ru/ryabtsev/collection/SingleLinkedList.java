@@ -171,7 +171,17 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public void add(int i, T t) {
-
+        Node<T> newNode = new Node<>(t);
+        if(i != 0) {
+            Node<T> previousNode = getNode(i - 1);
+            newNode.next = getNode(i);
+            previousNode.next = newNode;
+        }
+        else {
+            newNode.next = first;
+            first = newNode;
+        }
+        ++this.size;
     }
 
     @Override
