@@ -1,6 +1,5 @@
 package ru.ryabtsev.collection;
 
-import javax.print.DocFlavor;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Iterator;
@@ -20,7 +19,7 @@ public class SingleLinkedList<T> implements List<T> {
      */
     SingleLinkedList() {
         this.size = 0;
-        this.first = null;
+        this.first = new Node<>();
     }
 
     @Override
@@ -61,7 +60,7 @@ public class SingleLinkedList<T> implements List<T> {
 
         int i = 0;
         for(Node<T> current = first; current != null; current = current.next) {
-            array[i++] = (T1)(current.item);
+            array[i++] = (T1)current.item;
         }
 
         if( array.length > this.size ) {
@@ -73,12 +72,12 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        if( !isEmpty() ) {
-            Node<T> last = getLast();
-            last.next = new Node(t);
+        Node<T> last = getLast();
+        if( last.item != null ) {
+            last.next = new Node<>(t);
         }
         else {
-            first = new Node(t);
+            last.item = t;
         }
         ++this.size;
         return true;
@@ -116,11 +115,39 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> collection) {
-        return false;
+        Object[] array = collection.toArray();
+        if(array.length == 0) {
+            return false;
+        }
+        add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
+        Node<T> last = getLast();
+        for(int i = 1; i < array.length; ++i) {
+            last.next = new Node<>((T)array[i]);
+            last = last.next;
+            ++this.size;
+        }
+        return true;
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {
+//        Object[] array = collection.toArray();
+//        if(array.length == 0) {
+//            return false;
+//        }
+//        if(i < size && i > 0) {
+//            Node<T> previous = getNode(i - 1  );
+//            Node<T> current = previous.next;
+//        }
+//        else if(0 == i) {
+//
+//        }
+//        else if(size == i) {
+//
+//        }
+//        else {
+//            throw new IndexOutOfBoundsException();
+//        }
         return false;
     }
 
@@ -136,17 +163,37 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public void clear() {
-
+        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next) {
+            if( previous != null ) {
+                previous.next = null;
+            }
+        }
+        if( first != null ) {
+            first.next = null;
+            first = null;
+        }
+        this.size = 0;
     }
 
     @Override
     public T get(int i) {
+        checkElementIndex(i);
         return getNode(i).item;
     }
 
-    private Node<T> getNode(int i) throws IndexOutOfBoundsException {
-        if(i < 0 || i >= this.size) {
+    private void checkElementIndex(int i) throws IndexOutOfBoundsException {
+        if( !this.isElementIndex(i) ) {
             throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private boolean isElementIndex(int i) {
+        return (i >=0 &&  i < this.size);
+    }
+
+    private Node<T> getNode(int i) {
+        if(!isElementIndex(i)) {
+            return null;
         }
         Node<T> current = first;
         for(int counter = 0; current != null; ++counter, current = current.next) {
@@ -159,6 +206,7 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public T set(int i, T t) {
+        checkElementIndex(i);
         Node<T> node = getNode(i);
         T previous = node.item;
         node.item = t;
@@ -168,13 +216,13 @@ public class SingleLinkedList<T> implements List<T> {
     @Override
     public void add(int i, T t) {
         Node<T> newNode = new Node<>(t);
-        if(i != 0) {
-            Node<T> previousNode = getNode(i - 1);
-            newNode.next = getNode(i);
+        Node<T> previousNode = getNode(i - 1);
+        newNode.next = getNode(i);
+
+        if(previousNode != null) {
             previousNode.next = newNode;
         }
         else {
-            newNode.next = first;
             first = newNode;
         }
         ++this.size;
@@ -254,6 +302,10 @@ public class SingleLinkedList<T> implements List<T> {
         Node(T item) {
             this.item = item;
             this.next = null;
+        }
+
+        Node() {
+            this(null);
         }
     }
 }

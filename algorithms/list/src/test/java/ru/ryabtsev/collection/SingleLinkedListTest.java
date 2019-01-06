@@ -3,6 +3,7 @@ package ru.ryabtsev.collection;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -60,15 +61,15 @@ public class SingleLinkedListTest {
         integerList.add(1);
         array = integerList.toArray(array);
         Assert.assertEquals(2, array.length);
-        Assert.assertTrue(new Integer(1).equals(array[0]));
+        Assert.assertEquals(1, array[0].intValue() );
         Assert.assertNull(array[1]);
         integerList.add(2);
         integerList.add(3);
         array = integerList.toArray(array);
-        Assert.assertTrue(array.length == 3);
-        Assert.assertTrue(new Integer(1).equals(array[0]));
-        Assert.assertTrue(new Integer(2).equals(array[1]));
-        Assert.assertTrue(new Integer(3).equals(array[2]));
+        Assert.assertEquals(3, array.length);
+        Assert.assertEquals(1, array[0].intValue() );
+        Assert.assertEquals(2, array[1].intValue() );
+        Assert.assertEquals(3, array[2].intValue() );
     }
 
     @Test
@@ -80,10 +81,34 @@ public class SingleLinkedListTest {
         int size = integerList.size();
         Assert.assertTrue(integerList.remove(new Integer(2)));
         Assert.assertFalse(integerList.remove(new Integer(4)));
-        Assert.assertTrue(integerList.size() == size - 1);
+        Assert.assertEquals(size - 1, integerList.size());
         integerList.remove(new Integer(1));
         integerList.remove(new Integer(3));
-        Assert.assertTrue(integerList.size() == size - 3);
+        Assert.assertEquals(size - 3, integerList.size());
+    }
+
+    @Test
+    public void addAllMethodTest() {
+        resetList();
+        sequentiallyFillList(3, 1);
+        List<Integer> arrayList = new ArrayList<>();
+        Assert.assertFalse(integerList.addAll(arrayList));
+        for(int i = 0; i < integerList.size(); ++i) {
+            arrayList.add(integerList.get(i));
+        }
+        integerList.addAll(arrayList);
+        Assert.assertEquals(6, integerList.size());
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertEquals(i % 3, integerList.get(i).intValue());
+        }
+    }
+
+    @Test
+    public void clearMethodTest() {
+        resetList();
+        sequentiallyFillList();
+        integerList.clear();
+        Assert.assertEquals(0, integerList.size() );
     }
 
     @Test
@@ -91,7 +116,7 @@ public class SingleLinkedListTest {
         resetList();
         sequentiallyFillList();
         for (int i = 9; i > -1; --i) {
-            Assert.assertTrue(i == integerList.get(i));
+            Assert.assertEquals( i, integerList.get(i).intValue() );
         }
     }
 
@@ -110,18 +135,19 @@ public class SingleLinkedListTest {
         resetList();
         sequentiallyFillList();
         for (int i = 0; i < integerList.size(); ++i) {
-            Assert.assertTrue(i == integerList.set(i, i * 2));
-            Assert.assertTrue(2 * i == integerList.get(i));
+            Assert.assertEquals(i, integerList.set(i, i * 2).intValue());
+            Assert.assertEquals(2 * i,  integerList.get(i).intValue());
         }
     }
 
     @Test
     public void addToPositionMethodTest() {
         resetList();
-        integerList.add(2);
+        integerList.add(0, 2);
         integerList.add(0, 0);
         integerList.add(1, 1);
-        Assert.assertEquals(3, integerList.size());
+        integerList.add( 3, 3);
+        Assert.assertEquals(4, integerList.size());
         for (int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i, integerList.get(i).intValue());
         }
