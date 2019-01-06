@@ -146,12 +146,28 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public T get(int i) {
-        return null;
+        return getNode(i).item;
+    }
+
+    private Node<T> getNode(int i) throws IndexOutOfBoundsException {
+        if(i < 0 || i >= this.size) {
+            throw new IndexOutOfBoundsException();
+        }
+        Node<T> current = first;
+        for(int counter = 0; current != null; ++counter, current = current.next) {
+            if(i == counter) {
+                break;
+            }
+        }
+        return current;
     }
 
     @Override
     public T set(int i, T t) {
-        return null;
+        Node<T> node = getNode(i);
+        T previous = node.item;
+        node.item = t;
+        return previous;
     }
 
     @Override

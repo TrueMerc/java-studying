@@ -91,4 +91,35 @@ public class SingleLinkedListTest
         integerList.remove(new Integer( 3));
         Assert.assertTrue( integerList.size() == size - 3);
     }
+
+    @Test
+    public void getMethodTest() {
+        resetList();
+        sequentiallyFillList();
+        for(int i = 9; i > -1; --i) {
+           Assert.assertTrue( i == integerList.get(i));
+        }
+    }
+
+    private void sequentiallyFillList(int number, int step) {
+        for(int i = 0; i < number; ++i) {
+            integerList.add(i * step);
+        }
+    }
+
+    private void sequentiallyFillList() {
+        sequentiallyFillList(10, 1);
+    }
+
+    @Test
+    public void setMethodTest() {
+        resetList();
+        sequentiallyFillList();
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertTrue( i == integerList.set(i, i * 2));
+            Assert.assertTrue( 2 * i == integerList.get(i));
+        }
+    }
+
+
 }
