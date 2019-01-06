@@ -99,6 +99,18 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean remove(Object o) {
+        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next) {
+            if(o.equals(current.item)) {
+                if( current != first ) {
+                    previous.next = current.next;
+                }
+                else {
+                    first = current.next;
+                }
+                --this.size;
+                return true;
+            }
+        }
         return false;
     }
 

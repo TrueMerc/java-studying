@@ -76,4 +76,19 @@ public class SingleLinkedListTest
         Assert.assertTrue(new Integer(2).equals(array[1]));
         Assert.assertTrue(new Integer(3).equals(array[2]));
     }
+
+    @Test
+    public void removeMethodTest() {
+        resetList();
+        integerList.add(1);
+        integerList.add(2);
+        integerList.add(3);
+        int size = integerList.size();
+        Assert.assertTrue( integerList.remove(new Integer(2)) );
+        Assert.assertFalse( integerList.remove(new Integer(4)) );
+        Assert.assertTrue( integerList.size() == size - 1);
+        integerList.remove(new Integer(1));
+        integerList.remove(new Integer( 3));
+        Assert.assertTrue( integerList.size() == size - 3);
+    }
 }
