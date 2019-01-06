@@ -29,7 +29,7 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return (0 == size);
+        return 0 == this.size;
     }
 
     @Override
@@ -79,8 +79,7 @@ public class SingleLinkedList<T> implements List<T> {
     public boolean add(T t) {
         if( !isEmpty() ) {
             Node<T> last = getLast();
-            Node<T> newNode = new Node(t);
-            last.next = newNode;
+            last.next = new Node(t);
         }
         else {
             first = new Node(t);
