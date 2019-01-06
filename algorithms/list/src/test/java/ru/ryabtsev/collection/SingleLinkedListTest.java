@@ -152,6 +152,17 @@ public class SingleLinkedListTest {
             Assert.assertEquals(i, integerList.indexOf(i));
         }
     }
+
+    @Test
+    public void lastIndexOfMethodTest() {
+        resetList();
+        sequentiallyFillList( 3, 1);
+        sequentiallyFillList( 3, 1);
+        int halfSize = integerList.size() / 2;
+        for(int i = 0; i < halfSize; ++i) {
+            Assert.assertEquals(halfSize + i, integerList.lastIndexOf(i));
+        }
+    }
 }
 
 
