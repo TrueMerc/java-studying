@@ -110,7 +110,12 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean containsAll(Collection<?> collection) {
-        return false;
+        Object[] array = collection.toArray();
+        boolean result = array.length > 0 ? true : false;
+        for(int i = 0; i < array.length && result == true; ++i) {
+            result &= contains(array[i]);
+        }
+        return result;
     }
 
     @Override
