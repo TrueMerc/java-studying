@@ -1,23 +1,21 @@
 package ru.ryabtsev.collection;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
+import java.util.function.Consumer;
 
 /**
- * My single-linked list implementation.
+ * My single-linked forward list implementation.
  * @param <T> type of objects in the list.
  */
-public class SingleLinkedList<T> implements List<T> {
+public class ForwardLinkedList<T> implements List<T> {
     private transient int size;
     private transient Node<T> first;
 
     /**
      * Constructs empty single-linked list.
      */
-    SingleLinkedList() {
+    ForwardLinkedList() {
         this.size = 0;
         this.first = new Node<>();
     }
@@ -39,7 +37,7 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new ForwardIterator();
     }
 
     @Override
@@ -330,4 +328,103 @@ public class SingleLinkedList<T> implements List<T> {
             this(null);
         }
     }
+
+    private class ForwardIterator implements Iterator<T> {
+        private ForwardLinkedList.Node<T> previous;
+        private ForwardLinkedList.Node<T> current;
+        private int currentPosition;
+
+        ForwardIterator() {
+            previous = null;
+            current = ForwardLinkedList.this.first;
+            currentPosition = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentPosition < ForwardLinkedList.this.size;
+        }
+
+        @Override
+        public T next() {
+            T result = current.item;
+            previous = current;
+            current = current.next;
+            ++currentPosition;
+            return result;
+        }
+
+        @Override
+        public void remove() {
+            if(previous == null) {
+                throw new IllegalStateException();
+            }
+            else {
+                previous.next = current.next;
+                current = null;
+            }
+
+            --ForwardLinkedList.this.size;
+        }
+
+        @Override
+        public void forEachRemaining(Consumer<? super T> consumer) {
+            while(hasNext()) {
+                consumer.accept(next());
+            }
+        }
+    }
+
+//    private class ListIter implements ListIterator<T> {
+//
+//        private int cursor;
+//        private final int end;
+//
+//        ListIter(ForwardLinkedList<T> list)
+//
+//        @Override
+//        public boolean hasNext() {
+//            return false;
+//        }
+//
+//        @Override
+//        public T next() {
+//            return null;
+//        }
+//
+//        @Override
+//        public boolean hasPrevious() {
+//            return false;
+//        }
+//
+//        @Override
+//        public T previous() {
+//            return null;
+//        }
+//
+//        @Override
+//        public int nextIndex() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public int previousIndex() {
+//            return 0;
+//        }
+//
+//        @Override
+//        public void remove() {
+//
+//        }
+//
+//        @Override
+//        public void set(T t) {
+//
+//        }
+//
+//        @Override
+//        public void add(T t) {
+//
+//        }
+//    }
 }

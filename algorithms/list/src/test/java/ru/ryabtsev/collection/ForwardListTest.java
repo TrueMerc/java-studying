@@ -4,12 +4,13 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- * Unit test for SingleLinkedList class.
+ * Unit test for ForwardLinkedList class.
  */
-public class SingleLinkedListTest {
+public class ForwardLinkedListTest {
     private List<Integer> integerList;
 
     @Test
@@ -20,7 +21,7 @@ public class SingleLinkedListTest {
     }
 
     private void resetList() {
-        integerList = new SingleLinkedList<>();
+        integerList = new ForwardLinkedList<>();
     }
 
     @Test
@@ -54,6 +55,32 @@ public class SingleLinkedListTest {
         for (int i = 0; i < size; ++i) {
             list.add(initial + i * step);
         }
+    }
+
+    @Test
+    public void iteratorMethodTest() {
+        resetList();
+        fillMainList();
+        Iterator<Integer> it = integerList.iterator();
+
+        int i;
+        for(i = 0; it.hasNext(); ++i ) {
+            Assert.assertEquals(i, it.next().intValue());
+        }
+        Assert.assertEquals(i, integerList.size());
+    }
+
+    @Test
+    public void iteratorRemoveMethodTest() {
+        resetList();
+        fillMainList();
+        Iterator<Integer> it = integerList.iterator();
+
+        while(it.hasNext()) {
+            it.next();
+            it.remove();
+        }
+        Assert.assertEquals(0, integerList.size());
     }
 
     @Test
