@@ -95,6 +95,7 @@ public class SingleLinkedListTest {
         integerList.remove(new Integer(1));
         integerList.remove(new Integer(3));
         Assert.assertEquals(size - 3, integerList.size());
+        Assert.assertFalse(integerList.remove(new Integer(4) ));
     }
 
     @Test
@@ -140,6 +141,17 @@ public class SingleLinkedListTest {
         for(int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i % 5, integerList.get(i).intValue());
         }
+    }
+
+    @Test
+    public void removeAllMethodTest() {
+        resetList();
+        fillMainList(5, 1, 2);
+        List<Integer> list1 = new ArrayList<>();
+        sequentiallyFillList(list1, 2, 3, 6);
+        Assert.assertTrue(integerList.removeAll(list1));
+        Assert.assertFalse(integerList.removeAll(list1));
+        Assert.assertEquals(3, integerList.size());
     }
 
     @Test

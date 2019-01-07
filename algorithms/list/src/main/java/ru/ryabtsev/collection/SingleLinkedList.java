@@ -154,7 +154,15 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean removeAll(Collection<?> collection) {
-        return false;
+        Object[] array = collection.toArray();
+        if(array.length == 0) {
+            return false;
+        }
+        boolean result = false;
+        for( Object element: array ) {
+            result |= remove(element);
+        }
+        return result;
     }
 
     @Override
