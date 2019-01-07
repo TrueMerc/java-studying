@@ -9,6 +9,7 @@ import java.util.function.Consumer;
  * @param <T> type of objects in the list.
  */
 public class ForwardList<T> implements List<T> {
+    private transient int modificationsCount = 0;
     private transient int size;
     private transient Node<T> first;
 
@@ -290,17 +291,17 @@ public class ForwardList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        throw new UnsupportedOperationException();
+        return new BidirectionalIterator();
     }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        throw new UnsupportedOperationException();
+        return new BidirectionalIterator(i);
     }
 
     @Override
     public List<T> subList(int i, int i1) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -361,7 +362,6 @@ public class ForwardList<T> implements List<T> {
                 ForwardList.this.unlink(previous);
                 previous = null;
             }
-
             --ForwardList.this.size;
         }
 
@@ -384,5 +384,121 @@ public class ForwardList<T> implements List<T> {
                 }
             }
         }
+    }
+
+    private class BidirectionalIterator implements ListIterator<T> {
+
+        private ForwardList.Node<T> lastReturned;
+        private ForwardList.Node<T> next;
+        private int nextIndex;
+        private int expectedModificationCount;
+
+        BidirectionalIterator() {
+            lastReturned = null;
+            next = ForwardList.this.first;
+            nextIndex = 0;
+            expectedModificationCount = ForwardList.this.modificationsCount;
+        }
+
+        BidirectionalIterator(int i) {
+            lastReturned = (i > 0) ? ForwardList.this.getNode(i - 1) : null;
+            next = ForwardList.this.getNode(i);
+            nextIndex = i;
+            expectedModificationCount = ForwardList.this.modificationsCount;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextIndex < ForwardList.this.size();
+        }
+
+        @Override
+        public T next() {
+            if( !hasNext() ) {
+                throw new NoSuchElementException();
+            }
+            lastReturned = next;
+            next = next.next;
+            ++nextIndex;
+            return lastReturned.item;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            throw new UnsupportedOperationException("Can't get previous element information from forward list iterator.");
+        }
+
+        @Override
+        public T previous() {
+            throw new UnsupportedOperationException("Can't get previous element from forward list iterator.");
+        }
+
+        @Override
+        public int nextIndex() {
+            return nextIndex;
+        }
+
+        @Override
+        public int previousIndex() {
+            throw new UnsupportedOperationException("Can't get previous element from forward list iterator.");
+        }
+
+        @Override
+        public void remove() {
+            if(lastReturned == null) {
+                throw new IllegalStateException();
+            }
+            else {
+                ForwardList.this.unlink(lastReturned);
+                lastReturned = null;
+            }
+            --ForwardList.this.size;
+        }
+
+        @Override
+        public void set(T t) {
+            next.item = t;
+        }
+
+        @Override
+        public void add(T t) {
+            this.lastReturned = null;
+            ForwardList.this.add(nextIndex++, t);
+        }
+
+        final void checkForComodification() {
+            if(ForwardList.this.modificationsCount != this.expectedModificationCount) {
+                throw new ConcurrentModificationException();
+            }
+        }
+    }
+
+    private Node<T> previous(Node<T> node) {
+        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next ) {
+            if(node == current) {
+                return previous;
+            }
+        }
+        return null;
+    }
+
+    private int getPreviousIndex(Node<T> node) {
+        int index = -1;
+        for(Node<T> current = first; current != null; current = current.next, ++index) {
+            if(node == current) {
+                break;
+            }
+        }
+        return index;
+    }
+
+    private int getNextIndex(Node<T> node) {
+        int index = 0;
+        for(Node<T> current = first; current != null; current = current.next, ++index) {
+            if(node.next == current) {
+                break;
+            }
+        }
+        return index;
     }
 }

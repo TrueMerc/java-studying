@@ -3,9 +3,7 @@ package ru.ryabtsev.collection;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Unit test for ForwardList class.
@@ -272,6 +270,38 @@ public class ForwardListTest {
             Assert.assertEquals(halfSize + i, integerList.lastIndexOf(i));
         }
     }
+
+    @Test
+    public void listIteratorTest() {
+        resetList();
+        fillMainList();
+        ListIterator<Integer> it = integerList.listIterator();
+
+        Assert.assertEquals(0, it.nextIndex());
+        it.set(100);
+
+        Assert.assertEquals(100, integerList.get(0).intValue());
+        it.add(101);
+        Assert.assertEquals(11, integerList.size());
+        System.out.println(integerList);
+        Assert.assertEquals(101, integerList.get(0).intValue());
+        Assert.assertEquals(100, it.next().intValue());
+        it.add(102);
+        System.out.println(integerList);
+        Assert.assertEquals(102, integerList.get(2).intValue());
+    }
+//
+//    }
+//    @Test
+//    public void linkedListIteratorTest() {
+//        List<Integer> linkedList = new LinkedList<>();
+//        ListIterator<Integer> it = linkedList.listIterator();
+//        it.add(0);
+//        System.out.println("Next size " + linkedList.size() );
+//        System.out.println("Next index " + it.nextIndex() );
+//        it.next();
+//        System.out.println("Next index " + it.nextIndex() );
+//    }
 }
 
 
