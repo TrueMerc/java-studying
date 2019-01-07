@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Unit test for ForwardLinkedList class.
+ * Unit test for ForwardList class.
  */
-public class ForwardLinkedListTest {
+public class ForwardListTest {
     private List<Integer> integerList;
 
     @Test
@@ -21,7 +21,7 @@ public class ForwardLinkedListTest {
     }
 
     private void resetList() {
-        integerList = new ForwardLinkedList<>();
+        integerList = new ForwardList<>();
     }
 
     @Test

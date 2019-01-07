@@ -5,17 +5,17 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * My single-linked forward list implementation.
+ * My forward list implementation.
  * @param <T> type of objects in the list.
  */
-public class ForwardLinkedList<T> implements List<T> {
+public class ForwardList<T> implements List<T> {
     private transient int size;
     private transient Node<T> first;
 
     /**
      * Constructs empty single-linked list.
      */
-    ForwardLinkedList() {
+    ForwardList() {
         this.size = 0;
         this.first = new Node<>();
     }
@@ -290,12 +290,12 @@ public class ForwardLinkedList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -330,19 +330,18 @@ public class ForwardLinkedList<T> implements List<T> {
     }
 
     private class ForwardIterator implements Iterator<T> {
-        private ForwardLinkedList.Node<T> previous;
-        private ForwardLinkedList.Node<T> current;
-        private int currentPosition;
+        private ForwardList.Node<T> previous;
+        private ForwardList.Node<T> current;
+
 
         ForwardIterator() {
             previous = null;
-            current = ForwardLinkedList.this.first;
-            currentPosition = 0;
+            current = ForwardList.this.first;
         }
 
         @Override
         public boolean hasNext() {
-            return currentPosition < ForwardLinkedList.this.size;
+            return current != null;
         }
 
         @Override
@@ -350,7 +349,6 @@ public class ForwardLinkedList<T> implements List<T> {
             T result = current.item;
             previous = current;
             current = current.next;
-            ++currentPosition;
             return result;
         }
 
@@ -360,11 +358,11 @@ public class ForwardLinkedList<T> implements List<T> {
                 throw new IllegalStateException();
             }
             else {
-                previous.next = current.next;
-                current = null;
+                ForwardList.this.unlink(previous);
+                previous = null;
             }
 
-            --ForwardLinkedList.this.size;
+            --ForwardList.this.size;
         }
 
         @Override
@@ -375,56 +373,16 @@ public class ForwardLinkedList<T> implements List<T> {
         }
     }
 
-//    private class ListIter implements ListIterator<T> {
-//
-//        private int cursor;
-//        private final int end;
-//
-//        ListIter(ForwardLinkedList<T> list)
-//
-//        @Override
-//        public boolean hasNext() {
-//            return false;
-//        }
-//
-//        @Override
-//        public T next() {
-//            return null;
-//        }
-//
-//        @Override
-//        public boolean hasPrevious() {
-//            return false;
-//        }
-//
-//        @Override
-//        public T previous() {
-//            return null;
-//        }
-//
-//        @Override
-//        public int nextIndex() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public int previousIndex() {
-//            return 0;
-//        }
-//
-//        @Override
-//        public void remove() {
-//
-//        }
-//
-//        @Override
-//        public void set(T t) {
-//
-//        }
-//
-//        @Override
-//        public void add(T t) {
-//
-//        }
-//    }
+    private void unlink(Node<T> node) {
+        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next ) {
+            if(current == node) {
+                if(current != first) {
+                    previous.next = current.next;
+                }
+                else {
+                    first = current.next;
+                }
+            }
+        }
+    }
 }
