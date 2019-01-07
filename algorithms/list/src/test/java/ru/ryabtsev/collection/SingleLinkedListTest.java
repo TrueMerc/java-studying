@@ -155,6 +155,21 @@ public class SingleLinkedListTest {
     }
 
     @Test
+    public void retainAllMethodTest() {
+        resetList();
+        fillMainList(5, 1, 2);
+        List<Integer> list1 = new ArrayList<>();
+        sequentiallyFillList(list1, 2, 3, 6);
+        List<Integer> list2 = new ArrayList<>();
+        sequentiallyFillList(list2, 3, 0, 1);
+        Assert.assertTrue(integerList.retainAll(list1));
+        Assert.assertEquals(2, integerList.size());
+        Assert.assertTrue(integerList.containsAll(list1));
+        Assert.assertTrue(integerList.retainAll(list2));
+        Assert.assertTrue(integerList.isEmpty());
+    }
+
+    @Test
     public void clearMethodTest() {
         resetList();
         fillMainList();

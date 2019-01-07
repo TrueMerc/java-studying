@@ -154,12 +154,11 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean removeAll(Collection<?> collection) {
-        Object[] array = collection.toArray();
-        if(array.length == 0) {
+        if(collection.size() == 0) {
             return false;
         }
         boolean result = false;
-        for( Object element: array ) {
+        for( Object element: collection ) {
             result |= remove(element);
         }
         return result;
@@ -167,7 +166,21 @@ public class SingleLinkedList<T> implements List<T> {
 
     @Override
     public boolean retainAll(Collection<?> collection) {
-        return false;
+        Object[] array = collection.toArray();
+        if(array.length == 0) {
+            return false;
+        }
+        boolean result = false;
+        for( int i = 0; i < size; ) {
+            if( !collection.contains(this.get(i)) ) {
+                remove(i);
+                result |= true;
+            }
+            else {
+                ++i;
+            }
+        }
+        return result;
     }
 
     @Override
