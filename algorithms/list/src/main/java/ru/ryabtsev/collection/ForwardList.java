@@ -90,37 +90,37 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T remove() {
-        return null;
+        return removeFirst();
     }
 
     @Override
     public T poll() {
-        return null;
+        return pollFirst();
     }
 
     @Override
     public T element() {
-        return null;
+        return getFirst();
     }
 
     @Override
     public T peek() {
-        return null;
+        return peekFirst();
     }
 
     @Override
     public void push(T t) {
-
+        addFirst(t);
     }
 
     @Override
     public T pop() {
-        return null;
+        return removeFirst();
     }
 
     @Override
     public void addFirst(T t) {
-
+        offerFirst(t);
     }
 
     @Override
@@ -130,7 +130,22 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public boolean offerFirst(T t) {
-        return false;
+        if( !isEmpty() ) {
+            Node<T> newNode = new Node<>(t);
+            newNode.next = first;
+            first = newNode;
+            ++this.size;
+        }
+        else {
+            addFirstElement(t);
+        }
+        return true;
+    }
+
+    private void addFirstElement(T t) {
+        first = new Node<>(t);
+        last = first;
+        ++this.size;
     }
 
     /**
@@ -143,18 +158,20 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         if( !isEmpty() ) {
             last.next = new Node<>(t);
             last = last.next;
+            ++this.size;
         }
         else {
-            first = new Node<>(t);
-            last = first;
+            addFirstElement(t);
         }
-        ++this.size;
         return true;
     }
 
     @Override
     public T removeFirst() {
-        return null;
+        if( isEmpty() ) {
+            throw new NoSuchElementException();
+        }
+        return pollFirst();
     }
 
     @Override
@@ -164,6 +181,11 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T pollFirst() {
+        if( first != null ) {
+            T result = first.item;
+            first = first.next;
+            return result;
+        }
         return null;
     }
 
@@ -179,15 +201,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T getLast() {
-        return getLastNode().item;
-    }
-
-    private Node<T> getLastNode() {
-        Node<T> node = first;
-        while( node.next != null ) {
-            node = node.next;
-        }
-        return node;
+        return last.item;
     }
 
     @Override
@@ -274,8 +288,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public boolean retainAll(Collection<?> collection) {
-        Object[] array = collection.toArray();
-        if(array.length == 0) {
+        if(collection.size() == 0) {
             return false;
         }
         boolean result = false;
@@ -437,10 +450,6 @@ public class ForwardList<T> implements List<T>, Deque<T> {
             this.item = item;
             this.next = next;
         }
-
-        Node() {
-            this(null);
-        }
     }
 
     private class ForwardIterator implements Iterator<T> {
@@ -585,33 +594,4 @@ public class ForwardList<T> implements List<T>, Deque<T> {
             }
         }
     }
-
-//    private Node<T> previous(Node<T> node) {
-//        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next ) {
-//            if(node == current) {
-//                return previous;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    private int getPreviousIndex(Node<T> node) {
-//        int index = -1;
-//        for(Node<T> current = first; current != null; current = current.next, ++index) {
-//            if(node == current) {
-//                break;
-//            }
-//        }
-//        return index;
-//    }
-//
-//    private int getNextIndex(Node<T> node) {
-//        int index = 0;
-//        for(Node<T> current = first; current != null; current = current.next, ++index) {
-//            if(node.next == current) {
-//                break;
-//            }
-//        }
-//        return index;
-//    }
 }

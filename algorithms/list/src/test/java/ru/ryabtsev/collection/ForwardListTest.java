@@ -8,18 +8,13 @@ import java.util.*;
 /**
  * Unit test for ForwardList class.
  */
-public class ForwardListTest {
-    private List<Integer> integerList;
+public class ForwardListTest extends ForwardListTestBase {
 
     @Test
     public void emptyListCreationTest() {
         resetList();
         Assert.assertEquals(0, integerList.size());
         Assert.assertTrue(integerList.isEmpty());
-    }
-
-    private void resetList() {
-        integerList = new ForwardList<>();
     }
 
     @Test
@@ -32,6 +27,16 @@ public class ForwardListTest {
     }
 
     @Test
+    public void pollFirstMethodTest() {
+        resetList();
+        int size = fillMainList();
+        for(int i = 0; i < size; ++i) {
+            Assert.assertEquals(i, integerList.pollFirst().intValue());
+        }
+        Assert.assertNull(integerList.poll());
+    }
+
+    @Test
     public void containsMethodTest() {
         resetList();
         Assert.assertFalse(integerList.contains(0));
@@ -39,46 +44,6 @@ public class ForwardListTest {
         Assert.assertTrue(integerList.contains(1));
         Assert.assertFalse(integerList.contains(2));
         Assert.assertTrue(integerList.contains(3));
-    }
-
-    private void fillMainList() {
-        fillMainList( 10, 0, 1);
-    }
-
-    private void fillMainList(int size, int initial, int step) {
-        sequentiallyFillList(integerList, size, initial, step );
-    }
-
-    private void sequentiallyFillList(List<Integer> list, int size, int initial, int step) {
-        for (int i = 0; i < size; ++i) {
-            list.add(initial + i * step);
-        }
-    }
-
-    @Test
-    public void iteratorMethodTest() {
-        resetList();
-        fillMainList();
-        Iterator<Integer> it = integerList.iterator();
-
-        int i;
-        for(i = 0; it.hasNext(); ++i ) {
-            Assert.assertEquals(i, it.next().intValue());
-        }
-        Assert.assertEquals(i, integerList.size());
-    }
-
-    @Test
-    public void iteratorRemoveMethodTest() {
-        resetList();
-        fillMainList();
-        Iterator<Integer> it = integerList.iterator();
-
-        while(it.hasNext()) {
-            it.next();
-            it.remove();
-        }
-        Assert.assertEquals(0, integerList.size());
     }
 
     @Test
@@ -281,38 +246,6 @@ public class ForwardListTest {
             Assert.assertEquals(halfSize + i, integerList.lastIndexOf(i));
         }
     }
-
-    @Test
-    public void listIteratorTest() {
-        resetList();
-        fillMainList();
-        ListIterator<Integer> it = integerList.listIterator();
-
-        Assert.assertEquals(0, it.nextIndex());
-        it.set(100);
-
-        Assert.assertEquals(100, integerList.get(0).intValue());
-        it.add(101);
-        Assert.assertEquals(11, integerList.size());
-        System.out.println(integerList);
-        Assert.assertEquals(101, integerList.get(0).intValue());
-        Assert.assertEquals(100, it.next().intValue());
-        it.add(102);
-        System.out.println(integerList);
-        Assert.assertEquals(102, integerList.get(2).intValue());
-    }
-//
-//    }
-//    @Test
-//    public void linkedListIteratorTest() {
-//        List<Integer> linkedList = new LinkedList<>();
-//        ListIterator<Integer> it = linkedList.listIterator();
-//        it.add(0);
-//        System.out.println("Next size " + linkedList.size() );
-//        System.out.println("Next index " + it.nextIndex() );
-//        it.next();
-//        System.out.println("Next index " + it.nextIndex() );
-//    }
 }
 
 
