@@ -140,15 +140,6 @@ public class ForwardList<T> implements List<T>, Deque<T> {
      */
     @Override
     public boolean offerLast(T t) {
-//        Node<T> last = getLastNode();
-//        if( last.item != null ) {
-//            last.next = new Node<>(t);
-//        }
-//        else {
-//            last.item = t;
-//        }
-//        ++this.size;
-//        return true;
         if( !isEmpty() ) {
             last.next = new Node<>(t);
             last = last.next;
@@ -254,31 +245,18 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         for( T element : collection ) {
             this.add(element);
         }
-//        add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
-//        Node<T> last = getLastNode();
-//        for(int i = 1; i < array.length; ++i) {
-//            last.next = new Node<>((T) array[i]);
-//            last = last.next;
-//            ++this.size;
-//        }
         return true;
     }
 
     @Override
     public boolean addAll(int i, Collection<? extends T> collection) {
-        Object[] array = collection.toArray();
-        if(array.length == 0) {
+        if(collection.size() == 0) {
             return false;
         }
-        add(i, (T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
-        Node<T> previous = getNode(i);
-        Node<T> next = getNode(i + 1);
-        for(int j = 1; j < array.length; ++j) {
-            previous.next = new Node<>((T) array[j]);
-            previous = previous.next;
-            ++this.size;
+        int index = i;
+        for( T element : collection ) {
+            add(index, element);
         }
-        previous.next = next;
         return true;
     }
 

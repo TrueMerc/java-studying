@@ -156,12 +156,23 @@ public class ForwardListTest {
         resetList();
         List<Integer> arrayList = new ArrayList<>();
         sequentiallyFillList(arrayList, 5, 0, 1);
+
+        // Insertion at empty list.
         integerList.addAll(0, arrayList);
         Assert.assertEquals(5, integerList.size() );
         for(int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i, integerList.get(i).intValue());
         }
+
+        // Insertion at the end of the list.
         integerList.addAll( 5 , integerList);
+        Assert.assertEquals( 10, integerList.size() );
+        for(int i = 0; i < integerList.size(); ++i) {
+            Assert.assertEquals(i % 5, integerList.get(i).intValue());
+        }
+
+        // Insertion at the middle of the list.
+        integerList.addAll( 5, arrayList );
         Assert.assertEquals( 10, integerList.size() );
         for(int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i % 5, integerList.get(i).intValue());
