@@ -6,12 +6,15 @@ import java.util.function.Consumer;
 
 /**
  * My forward list implementation.
+ * This list have not capacity restriction, so add* methods from @see Deque<T> interface
+ * implemented with corresponding offer* methods.
  * @param <T> type of objects in the list.
  */
-public class ForwardList<T> implements List<T> {
+public class ForwardList<T> implements List<T>, Deque<T> {
     private transient int modificationsCount = 0;
     private transient int size;
     private transient Node<T> first;
+    //private transient Node<T>
 
     /**
      * Constructs empty single-linked list.
@@ -39,6 +42,11 @@ public class ForwardList<T> implements List<T> {
     @Override
     public Iterator<T> iterator() {
         return new ForwardIterator();
+    }
+
+    @Override
+    public Iterator<T> descendingIterator() {
+        return null;
     }
 
     @Override
@@ -71,7 +79,62 @@ public class ForwardList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        Node<T> last = getLast();
+        return offerLast(t);
+    }
+
+    @Override
+    public boolean offer(T t) {
+        return offerLast(t);
+    }
+
+    @Override
+    public T remove() {
+        return null;
+    }
+
+    @Override
+    public T poll() {
+        return null;
+    }
+
+    @Override
+    public T element() {
+        return null;
+    }
+
+    @Override
+    public T peek() {
+        return null;
+    }
+
+    @Override
+    public void push(T t) {
+
+    }
+
+    @Override
+    public T pop() {
+        return null;
+    }
+
+    @Override
+    public void addFirst(T t) {
+
+    }
+
+    @Override
+    public void addLast(T t) {
+
+    }
+
+    @Override
+    public boolean offerFirst(T t) {
+        return false;
+    }
+
+    @Override
+    public boolean offerLast(T t) {
+        Node<T> last = getLastNode();
         if( last.item != null ) {
             last.next = new Node<>(t);
         }
@@ -82,12 +145,62 @@ public class ForwardList<T> implements List<T> {
         return true;
     }
 
-    private Node<T> getLast() {
+    @Override
+    public T removeFirst() {
+        return null;
+    }
+
+    @Override
+    public T removeLast() {
+        return null;
+    }
+
+    @Override
+    public T pollFirst() {
+        return null;
+    }
+
+    @Override
+    public T pollLast() {
+        return null;
+    }
+
+    @Override
+    public T getFirst() {
+        return first.item;
+    }
+
+    @Override
+    public T getLast() {
+        return getLastNode().item;
+    }
+
+    private Node<T> getLastNode() {
         Node<T> node = first;
         while( node.next != null ) {
             node = node.next;
         }
         return node;
+    }
+
+    @Override
+    public T peekFirst() {
+        return null;
+    }
+
+    @Override
+    public T peekLast() {
+        return null;
+    }
+
+    @Override
+    public boolean removeFirstOccurrence(Object o) {
+        return false;
+    }
+
+    @Override
+    public boolean removeLastOccurrence(Object o) {
+        return false;
     }
 
     @Override
@@ -124,7 +237,7 @@ public class ForwardList<T> implements List<T> {
             return false;
         }
         add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
-        Node<T> last = getLast();
+        Node<T> last = getLastNode();
         for(int i = 1; i < array.length; ++i) {
             last.next = new Node<>((T) array[i]);
             last = last.next;
@@ -291,12 +404,12 @@ public class ForwardList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        return new BidirectionalIterator();
+        return new ForwardListIterator();
     }
 
     @Override
     public ListIterator<T> listIterator(int i) {
-        return new BidirectionalIterator(i);
+        return new ForwardListIterator(i);
     }
 
     @Override
@@ -386,21 +499,21 @@ public class ForwardList<T> implements List<T> {
         }
     }
 
-    private class BidirectionalIterator implements ListIterator<T> {
+    private class ForwardListIterator implements ListIterator<T> {
 
         private ForwardList.Node<T> lastReturned;
         private ForwardList.Node<T> next;
         private int nextIndex;
         private int expectedModificationCount;
 
-        BidirectionalIterator() {
+        ForwardListIterator() {
             lastReturned = null;
             next = ForwardList.this.first;
             nextIndex = 0;
             expectedModificationCount = ForwardList.this.modificationsCount;
         }
 
-        BidirectionalIterator(int i) {
+        ForwardListIterator(int i) {
             lastReturned = (i > 0) ? ForwardList.this.getNode(i - 1) : null;
             next = ForwardList.this.getNode(i);
             nextIndex = i;
@@ -473,32 +586,32 @@ public class ForwardList<T> implements List<T> {
         }
     }
 
-    private Node<T> previous(Node<T> node) {
-        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next ) {
-            if(node == current) {
-                return previous;
-            }
-        }
-        return null;
-    }
-
-    private int getPreviousIndex(Node<T> node) {
-        int index = -1;
-        for(Node<T> current = first; current != null; current = current.next, ++index) {
-            if(node == current) {
-                break;
-            }
-        }
-        return index;
-    }
-
-    private int getNextIndex(Node<T> node) {
-        int index = 0;
-        for(Node<T> current = first; current != null; current = current.next, ++index) {
-            if(node.next == current) {
-                break;
-            }
-        }
-        return index;
-    }
+//    private Node<T> previous(Node<T> node) {
+//        for(Node<T> current = first, previous = null; current != null; previous = current, current = current.next ) {
+//            if(node == current) {
+//                return previous;
+//            }
+//        }
+//        return null;
+//    }
+//
+//    private int getPreviousIndex(Node<T> node) {
+//        int index = -1;
+//        for(Node<T> current = first; current != null; current = current.next, ++index) {
+//            if(node == current) {
+//                break;
+//            }
+//        }
+//        return index;
+//    }
+//
+//    private int getNextIndex(Node<T> node) {
+//        int index = 0;
+//        for(Node<T> current = first; current != null; current = current.next, ++index) {
+//            if(node.next == current) {
+//                break;
+//            }
+//        }
+//        return index;
+//    }
 }
