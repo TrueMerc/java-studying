@@ -1,4 +1,4 @@
 package ru.ryabtsev.collection;
 
-public interface Stack {
+public class ForwardListQueue {
 }
