@@ -176,7 +176,10 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T removeLast() {
-        return null;
+        if( isEmpty() ) {
+            throw new NoSuchElementException();
+        }
+        return pollLast();
     }
 
     @Override
@@ -184,6 +187,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         if( first != null ) {
             T result = first.item;
             first = first.next;
+            --this.size;
             return result;
         }
         return null;

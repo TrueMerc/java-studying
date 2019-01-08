@@ -36,6 +36,17 @@ public class ForwardListTest extends ForwardListTestBase {
         Assert.assertNull(integerList.poll());
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void  removeFirstMethodTest() {
+        resetList();
+        int size = fillMainList();
+        for(int i = 0; i < size; ++i) {
+            Assert.assertEquals(i, integerList.removeFirst().intValue());
+        }
+        Assert.assertTrue(integerList.isEmpty());
+        integerList.remove();
+    }
+
     @Test
     public void containsMethodTest() {
         resetList();
