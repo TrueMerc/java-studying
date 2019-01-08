@@ -6,22 +6,23 @@ import java.util.function.Consumer;
 
 /**
  * My forward list implementation.
- * This list have not capacity restriction, so add* methods from @see Deque<T> interface
- * implemented with corresponding offer* methods.
+ * This list have not capacity restriction, so add*() methods from {@link java.util.Deque<T>} interface
+ * implemented with corresponding offer*() methods.
  * @param <T> type of objects in the list.
  */
 public class ForwardList<T> implements List<T>, Deque<T> {
     private transient int modificationsCount = 0;
     private transient int size;
     private transient Node<T> first;
-    //private transient Node<T>
+    private transient Node<T> last;
 
     /**
      * Constructs empty single-linked list.
      */
     ForwardList() {
         this.size = 0;
-        this.first = new Node<>();
+        this.first = null;
+        this.last = null;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public Iterator<T> descendingIterator() {
-        return null;
+        throw new UnsupportedOperationException("Forward list has not implementation for descending operator.");
     }
 
     @Override
@@ -124,7 +125,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public void addLast(T t) {
-
+        offerLast(t);
     }
 
     @Override
@@ -132,14 +133,29 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         return false;
     }
 
+    /**
+     * Inserts the specified element at the end of this list.
+     * @param t the element to add
+     * @return always true because {@link ru.ryabtsev.collection.ForwardList<T>} hasn't capacity restrictions.
+     */
     @Override
     public boolean offerLast(T t) {
-        Node<T> last = getLastNode();
-        if( last.item != null ) {
+//        Node<T> last = getLastNode();
+//        if( last.item != null ) {
+//            last.next = new Node<>(t);
+//        }
+//        else {
+//            last.item = t;
+//        }
+//        ++this.size;
+//        return true;
+        if( !isEmpty() ) {
             last.next = new Node<>(t);
+            last = last.next;
         }
         else {
-            last.item = t;
+            first = new Node<>(t);
+            last = first;
         }
         ++this.size;
         return true;
@@ -232,17 +248,19 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public boolean addAll(Collection<? extends T> collection) {
-        Object[] array = collection.toArray();
-        if(array.length == 0) {
+        if(collection.size() == 0) {
             return false;
         }
-        add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
-        Node<T> last = getLastNode();
-        for(int i = 1; i < array.length; ++i) {
-            last.next = new Node<>((T) array[i]);
-            last = last.next;
-            ++this.size;
+        for( T element : collection ) {
+            this.add(element);
         }
+//        add((T)array[0]); // We are need to add the first element outside from for-loop because a list can be empty.
+//        Node<T> last = getLastNode();
+//        for(int i = 1; i < array.length; ++i) {
+//            last.next = new Node<>((T) array[i]);
+//            last = last.next;
+//            ++this.size;
+//        }
         return true;
     }
 
@@ -434,8 +452,12 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         Node<T> next;
 
         Node(T item) {
+            this(item, null);
+        }
+
+        Node(T item, Node<T> next) {
             this.item = item;
-            this.next = null;
+            this.next = next;
         }
 
         Node() {
