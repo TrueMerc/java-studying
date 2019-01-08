@@ -187,15 +187,30 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         if( first != null ) {
             T result = first.item;
             first = first.next;
-            --this.size;
+            decreaseSizeByOne();
             return result;
         }
         return null;
     }
 
+    private void decreaseSizeByOne() {
+        size = --size > 0 ? size :  0;
+    }
+
     @Override
     public T pollLast() {
-        return null;
+        T result = (last != null) ? last.item : null;
+        if(size > 1) {
+            Node<T> previous = getNode(size - 2);
+            previous.next = null;
+            last = previous;
+        }
+        else {
+            first = null;
+            last = null;
+        }
+        decreaseSizeByOne();
+        return result;
     }
 
     @Override
@@ -284,7 +299,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         }
         int index = i;
         for( T element : collection ) {
-            add(index, element);
+            add(index++, element);
         }
         return true;
     }
@@ -382,6 +397,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         }
         else {
             first = newNode;
+            //last = first;
         }
         ++this.size;
     }

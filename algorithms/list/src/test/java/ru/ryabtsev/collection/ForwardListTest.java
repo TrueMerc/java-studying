@@ -36,6 +36,17 @@ public class ForwardListTest extends ForwardListTestBase {
         Assert.assertNull(integerList.poll());
     }
 
+    @Test
+    public void pollLastMethodTest() {
+        resetList();
+        int size = fillMainList();
+        for(int i = size - 1; i > -1; --i) {
+            Assert.assertEquals(i, integerList.pollLast().intValue());
+        }
+        Assert.assertTrue(integerList.isEmpty());
+        Assert.assertNull(integerList.pollLast());
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void  removeFirstMethodTest() {
         resetList();
@@ -45,6 +56,17 @@ public class ForwardListTest extends ForwardListTestBase {
         }
         Assert.assertTrue(integerList.isEmpty());
         integerList.remove();
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void removeLastMethodTest() {
+        resetList();
+        int size = fillMainList();
+        for(int i = size - 1; i > -1; --i) {
+            Assert.assertEquals(i, integerList.removeLast().intValue());
+        }
+        Assert.assertTrue(integerList.isEmpty());
+        integerList.removeLast();
     }
 
     @Test
@@ -167,7 +189,7 @@ public class ForwardListTest extends ForwardListTestBase {
         }
 
         // Insertion at the end of the list.
-        integerList.addAll( 5 , integerList);
+        integerList.addAll( 5 , arrayList);
         Assert.assertEquals( 10, integerList.size() );
         for(int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i % 5, integerList.get(i).intValue());
@@ -175,7 +197,7 @@ public class ForwardListTest extends ForwardListTestBase {
 
         // Insertion at the middle of the list.
         integerList.addAll( 5, arrayList );
-        Assert.assertEquals( 10, integerList.size() );
+        Assert.assertEquals( 15, integerList.size() );
         for(int i = 0; i < integerList.size(); ++i) {
             Assert.assertEquals(i % 5, integerList.get(i).intValue());
         }
