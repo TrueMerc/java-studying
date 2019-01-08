@@ -200,32 +200,43 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T getFirst() {
-        return first.item;
+        if(isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return peekFirst();
     }
 
     @Override
     public T getLast() {
-        return last.item;
+        if(isEmpty()) {
+            throw new NoSuchElementException();
+        }
+        return peekLast();
     }
 
     @Override
     public T peekFirst() {
-        return null;
+        return (isEmpty()) ? null : first.item;
     }
 
     @Override
     public T peekLast() {
-        return null;
+        return (isEmpty()) ? null : last.item;
     }
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
-        return false;
+        return remove(o);
     }
 
     @Override
     public boolean removeLastOccurrence(Object o) {
-        return false;
+        int lastOccurrenceIndex = lastIndexOf(o);
+        boolean result;
+        if( result = isElementIndex(lastOccurrenceIndex) ) {
+            remove(lastOccurrenceIndex);
+        }
+        return result;
     }
 
     @Override
@@ -377,12 +388,16 @@ public class ForwardList<T> implements List<T>, Deque<T> {
 
     @Override
     public T remove(int i) {
+        checkElementIndex(i);
         T result;
-        if( i != 0 ) {
+        if( i > 0 ) {
             Node<T> previousNode = getNode(i - 1);
             Node<T> removedNode = getNode(i);
             result = removedNode.item;
             previousNode.next = removedNode.next;
+            if(i == size - 1) {
+                last = previousNode;
+            }
         }
         else {
             result = first.item;

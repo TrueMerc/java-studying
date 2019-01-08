@@ -48,6 +48,32 @@ public class ForwardListTest extends ForwardListTestBase {
     }
 
     @Test
+    public void removeFirstOccurrenceMethodTest() {
+        resetList();;
+        int size = fillMainList(5, 1, 0 );
+        integerList.set(0, 5);
+        integerList.set(size - 1, 5);
+
+        Assert.assertTrue(integerList.removeFirstOccurrence(new Integer(5)));
+        Assert.assertEquals(size - 1, integerList.size());
+        Assert.assertEquals( 1, integerList.getFirst().intValue() );
+        Assert.assertEquals( 5, integerList.getLast().intValue() );
+    }
+
+    @Test
+    public void removeLastOccurrenceMethodTest() {
+        resetList();;
+        int size = fillMainList(5, 1, 0 );
+        integerList.set(0, 5);
+        integerList.set(size - 1, 5);
+
+        Assert.assertTrue(integerList.removeLastOccurrence(new Integer(5)));
+        Assert.assertEquals(size - 1, integerList.size());
+        Assert.assertEquals( 5, integerList.getFirst().intValue() );
+        Assert.assertEquals( 1, integerList.getLast().intValue() );
+    }
+
+    @Test
     public void containsMethodTest() {
         resetList();
         Assert.assertFalse(integerList.contains(0));
