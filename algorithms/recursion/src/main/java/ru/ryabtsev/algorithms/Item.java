@@ -5,15 +5,15 @@ package ru.ryabtsev.algorithms;
  */
 public class Item {
 
-    private float weight;
-    private float nutritionalValue;
+    private int weight;
+    private int nutritionalValue;
 
     /**
      * Constructs new backpack item with given weight and given nutritional value.
      * @param weight
      * @param nutritionalValue
      */
-    public Item(float weight, float nutritionalValue) {
+    public Item(int weight, int nutritionalValue) {
         this.weight = weight;
         this.nutritionalValue = nutritionalValue;
     }
@@ -21,14 +21,24 @@ public class Item {
     /**
      * Returns the item's weight.
      */
-    public float getWeight() {
+    public int getWeight() {
         return weight;
     }
 
     /**
      *  Returns the item's nutritional value.
      */
-    public float getNutritionalValue() {
+    public int getNutritionalValue() {
         return nutritionalValue;
+    }
+
+    /**
+     * Returns the string representation.
+     */
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("weight: " + this.weight + ", nutrition value: " + this.nutritionalValue);
+        return stringBuilder.toString();
     }
 }
