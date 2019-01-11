@@ -23,7 +23,7 @@ public class Backpack {
     /**
      * Adds new item to this backpack if it is possible. Possibility depends on current backpack weight,
      * backpack maximal weight and weight of this item.
-     * @return true if item is added successfully or false if item isn't added.
+     * @param item item instance.
      */
     void add(final Item item) {
         items.add(item);
@@ -31,6 +31,8 @@ public class Backpack {
 
     /**
      * Gets the optimal set of items for given knapsack maximal weight.
+     * @return the list of items that have maximal nutritional value and have weight which less or equal
+     * maximal backpack weight.
      */
     public List<Item> getBestItems() {
         final List<Item> result = new ArrayList<>();
