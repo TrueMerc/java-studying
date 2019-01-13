@@ -4,10 +4,10 @@ package ru.ryabtsev.collection;
  * Simple queue interface.
  * @param <T> the elements type.
  */
-public interface Stack1<T> {
+public interface Stack<T> {
     /**
      * Pops the element out from the top of this stack.
-     * @return
+     * @return the value of element from the top of this stack.
      */
     T pop();
 

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Base for ForwardList and its iterators tests.
  */
-public class ForwardListTestBase {
+class ForwardListTestBase {
 
     protected ForwardList<Integer> integerList;
 

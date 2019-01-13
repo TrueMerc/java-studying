@@ -274,8 +274,9 @@ public class ForwardList<T> implements List<T>, Deque<T> {
     @Override
     public boolean containsAll(Collection<?> collection) {
         Object[] array = collection.toArray();
-        boolean result = array.length > 0 ? true : false;
-        for(int i = 0; i < array.length && result == true; ++i) {
+
+        boolean result = array.length > 0;
+        for(int i = 0; i < array.length && result; ++i) {
             result &= contains(array[i]);
         }
         return result;
@@ -325,7 +326,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
         for( int i = 0; i < size; ) {
             if( !collection.contains(this.get(i)) ) {
                 remove(i);
-                result |= true;
+                result = true;
             }
             else {
                 ++i;

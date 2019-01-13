@@ -6,7 +6,11 @@ package ru.ryabtsev.collection;
  */
 public class ForwardListStack<T> implements Stack<T> {
 
-    private final ForwardList<T> list = new ForwardList<>();
+    private final ForwardList<T> list;
+
+    public ForwardListStack() {
+        list = new ForwardList<>();
+    }
 
     @Override
     public T pop() {
@@ -22,4 +26,7 @@ public class ForwardListStack<T> implements Stack<T> {
     public boolean isEmpty() {
         return list.isEmpty();
     }
+
+    @Override
+    public String toString() { return list.toString(); }
 }

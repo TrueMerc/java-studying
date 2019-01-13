@@ -4,7 +4,7 @@ package ru.ryabtsev.collection;
  * Simple queue interface.
  * @param <T> the elements type.
  */
-public interface Stack<T> {
+public interface Queue<T> {
     /**
      * Returns value of the first element of queue, then removes this element.
      * @return the value of the first element of queue.

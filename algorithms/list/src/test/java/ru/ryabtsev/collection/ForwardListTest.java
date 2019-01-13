@@ -71,12 +71,13 @@ public class ForwardListTest extends ForwardListTestBase {
 
     @Test
     public void removeFirstOccurrenceMethodTest() {
+        resetList();
         resetList();;
         int size = fillMainList(5, 1, 0 );
         integerList.set(0, 5);
         integerList.set(size - 1, 5);
 
-        Assert.assertTrue(integerList.removeFirstOccurrence(new Integer(5)));
+        Assert.assertTrue(integerList.removeFirstOccurrence(5));
         Assert.assertEquals(size - 1, integerList.size());
         Assert.assertEquals( 1, integerList.getFirst().intValue() );
         Assert.assertEquals( 5, integerList.getLast().intValue() );
@@ -84,12 +85,13 @@ public class ForwardListTest extends ForwardListTestBase {
 
     @Test
     public void removeLastOccurrenceMethodTest() {
-        resetList();;
+        resetList();
         int size = fillMainList(5, 1, 0 );
         integerList.set(0, 5);
         integerList.set(size - 1, 5);
 
-        Assert.assertTrue(integerList.removeLastOccurrence(new Integer(5)));
+        Assert.assertTrue(integerList.removeLastOccurrence(5));
+
         Assert.assertEquals(size - 1, integerList.size());
         Assert.assertEquals( 5, integerList.getFirst().intValue() );
         Assert.assertEquals( 1, integerList.getLast().intValue() );
@@ -165,9 +167,8 @@ public class ForwardListTest extends ForwardListTestBase {
         fillMainList(3, 0, 1);
         List<Integer> arrayList = new ArrayList<>();
         Assert.assertFalse(integerList.addAll(arrayList));
-        for(int i = 0; i < integerList.size(); ++i) {
-            arrayList.add(integerList.get(i));
-        }
+
+        arrayList.addAll(integerList);
         integerList.addAll(arrayList);
         Assert.assertEquals(6, integerList.size());
         for(int i = 0; i < integerList.size(); ++i) {
