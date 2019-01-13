@@ -72,6 +72,7 @@ public class ForwardListTest extends ForwardListTestBase {
     @Test
     public void removeFirstOccurrenceMethodTest() {
         resetList();
+        resetList();;
         int size = fillMainList(5, 1, 0 );
         integerList.set(0, 5);
         integerList.set(size - 1, 5);
@@ -90,6 +91,7 @@ public class ForwardListTest extends ForwardListTestBase {
         integerList.set(size - 1, 5);
 
         Assert.assertTrue(integerList.removeLastOccurrence(5));
+
         Assert.assertEquals(size - 1, integerList.size());
         Assert.assertEquals( 5, integerList.getFirst().intValue() );
         Assert.assertEquals( 1, integerList.getLast().intValue() );
@@ -165,6 +167,7 @@ public class ForwardListTest extends ForwardListTestBase {
         fillMainList(3, 0, 1);
         List<Integer> arrayList = new ArrayList<>();
         Assert.assertFalse(integerList.addAll(arrayList));
+
         arrayList.addAll(integerList);
         integerList.addAll(arrayList);
         Assert.assertEquals(6, integerList.size());

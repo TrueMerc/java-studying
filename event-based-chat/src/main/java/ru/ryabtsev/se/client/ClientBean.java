@@ -3,9 +3,12 @@ package ru.ryabtsev.se.client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import ru.ryabtsev.se.User;
 import ru.ryabtsev.se.configuration.NetworkConfiguration;
 import ru.ryabtsev.se.client.event.ClientMessageInputEvent;
 import ru.ryabtsev.se.client.event.ClientMessageReadEvent;
+import ru.ryabtsev.se.logging.LogFile;
+import ru.ryabtsev.se.logging.Logable;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;
@@ -14,17 +17,20 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 
 /**
- * Console client implementation
+ * Console client implementation.
  */
-@Getter
 @ApplicationScoped
 @NoArgsConstructor
 public class ClientBean implements Client {
 
+    /**
+     * Network configuration.
+     */
     @Inject
-    NetworkConfiguration networkConfiguration;
+    private NetworkConfiguration networkConfiguration;
 
     @Inject
     private Event<ClientMessageReadEvent> clientMessageReadEvent;
@@ -32,12 +38,25 @@ public class ClientBean implements Client {
     @Inject
     private Event<ClientMessageInputEvent> clientMessageInputEvent;
 
+
     private Socket socket;
 
     private DataInputStream in;
 
     private DataOutputStream out;
 
+    /**
+     * User data like login, password, e.t.c.
+     */
+    private User userData;
+
+    private Logable log;
+
+    private boolean isAuthorized = false;
+
+    /**
+     * @InheritDoc
+     */
     @Override
     @SneakyThrows
     public void run() {
@@ -50,25 +69,67 @@ public class ClientBean implements Client {
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 
+    /**
+     * @InheritDoc
+     */
     @Override
     @SneakyThrows
     public void send( final String message ) {
         out.writeUTF( message );
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
-    public String receive() {
-        String result = null;
-        try {
-            result = in.readUTF();
-        }
-        catch (IOException e) {
-            System.out.println("Client receive() exception");
-        }
-
-        return result;
+    public boolean isAuthorized() {
+        return isAuthorized;
     }
 
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setAuthorized(boolean isAuthorized) {
+        final String logFileSuffix = "-messages.txt";
+        this.isAuthorized = isAuthorized;
+        log = new LogFile(userData.getLogin() + logFileSuffix);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public User getUser() {
+        return userData;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void setUser(User user) {
+        userData = user;
+    }
+
+    /**
+     * @InheritDoc
+     */
+    @Override
+    public String receive() throws IOException {
+        try {
+            return in.readUTF();
+        }
+        catch (IOException exception) {
+            System.out.println("Client receive() exception");
+            throw exception;
+        }
+    }
+
+    /**
+     * @InheritDoc
+     */
+    @Override
     @SneakyThrows
     public void exit( ) {
         socket.close();
@@ -76,4 +137,23 @@ public class ClientBean implements Client {
         System.exit( 0 );
     }
 
+    @Override
+    public void clear() {
+        log.clear();
+    }
+
+    @Override
+    public void write(String string) {
+        log.write( string );
+    }
+
+    @Override
+    public List<String> readAll() {
+        return log.readAll();
+    }
+
+    @Override
+    public List<String> readLast(int stringsNumber) {
+        return log.readLast( stringsNumber );
+    }
 }

@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import ru.ryabtsev.se.packets.PacketType;
 
 import ru.ryabtsev.se.packets.nickname.PacketSetNicknameRequest;
-import ru.ryabtsev.se.server.event.ServerLoginEvent;
 import ru.ryabtsev.se.server.event.ServerSetNicknameEvent;
 import ru.ryabtsev.se.server.service.ConnectionServiceBean;
 import ru.ryabtsev.se.server.service.UserService;
@@ -37,7 +36,7 @@ public class ServerSetNicknameHandler {
         boolean check = userService.setNickname( login, nickname );
         if( check ) {
             System.out.println("User " + login + " successfully changed nickname.");
-            connectionService.setLogin( socket, login );
+            connectionService.authorize( socket, login );
         }
         else {
             System.out.println( "Nickname change failed." );

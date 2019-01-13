@@ -2,7 +2,6 @@ package ru.ryabtsev.se.server.jdbc.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import ru.ryabtsev.se.packets.User;
 
 import java.util.UUID;
 

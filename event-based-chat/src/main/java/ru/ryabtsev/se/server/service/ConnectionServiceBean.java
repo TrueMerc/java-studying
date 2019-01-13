@@ -29,7 +29,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionServiceBean implements ConnectionService {
 
-    private final static long AUTHORIZATION_TIMEOUT = 1500000;
+    private final static long AUTHORIZATION_TIMEOUT = 150000;
 
     private final Map<Socket, Connection> connections = new LinkedHashMap<>();
 
@@ -47,6 +47,7 @@ public class ConnectionServiceBean implements ConnectionService {
      * @param socket - client socket.
      * @return Connection matches specified client socket.
      */
+    @Override
     @Nullable
     public Connection get(@Nullable final Socket socket ) {
         if( socket == null ) {
@@ -61,8 +62,9 @@ public class ConnectionServiceBean implements ConnectionService {
      * @param login - client login.
      * @return Connection matches specified client socket.
      */
+    @Override
     @Nullable
-    public Connection getByLogin( String login ) {
+    public Connection get( String login ) {
         if( login == null ) {
             return null;
         }
@@ -75,9 +77,9 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Adds connection with specified socket.
-     * @param socket - client socket.
+     * @inheritDoc
      */
+    @Override
     public void add(@Nullable final Socket socket ) {
         if( socket == null ) {
             return;
@@ -87,11 +89,10 @@ public class ConnectionServiceBean implements ConnectionService {
         System.out.println("Added connection with id = " + connection.getId() + "...");
     }
 
-
     /**
-     * Removes connection with specified socket.
-     * @param socket - client socket.
+     * @inheritDoc
      */
+    @Override
     public void remove(@Nullable final Socket socket ) {
         if( socket == null ) {
             return;
@@ -100,11 +101,10 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Sets login for specified socket.
-     * @param socket - client socket.
-     * @param login - client login.
+     * @inheritDoc
      */
-    public void setLogin(@Nullable final Socket socket, @Nullable final String login) {
+    @Override
+    public void authorize(@Nullable final Socket socket, @Nullable final String login) {
         Connection connection = get(socket);
         if( connection != null ) {
             connection.setLogin( login );
@@ -112,7 +112,9 @@ public class ConnectionServiceBean implements ConnectionService {
         }
     }
 
-
+    /**
+     * @inheritDoc
+     */
     @Override
     public void sendResult(@Nullable Socket socket, @Nullable PacketType packetType, @Nullable Boolean success) {
         try {
@@ -129,42 +131,54 @@ public class ConnectionServiceBean implements ConnectionService {
         System.out.println( "Result was sent." );
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     @SneakyThrows
-    public void sendUnicast(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+    public boolean sendUnicast(@NotNull final String sender, @NotNull final String receiver, @NotNull final String message) {
+        Connection connection = get( receiver );
         if( connection == null || connection.getLogin() == null ) {
-            return;
+            return false;
         }
 
-        @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( login, message );
+        @NotNull final PacketUnicastMessage packet = new PacketUnicastMessage( sender, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         connection.send( objectMapper.writeValueAsString( packet ) );
+        return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
-    public void sendBroadcast(@Nullable String login, @Nullable String message) {
+    public void sendBroadcast(@NotNull final String sender, @NotNull final String message) {
         for( final Map.Entry<Socket, Connection> receiverConnection : connections.entrySet() ) {
-            sendMessage( receiverConnection.getValue(), login,  message );
+            sendBroadcastToConnection( receiverConnection.getValue(), sender,  message );
         }
     }
 
-    @Override
+    /**
+     * Sends broadcast message to specified connection.
+     * @param connection - connection.
+     * @param login - sender login.
+     * @param message - message text.
+     */
     @SneakyThrows
-    public void sendMessage(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
+    private void sendBroadcastToConnection(@Nullable Connection connection, @Nullable String login, @Nullable String message) {
         if( connection == null || connection.getLogin() == null ) {
             return;
         }
 
-        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse();
+        @NotNull final PacketBroadcastResponse packet = new PacketBroadcastResponse( login, message );
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
-        packet.setLogin( login );
-        packet.setMessage( message );
         connection.send( objectMapper.writeValueAsString( packet ) );
     }
 
     /**
-     * Close connection to specified client socket.
+     * @inheritDoc
      */
+    @Override
     @SneakyThrows
     public void disconnect(@Nullable final Socket socket ) {
         socket.close();
@@ -172,7 +186,7 @@ public class ConnectionServiceBean implements ConnectionService {
     }
 
     /**
-     * Kick unauthorized users by timeout.
+     * @inheritDoc
      */
     @Override
     public void kickByTimeout() {

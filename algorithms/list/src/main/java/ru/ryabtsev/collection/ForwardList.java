@@ -274,6 +274,7 @@ public class ForwardList<T> implements List<T>, Deque<T> {
     @Override
     public boolean containsAll(Collection<?> collection) {
         Object[] array = collection.toArray();
+
         boolean result = array.length > 0;
         for(int i = 0; i < array.length && result; ++i) {
             result &= contains(array[i]);

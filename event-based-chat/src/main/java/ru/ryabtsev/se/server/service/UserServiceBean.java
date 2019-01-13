@@ -3,7 +3,7 @@
 //import lombok.NoArgsConstructor;
 //import org.jetbrains.annotations.NotNull;
 //import org.jetbrains.annotations.Nullable;
-//import ru.ryabtsev.se.packets.User;
+//import ru.ryabtsev.se.User;
 //
 //import javax.annotation.PostConstruct;
 //import javax.enterprise.context.ApplicationScoped;
@@ -30,7 +30,7 @@
 //        }
 //        else {
 //            final User user = new User();
-//            user.setLogin( login );
+//            user.authorize( login );
 //            user.setPassword( password );
 //            users.put( login, user );
 //            return true;

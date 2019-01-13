@@ -18,6 +18,9 @@ import javax.enterprise.event.ObservesAsync;
 import javax.inject.Inject;
 import java.net.Socket;
 
+/**
+ * Handles unicast message request.
+ */
 @ApplicationScoped
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ServerUnicastHandler {
@@ -34,24 +37,20 @@ public class ServerUnicastHandler {
             System.out.println( "Can't find connection.");
             return;
         }
-        @Nullable final String login = connection.getLogin();
-        if( login == null || login.isEmpty() ) {
+        @Nullable final String sender = connection.getLogin();
+        if( sender == null || sender.isEmpty() ) {
             System.out.println( "Can't find connection login.");
             return;
         }
         @NotNull final String message = event.getMessage();
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         @NotNull final PacketUnicastRequest packetUnicastRequest = objectMapper.readValue( message, PacketUnicastRequest.class );
-        @NotNull final String receiverLogin = packetUnicastRequest.getReceiverLogin();
-        @NotNull final String unicastMessage =  packetUnicastRequest.getMessage();
-        @Nullable final Connection receiverConnection = connectionService.getByLogin( receiverLogin );
+        @NotNull final String receiver = packetUnicastRequest.getReceiverLogin();
+        @NotNull final String unicast =  packetUnicastRequest.getMessage();
 
-        boolean result = (receiverConnection != null);
+        System.out.println("Sending unicast message.");
+        boolean result = connectionService.sendUnicast( sender, receiver, unicast );
 
-        if( result ) {
-            System.out.println("Sending unicast message.");
-            connectionService.sendUnicast(receiverConnection, login, unicastMessage);
-        }
         connectionService.sendResult( socket, PacketType.UNICAST_RESPONSE, result );
     }
 }

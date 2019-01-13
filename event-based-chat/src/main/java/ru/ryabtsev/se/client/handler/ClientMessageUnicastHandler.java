@@ -38,6 +38,7 @@ public class ClientMessageUnicastHandler {
 
         @NotNull final ObjectMapper objectMapper = new ObjectMapper();
         client.send( objectMapper.writeValueAsString( packet ) );
+        client.write( "Me to " + recipient + ": " + message);
         clientMessageInputEvent.fire( new ClientMessageInputEvent() );
     }
 }
