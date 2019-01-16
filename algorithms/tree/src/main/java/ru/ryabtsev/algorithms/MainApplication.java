@@ -5,7 +5,7 @@ package ru.ryabtsev.algorithms;
  */
 public class MainApplication {
 
-    private static final int TREES_NUMBER = 10000000;
+    private static final int TREES_NUMBER = 100000;
     private static final int TREE_MAX_DEPTH = 6;
 
     public static void main(String[] args) {
