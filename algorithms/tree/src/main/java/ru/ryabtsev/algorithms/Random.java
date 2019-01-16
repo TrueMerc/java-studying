@@ -14,4 +14,13 @@ public class Random {
     public int getValue() {
         return (int)Math.round((double)left + (double)(right - left) * Math.random());
     }
+
+    public int getLeftBorder() {
+        return left;
+    }
+
+    public int getRightBorder() {
+        return right;
+    }
+
 }
