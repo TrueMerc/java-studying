@@ -52,12 +52,35 @@ public class LogFile implements Logable {
         }
     }
 
-    @Override
-    public List<String> readLast(int stringsNumber) {
-        List<String> result = readAll();
-        while( result.size() > stringsNumber ) {
-            result.remove( 0 );
-        }
-        return result;
-    }
+   @Override
+   @SneakyThrows
+   public List<String> readLast(int stringsNumber) {
+       List<String> result = new ArrayList<>();
+       RandomAccessFile file = null;
+       try {
+           file = new RandomAccessFile(fileName, "r");
+           long lastByte = file.length() - 1;
+           StringBuilder sb = new StringBuilder();
+           int line = 0;
+
+           for (long filePointer = lastByte; filePointer != -1; filePointer--) {
+               file.seek(filePointer);
+               int readByte = file.readByte();
+
+               if ( (readByte == 0xA && filePointer < lastByte) || (readByte == 0xD) && (filePointer < lastByte - 1) ) {
+                   ++line;
+                   String lastLine = sb.reverse().toString();
+                   result.add( lastLine );
+                   sb = new StringBuilder();
+               }
+               if (line >= stringsNumber) {
+                   break;
+               }
+               sb.append((char) readByte);
+           }
+       } finally {
+           file.close();
+           return result;
+       }
+   }
 }
