@@ -4,6 +4,7 @@ import ru.ryabtsev.algorithms.graph.City;
 import ru.ryabtsev.algorithms.graph.Edge;
 import ru.ryabtsev.algorithms.graph.SimpleGraph;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -12,6 +13,7 @@ import java.util.function.Supplier;
 public class MainApplication
 {
     private static final City Bryansk = new City("Bryansk");
+    private static final City Vladivostok = new City("Vladivostok");
     private static final City Ivanovo = new City( "Ivanovo");
     private static final City Moscow = new City("Moscow");
     private static final City NiznyNovgorod = new City( "Nizny Novgorod");
@@ -37,10 +39,19 @@ public class MainApplication
         System.out.println("Connection between cities:");
         System.out.println(citiesGraph);
         System.out.println("Total cities: " + citiesGraph.verticesSet().size());
+
+        final BreadthFirstSearch<City, Edge> bfs = new BreadthFirstSearch<>(citiesGraph);
+
+        findShortestWay(bfs, Bryansk, StPetersburg);
+        findShortestWay(bfs, Moscow, StPetersburg);
+        findShortestWay(bfs, Novgorod, Ryazan);
+        findShortestWay(bfs, Vladivostok, Novgorod);
+        findShortestWay(bfs, Vladivostok, Ivanovo);
     }
 
     private static void addCities(Graph<City, Edge> citiesGraph) {
         citiesGraph.addVertex(Bryansk);
+        citiesGraph.addVertex(Vladivostok);
         citiesGraph.addVertex(Ivanovo);
         citiesGraph.addVertex(Moscow);
         citiesGraph.addVertex(Novgorod);
@@ -55,12 +66,13 @@ public class MainApplication
     private static void addRoads(Graph<City, Edge> citiesGraph) {
         citiesGraph.addEdge(Bryansk, Moscow);
         citiesGraph.addEdge(Bryansk, Orel);
+        citiesGraph.addEdge(Vladivostok, Moscow);
+        //citiesGraph.addEdge(Vladivostok, StPetersburg);
         citiesGraph.addEdge(Ivanovo, Moscow);
         citiesGraph.addEdge(Ivanovo, NiznyNovgorod);
         citiesGraph.addEdge(Ivanovo, Tver);
         citiesGraph.addEdge(Moscow, NiznyNovgorod);
         citiesGraph.addEdge(Moscow, Ryazan);
-        citiesGraph.addEdge(Moscow, StPetersburg);
         citiesGraph.addEdge(Moscow, Tver);
         citiesGraph.addEdge(Moscow, Tula);
         citiesGraph.addEdge(NiznyNovgorod, Ryazan);
@@ -70,5 +82,12 @@ public class MainApplication
         citiesGraph.addEdge(Orel, Tula);
         citiesGraph.addEdge(Ryazan, Tula);
         citiesGraph.addEdge(StPetersburg, Tver);
+    }
+
+    private static void findShortestWay(BreadthFirstSearch<City, Edge> bfs, City from, City to) {
+        final Set<City> path = bfs.getShortestWay(from, to);
+        System.out.println(
+                "The shortest way between: " + from + " and " + to + ": " + path + ", length = " + (path.size() - 1)
+        );
     }
 }

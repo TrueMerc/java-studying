@@ -27,7 +27,7 @@ public class Edge {
     }
 
     /**
-     * Return the source vertex of this edge.
+     * Returns the source vertex of this edge.
      * @return the source vertex of this edge.
      */
     public Object getSource() {
@@ -35,11 +35,25 @@ public class Edge {
     }
 
     /**
-     * Return the target vertex of this edge.
+     * Returns the target vertex of this edge.
      * @return the target vertex of this edge.
      */
     public Object getTarget() {
         return target;
+    }
+
+    /**
+     * Returns the destination vertex for given source vertex if this edge contains source vertex
+     * or null in the other case.
+     */
+    public Object getDestination(Object source) {
+        if(source.equals(this.source)) {
+            return this.target;
+        }
+        if(source.equals(this.target)) {
+            return this.source;
+        }
+        return null;
     }
 
     /**

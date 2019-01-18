@@ -2,10 +2,7 @@ package ru.ryabtsev.algorithms.graph;
 
 import ru.ryabtsev.algorithms.Graph;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -22,7 +19,7 @@ public class SimpleGraph<VertexType, EdgeType extends Edge> implements Graph<Ver
      * Creates simple graph instance.
      */
     public SimpleGraph(Supplier<EdgeType> edgeSupplier) {
-        graph = new HashMap<>();
+        graph = new LinkedHashMap<>();
         this.edgeSupplier = edgeSupplier;
     }
 
