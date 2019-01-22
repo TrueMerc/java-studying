@@ -47,8 +47,10 @@ public class HashMap<Key, Value>  {
         }
     }
 
+    private static final int INDEX_FOR_NULL_KEY = 0;
     private static final int DEFAULT_CAPACITY = 16;
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+    private static final int MAXIMAL_CAPACITY = Integer.MAX_VALUE / 2;
 
     private Entry[] table;
     private float loadFactor;
@@ -98,16 +100,23 @@ public class HashMap<Key, Value>  {
 
 
     /**
-     * 
-     * @param key
-     * @param value
-     * @return
+     * Puts element in this hash map.
+     * @param key element key.
+     * @param value element value.
+     * @return Old value associated with key, or null if there was no mapping for key.
      */
-    
-    
     Value put(Key key, Value value) {
         if( key == null) {
-            //putForNullKeyValue();
+            Entry e = table[INDEX_FOR_NULL_KEY];
+            if( e != null) {
+                Value oldValue = (Value) e.value;
+                e.value = value;
+                return oldValue;
+            }
+            else {
+                table[INDEX_FOR_NULL_KEY] = new Entry(key, value);
+                ++size;
+            }
             return null;
         }
 
@@ -133,11 +142,29 @@ public class HashMap<Key, Value>  {
         else {
             table[index] = new Entry(key, value);
         }
-
+        ++size;
         return null;
     }
 
+    static int hash(int hashCode) {
+        hashCode^= (hashCode >>> 20) ^ (hashCode >>> 12);
+        return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
+    }
+
+    static int indexFor(int hash, int tableLength) {
+        return hash & (tableLength - 1);
+    }
+
+    /**
+     * Returns value associated with given key, or false if there is no value associated with given key.
+     * @param key element key.
+     * @return value associated with given key, or false if there is no value associated with given key.
+     */
     Value get(Key key) {
+        if(key == null) {
+            return (Value)table[INDEX_FOR_NULL_KEY].value;
+        }
+
         int keyHash = hash(key.hashCode());
         int index = indexFor(keyHash, table.length);
         Entry e = table[index];
@@ -154,13 +181,52 @@ public class HashMap<Key, Value>  {
 
         return null;
     }
-    
-    static int hash(int hashCode) {
-        hashCode^= (hashCode >>> 20) ^ (hashCode >>> 12);
-        return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
+
+    /**
+     * Changes capacity of this hash map to given value.
+     * @param capacity new capacity of this hash map.
+     */
+    void resize(int capacity) {
+        if(table.length >= MAXIMAL_CAPACITY) {
+            threshold = Integer.MAX_VALUE;
+        }
+
+        Entry[] newTable = new Entry[capacity];
+        transfer(newTable);
+        table = newTable;
+        this.capacity = capacity;
+        threshold = (int)(capacity * loadFactor);
     }
 
-    static int indexFor(int hash, int tableLength) {
-        return hash & (tableLength - 1);
+    private void transfer(Entry[] newTable) {
+        newTable[INDEX_FOR_NULL_KEY] = table[INDEX_FOR_NULL_KEY];
+
+        for(int i = 1; i < table.length; ++i) {
+            Entry e = table[i];
+            if(e != null && e.value != null) {
+                int keyHash = hash(e.key.hashCode());
+                int index = indexFor(keyHash, newTable.length);
+                Entry ne = newTable[index];
+
+                if( ne != null) {
+                    Entry previous = null;
+                    while (ne != null) {
+                        int entryHash = hash(ne.key.hashCode());
+                        if ((entryHash == keyHash) && (ne.key == e.key || ne.key.equals(e.key))) {
+                            Value oldValue = (Value) ne.value;
+                            ne.value = e.value;
+
+                        }
+                        previous = e;
+                        e = e.next;
+                    }
+                    previous.next = new Entry(e.key, e.value);
+                }
+                else {
+                    newTable[index] = new Entry(e.key, e.value);
+                }
+            }
+        }
     }
 }
+

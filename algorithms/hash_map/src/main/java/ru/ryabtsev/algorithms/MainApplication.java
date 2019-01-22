@@ -15,7 +15,13 @@ public class MainApplication
         myMap.put("8", "16");
 
         if( !"1".equals(myMap.get("0")) || !"3".equals(myMap.get("2")) || !"16".equals(myMap.get("8")) ) {
-            System.out.println("Getter error!");
+            System.out.println("Put/get error!");
+        }
+
+        myMap.resize(32);
+
+        if( !"1".equals(myMap.get("0")) || !"3".equals(myMap.get("2")) || !"16".equals(myMap.get("8")) ) {
+            System.out.println("Capacity error!");
         }
 
         System.out.println("Processing completed.");
