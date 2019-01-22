@@ -1,7 +1,5 @@
 package ru.ryabtsev.algorithms;
 
-import java.util.Map;
-
 /**
  * My HashMap implementation.
  * @param <Key> map key type.
@@ -44,6 +42,23 @@ public class HashMap<Key, Value>  {
          */
         public Value getValue() {
             return value;
+        }
+
+        Entry elementForKey(Key key) {
+            return elementForKey(key, hash(key.hashCode()));
+        }
+
+        Entry elementForKey(Key key, int keyHash) {
+            if(key == null && this.key == null) {
+                return this;
+            }
+            for( Entry current = this, previous = null; current != null; current = current.next) {
+                int hash = hash(this.key.hashCode());
+                if((keyHash == hash) && (current.key == key || (key.equals(current.key)) )) {
+                    return current;
+                }
+            }
+            return null;
         }
     }
 
@@ -97,7 +112,6 @@ public class HashMap<Key, Value>  {
     boolean isEmpty() {
         return 0 == this.size;
     }
-
 
     /**
      * Puts element in this hash map.
@@ -157,6 +171,7 @@ public class HashMap<Key, Value>  {
         ++size;
         return null;
     }
+
 
     /**
      * Returns value associated with given key, or false if there is no value associated with given key.

@@ -1,6 +1,5 @@
 package ru.ryabtsev.algorithms;
 
-
 /**
  * The eighth homework main application.
  */
@@ -14,7 +13,7 @@ public class MainApplication
         myMap.put("2", "3");
         myMap.put("8", "16");
 
-        if( !"1".equals(myMap.get("0")) || !"3".equals(myMap.get("2")) || !"16".equals(myMap.get("8")) ) {
+        if( !"1".equals(myMap.get("0")) || !"3".equals(myMap.get("2")) || !"16".equals(myMap.get("8")) || myMap.size() != 3 ) {
             System.out.println("Put/get error!");
         }
 
