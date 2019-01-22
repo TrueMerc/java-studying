@@ -122,9 +122,21 @@ public class HashMap<Key, Value>  {
 
         int keyHash = hash(key.hashCode());
         int index = indexFor(keyHash, table.length);
+
+        return addEntry(table, index, key, value, keyHash);
+    }
+
+    static int hash(int hashCode) {
+        hashCode^= (hashCode >>> 20) ^ (hashCode >>> 12);
+        return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
+    }
+
+    static int indexFor(int hash, int tableLength) {
+        return hash & (tableLength - 1);
+    }
+
+    private Value addEntry(Entry[] table, int index, Key key, Value value, int keyHash) {
         Entry e = table[index];
-
-
         if( e != null) {
             Entry previous = null;
             while (e != null) {
@@ -144,15 +156,6 @@ public class HashMap<Key, Value>  {
         }
         ++size;
         return null;
-    }
-
-    static int hash(int hashCode) {
-        hashCode^= (hashCode >>> 20) ^ (hashCode >>> 12);
-        return hashCode ^ (hashCode >>> 7) ^ (hashCode >>> 4);
-    }
-
-    static int indexFor(int hash, int tableLength) {
-        return hash & (tableLength - 1);
     }
 
     /**
@@ -206,25 +209,8 @@ public class HashMap<Key, Value>  {
             if(e != null && e.value != null) {
                 int keyHash = hash(e.key.hashCode());
                 int index = indexFor(keyHash, newTable.length);
-                Entry ne = newTable[index];
 
-                if( ne != null) {
-                    Entry previous = null;
-                    while (ne != null) {
-                        int entryHash = hash(ne.key.hashCode());
-                        if ((entryHash == keyHash) && (ne.key == e.key || ne.key.equals(e.key))) {
-                            Value oldValue = (Value) ne.value;
-                            ne.value = e.value;
-
-                        }
-                        previous = e;
-                        e = e.next;
-                    }
-                    previous.next = new Entry(e.key, e.value);
-                }
-                else {
-                    newTable[index] = new Entry(e.key, e.value);
-                }
+                addEntry(newTable, index, (Key)e.key, (Value)e.value, keyHash);
             }
         }
     }
