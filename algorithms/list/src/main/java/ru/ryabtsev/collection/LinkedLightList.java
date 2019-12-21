@@ -41,7 +41,7 @@ public class LinkedLightList<T> implements LightList<T> {
 
     @Override
     public void add(int index, T element) {
-        checkElementIndex(index);
+        checkAddElementIndex(index);
         Node<T> previousNode = getNode(index - 1);
         Node<T> nextNode = getNode(index);
         Node<T> newNode = new Node<>(element, previousNode, nextNode);
@@ -61,6 +61,12 @@ public class LinkedLightList<T> implements LightList<T> {
         }
 
         ++this.size;
+    }
+
+    private void checkAddElementIndex(int index) throws IndexOutOfBoundsException {
+        if(0 > index || index > size) {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     @Override
@@ -116,7 +122,7 @@ public class LinkedLightList<T> implements LightList<T> {
     }
 
     private boolean isElementIndex(int index) {
-        return 0 <= index && index <= size;
+        return 0 <= index && index < size;
     }
 
     @Override

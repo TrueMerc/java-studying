@@ -12,13 +12,13 @@ public interface LightList<T> {
 
     boolean add(T element);
 
-    void add(int position, T element);
+    void add(int index, T element);
 
     boolean remove(T element);
 
-    T get(int position);
+    T get(int index);
 
-    T set(int position, T element);
+    T set(int index, T element);
 
     int indexOf(T element);
 }
