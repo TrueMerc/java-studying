@@ -7,7 +7,6 @@ import lombok.SneakyThrows;
  */
 public class ThreadsApplication {
 
-    private static final int FIRST_TASK_MESSAGES_COUNT = 10;
     private static final int SECOND_TASK_INCREASE_CALLS_COUNT = 5;
     private static final int SECOND_TASK_THREADS_NUMBER = 4;
     private static final int SLEEP_FOR_MILLISECONDS = 5;
@@ -22,8 +21,11 @@ public class ThreadsApplication {
         System.out.println("First task execution started.");
         SynchronizedPrint synchronizedPrint = new SynchronizedPrint();
 
-        Thread ping = new Thread(()-> { firstTaskThreadFunction(synchronizedPrint,"Ping"); });
-        Thread pong = new Thread(()-> { firstTaskThreadFunction(synchronizedPrint,"Pong"); });
+        PingMessage pingMessage = new PingMessage(synchronizedPrint);
+        PongMessage pongMessage = new PongMessage(synchronizedPrint);
+
+        Thread ping = new Thread( pingMessage );
+        Thread pong = new Thread( pongMessage );
 
         ping.start();
         pong.start();
@@ -32,15 +34,6 @@ public class ThreadsApplication {
         pong.join();
 
         System.out.println("First task execution finished.");
-    }
-
-    @SneakyThrows
-    private static void firstTaskThreadFunction(SynchronizedPrint synchronizedPrint, String message) {
-        for(int i = 0; i < FIRST_TASK_MESSAGES_COUNT; ++i) {
-            while(!synchronizedPrint.print(message)) {
-                    Thread.sleep(SLEEP_FOR_MILLISECONDS);
-            }
-        }
     }
 
     @SneakyThrows
