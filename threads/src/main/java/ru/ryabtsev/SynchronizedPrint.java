@@ -1,5 +1,7 @@
 package ru.ryabtsev;
 
+import lombok.SneakyThrows;
+
 /**
  * Implements synchronized "Ping - Pong" messages print.
  */
@@ -10,17 +12,23 @@ public class SynchronizedPrint {
 
     private String nextMessage = PING_MESSAGE;
 
-    public synchronized boolean print(String message) {
-        if(message.equals(nextMessage)) {
-            System.out.println(message);
-            if(message.equals(PING_MESSAGE)) {
-                nextMessage = PONG_MESSAGE;
-            }
-            else {
-                nextMessage = PING_MESSAGE;
-            }
-            return true;
+    @SneakyThrows
+    public synchronized void print(String message) {
+        while(!message.equals(nextMessage)) {
+            wait();
         }
-        return false;
+
+        System.out.println(message);
+        nextMessage = getNextMessage(message);
+        notify();
+    }
+
+    private synchronized String getNextMessage(String message) {
+        if(message.equals(PING_MESSAGE)) {
+            return PONG_MESSAGE;
+        }
+        else {
+            return PING_MESSAGE;
+        }
     }
 }
