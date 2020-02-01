@@ -1,5 +1,6 @@
 package ru.ryabtsev.jdbc.moviedb.db;
 
+import ru.ryabtsev.jdbc.moviedb.entities.IntersectedSessions;
 import ru.ryabtsev.jdbc.moviedb.entities.Session;
 
 import java.time.LocalDateTime;
@@ -19,7 +20,7 @@ public interface ScheduleService {
 
     void disconnect() throws Exception;
 
-    List<Session> listOfIntersections();
+    List<IntersectedSessions> listOfIntersections();
 
     List<Session> getAll();
 }

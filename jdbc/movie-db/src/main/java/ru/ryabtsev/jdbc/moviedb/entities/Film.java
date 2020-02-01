@@ -8,4 +8,8 @@ public class Film {
         this.title = title;
         this.duration = duration;
     }
+
+    public String toString() {
+        return "Title: " + title + ", duration: " + duration;
+    }
 }

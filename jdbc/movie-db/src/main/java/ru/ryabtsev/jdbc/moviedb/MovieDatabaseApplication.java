@@ -7,6 +7,7 @@ import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.UserConfiguration;
 import ru.ryabtsev.jdbc.moviedb.db.*;
 import ru.ryabtsev.jdbc.moviedb.entities.Film;
+import ru.ryabtsev.jdbc.moviedb.entities.IntersectedSessions;
 import ru.ryabtsev.jdbc.moviedb.entities.Session;
 
 import java.time.LocalDate;
@@ -46,7 +47,6 @@ public class MovieDatabaseApplication
         "FOREIGN KEY(session_id) REFERENCES movies.schedule(id)"
     };
 
-
     @SneakyThrows
     public static void main( String[] args )
     {
@@ -62,11 +62,9 @@ public class MovieDatabaseApplication
             }
         }
 
-        filmsService.disconnect();
-
         LocalDate today = LocalDate.now();
 
-        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration());
+        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration(), filmsService);
         scheduleService.connect();
 
         List<Session> sessions = scheduleService.getAll();
@@ -81,8 +79,10 @@ public class MovieDatabaseApplication
             }
         }
 
-        List<Session> intersections = scheduleService.listOfIntersections();
+        List<IntersectedSessions> intersections = scheduleService.listOfIntersections();
+        printIntersectedSessionsList(intersections);
 
+        filmsService.disconnect();
         scheduleService.disconnect();
     }
 
@@ -90,15 +90,6 @@ public class MovieDatabaseApplication
     private static void createDatabaseIfNotExists() {
         DatabaseService databaseService = new JdbcPostgresDatabaseService(getConfiguration());
         databaseService.connect();
-        System.out.println("Connection established.");
-
-        if(databaseService.isSchemaExist(DEFAULT_SCHEMA_NAME)) {
-            System.out.println("Schema does exist.");
-        }
-        else {
-            System.out.println("Schema does not exist.");
-            databaseService.createSchema(DEFAULT_SCHEMA_NAME);
-        }
 
         for(int i = 0; i < DEFAULT_TABLE_NAMES.length; ++i) {
             if(!databaseService.isTableExist(DEFAULT_TABLE_NAMES[i])) {
@@ -114,5 +105,11 @@ public class MovieDatabaseApplication
                 new DatabaseConfiguration(DATABASE_DRIVER, DATABASE_TYPE, DATABASE_NAME);
         final UserConfiguration userConfig = new UserConfiguration(DATABASE_USERNAME, DATABASE_PASSWORD);
         return new DatabaseConnectionConfiguration(connectionConfig, databaseConfig, userConfig);
+    }
+
+    private static void printIntersectedSessionsList(List<IntersectedSessions> intersectedSessions) {
+        for(IntersectedSessions sessions : intersectedSessions) {
+            System.out.println(sessions.getFirst() + " intersects with " + sessions.getSecond());
+        }
     }
 }

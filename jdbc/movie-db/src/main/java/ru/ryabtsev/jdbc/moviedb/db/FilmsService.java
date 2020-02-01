@@ -12,6 +12,10 @@ public interface FilmsService {
 
     List<Film> getAll();
 
+    Film get(long id);
+
+    List<Film> get(String name);
+
     void connect() throws Exception;
 
     void disconnect() throws Exception;

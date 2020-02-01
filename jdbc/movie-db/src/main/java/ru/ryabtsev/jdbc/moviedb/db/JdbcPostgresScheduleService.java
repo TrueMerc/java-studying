@@ -2,6 +2,7 @@ package ru.ryabtsev.jdbc.moviedb.db;
 
 import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.entities.Film;
+import ru.ryabtsev.jdbc.moviedb.entities.IntersectedSessions;
 import ru.ryabtsev.jdbc.moviedb.entities.Session;
 
 import java.sql.PreparedStatement;
@@ -13,35 +14,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcPostgresScheduleService extends JdbcPostgresDatabaseInteraction implements ScheduleService {
-
     private static final int FILM_ID_ID = 1;
     private static final int DATE_TIME_ID = 2;
     private static final int PRICE_ID = 3;
+
+    // 'Add new session' query parameters.
     private static final String ADD_SESSION_SQL =
             "INSERT INTO movies.schedule(film_id, date_time, price) VALUES(?, ?, ?)";
+    private static final int ADD_SESSION_SQL_FILM_ID_FIELD = 1;
+    private static final int ADD_SESSION_SQL_DATE_TIME_FIELD = 2;
+    private static final int ADD_SESSION_SQL_PRICE_FIELD = 3;
+
+    // 'Find all time intersections' query parameters.
     private static final String FIND_ALL_INTERSECTIONS_SQL =
-            "SELECT s1.film_id, s1.date_time, f1.duration, s2.film_id, s2.date_time, f2.duration " +
+            "SELECT s1.film_id, s1.date_time, s1.price, s2.film_id, s2.date_time, s2.price " +
             "FROM " +
                 "movies.schedule s1 INNER JOIN movies.films f1 ON s1.film_id = f1.id, " +
                 "movies.schedule s2 INNER JOIN movies.films f2 ON s2.film_id = f2.id " +
             "WHERE " +
                 "s1.id < s2.id AND s2.date_time < s1.date_time + (f1.duration::TEXT||'minute')::INTERVAL " +
             "ORDER BY s1.date_time";
+    private static final int FIND_ALL_INTERSECTIONS_SQL_FIRST_FILM_ID_FIELD = 1;
+    private static final int FIND_ALL_INTERSECTIONS_SQL_FIRST_DATE_TIME_FIELD = 2;
+    private static final int FIND_ALL_INTERSECTIONS_SQL_FIRST_PRICE_FIELD = 3;
+    private static final int FIND_ALL_INTERSECTIONS_SQL_SECOND_FILM_ID_FIELD = 4;
+    private static final int FIND_ALL_INTERSECTIONS_SQL_SECOND_DATE_TIME_FIELD = 5;
+    private static final int FIND_ALL_INTERSECTIONS_SQL_SECOND_PRICE_FIELD = 6;
+
+    // 'Get all sessions' query parameters.
     private static final String GET_ALL_SESSIONS_SQL = "SELECT * FROM movies.schedule";
+    private static final int GET_ALL_SESSIONS_SQL_FILM_ID_FIELD = 1;
+    private static final int GET_ALL_SESSIONS_SQL_DATE_TIME_FIELD = 2;
+    private static final int GET_ALL_SESSIONS_SQL_PRICE_FIELD = 3;
 
-    private PreparedStatement addSessionStatement;
+    private final FilmsService filmsService;
 
-    public JdbcPostgresScheduleService(DatabaseConnectionConfiguration configuration) {
+    public JdbcPostgresScheduleService(DatabaseConnectionConfiguration configuration, FilmsService filmsService) {
         super(configuration);
+        this.filmsService = filmsService;
     }
 
     @Override
     public void addSession(LocalDateTime dateTime, float price, int filmId) {
         try {
-            addSessionStatement = connection.prepareStatement(ADD_SESSION_SQL);
-            addSessionStatement.setInt(FILM_ID_ID, filmId);
-            addSessionStatement.setTimestamp(DATE_TIME_ID, Timestamp.valueOf(dateTime));
-            addSessionStatement.setFloat(PRICE_ID, price);
+            PreparedStatement addSessionStatement = connection.prepareStatement(ADD_SESSION_SQL);
+            addSessionStatement.setInt(ADD_SESSION_SQL_FILM_ID_FIELD, filmId);
+            addSessionStatement.setTimestamp(ADD_SESSION_SQL_DATE_TIME_FIELD, Timestamp.valueOf(dateTime));
+            addSessionStatement.setFloat(ADD_SESSION_SQL_PRICE_FIELD, price);
             addSessionStatement.executeUpdate();
         }
         catch(SQLException e) {
@@ -50,16 +69,22 @@ public class JdbcPostgresScheduleService extends JdbcPostgresDatabaseInteraction
     }
 
     @Override
-    public List<Session> listOfIntersections() {
-        List<Session> resultList = new ArrayList<>();
+    public List<IntersectedSessions> listOfIntersections() {
+        final List<IntersectedSessions> resultList = new ArrayList<>();
         try {
-            PreparedStatement findAllIntersections = connection.prepareStatement(FIND_ALL_INTERSECTIONS_SQL);
-            ResultSet result = findAllIntersections.executeQuery();
+            final PreparedStatement findAllIntersections = connection.prepareStatement(FIND_ALL_INTERSECTIONS_SQL);
+            final ResultSet result = findAllIntersections.executeQuery();
             while(result.next()) {
-                Film film = new Film("name", 0);
-                Timestamp timestamp = result.getTimestamp(2);
-                float price = 0;
-                resultList.add(new Session(film, timestamp.toLocalDateTime(), price));
+                final Film firstFilm = filmsService.get(result.getInt(FIND_ALL_INTERSECTIONS_SQL_FIRST_FILM_ID_FIELD));
+                final Timestamp firstTimeStamp = result.getTimestamp(FIND_ALL_INTERSECTIONS_SQL_FIRST_DATE_TIME_FIELD);
+                final float firstPrice = result.getFloat(FIND_ALL_INTERSECTIONS_SQL_FIRST_PRICE_FIELD);
+                final Session firstSession = new Session(firstFilm, firstTimeStamp.toLocalDateTime(), firstPrice);
+                final Film secondFilm = filmsService.get(result.getInt(FIND_ALL_INTERSECTIONS_SQL_SECOND_FILM_ID_FIELD));
+                final Timestamp secondTimeStamp = result.getTimestamp(FIND_ALL_INTERSECTIONS_SQL_SECOND_DATE_TIME_FIELD);
+                final float secondPrice = result.getFloat(FIND_ALL_INTERSECTIONS_SQL_SECOND_PRICE_FIELD);
+                final Session secondSession = new Session(secondFilm, secondTimeStamp.toLocalDateTime(), secondPrice);
+
+                resultList.add(new IntersectedSessions(firstSession, secondSession));
             }
         }
         catch (SQLException exception) {
@@ -75,9 +100,9 @@ public class JdbcPostgresScheduleService extends JdbcPostgresDatabaseInteraction
             PreparedStatement statement = connection.prepareStatement(GET_ALL_SESSIONS_SQL);
             ResultSet result = statement.executeQuery();
             while(result.next()) {
-                Film film = new Film("name", 0);
-                Timestamp timestamp = result.getTimestamp(DATE_TIME_ID + 1);
-                float price = 0;
+                Film film = filmsService.get(result.getInt(GET_ALL_SESSIONS_SQL_FILM_ID_FIELD));
+                Timestamp timestamp = result.getTimestamp(GET_ALL_SESSIONS_SQL_DATE_TIME_FIELD);
+                float price = result.getFloat(GET_ALL_SESSIONS_SQL_PRICE_FIELD);
                 resultList.add(new Session(film, timestamp.toLocalDateTime(), price));
             }
         }

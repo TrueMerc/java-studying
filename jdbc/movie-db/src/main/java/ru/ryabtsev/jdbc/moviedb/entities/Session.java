@@ -12,4 +12,9 @@ public class Session {
         this.dateTime = dateTime;
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return film + ", starts at " + dateTime + ", price: " + price;
+    }
 }
