@@ -28,7 +28,7 @@ public class JdbcPostgresDatabaseService extends JdbcPostgresDatabaseInteraction
 
     @Override
     public void disconnect() throws Exception {
-        connection.close();
+        super.disconnect();
     }
 
     @Override

@@ -30,4 +30,8 @@ public class JdbcPostgresDatabaseInteraction {
                 + connectConfig.getHost() + ':' + connectConfig.getPort() + '/' + dbConfig.getDatabaseName();
     }
 
+
+    public void disconnect() throws Exception {
+        connection.close();
+    }
 }

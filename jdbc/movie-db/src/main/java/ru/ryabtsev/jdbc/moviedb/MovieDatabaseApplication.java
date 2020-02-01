@@ -5,14 +5,20 @@ import ru.ryabtsev.jdbc.moviedb.configs.ConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.UserConfiguration;
-import ru.ryabtsev.jdbc.moviedb.db.DatabaseService;
-import ru.ryabtsev.jdbc.moviedb.db.JdbcPostgresDatabaseService;
+import ru.ryabtsev.jdbc.moviedb.db.*;
+import ru.ryabtsev.jdbc.moviedb.entities.Film;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 /**
  * Implements the fourth homework of 'Coding Interview' course
  */
 public class MovieDatabaseApplication
 {
+    private static final int FILMS_NUMBER = 5;
     private static final String DATABASE_DRIVER = "org.postgresql.Driver";
     private static final String DATABASE_TYPE = "postgresql";
     private static final String DATABASE_NAME = "movies";
@@ -43,8 +49,39 @@ public class MovieDatabaseApplication
     @SneakyThrows
     public static void main( String[] args )
     {
-        DatabaseService databaseService = new JdbcPostgresDatabaseService(getConfiguration());
+        createDatabaseIfNotExists();
 
+        FilmsService filmsService = new JdbcPostgresFilmsService(getConfiguration());
+        filmsService.connect();
+
+        List<Film> films = filmsService.getAll();
+        if(films.isEmpty()) {
+            for (int i = 0; i < FILMS_NUMBER; ++i) {
+                filmsService.addFilm("Film " + i, 30 * (i % 3) + 60);
+            }
+        }
+
+        filmsService.disconnect();
+
+        LocalDate today = LocalDate.now();
+
+        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration());
+        scheduleService.connect();
+
+        for(int i = 0; i < FILMS_NUMBER; ++i) {
+            LocalDateTime startTime = LocalDateTime.of(
+                    today,
+                    LocalTime.of(14 + i, 30 * ((i + 1) % 2), 0)
+            );
+            float price = .5f * (float)i;
+            scheduleService.addSession(startTime, price, i + 1);
+        }
+        scheduleService.disconnect();
+    }
+
+    @SneakyThrows
+    private static void createDatabaseIfNotExists() {
+        DatabaseService databaseService = new JdbcPostgresDatabaseService(getConfiguration());
         databaseService.connect();
         System.out.println("Connection established.");
 
@@ -61,7 +98,6 @@ public class MovieDatabaseApplication
                 databaseService.createTable(DEFAULT_SCHEMA_NAME, DEFAULT_TABLE_NAMES[i], DEFAULT_TABLE_COLUMNS[i]);
             }
         }
-
         databaseService.disconnect();
     }
 
