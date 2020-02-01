@@ -7,6 +7,7 @@ import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.UserConfiguration;
 import ru.ryabtsev.jdbc.moviedb.db.*;
 import ru.ryabtsev.jdbc.moviedb.entities.Film;
+import ru.ryabtsev.jdbc.moviedb.entities.Session;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -68,14 +69,20 @@ public class MovieDatabaseApplication
         ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration());
         scheduleService.connect();
 
-        for(int i = 0; i < FILMS_NUMBER; ++i) {
-            LocalDateTime startTime = LocalDateTime.of(
-                    today,
-                    LocalTime.of(14 + i, 30 * ((i + 1) % 2), 0)
-            );
-            float price = .5f * (float)i;
-            scheduleService.addSession(startTime, price, i + 1);
+        List<Session> sessions = scheduleService.getAll();
+        if(sessions.isEmpty()) {
+            for (int i = 0; i < FILMS_NUMBER; ++i) {
+                LocalDateTime startTime = LocalDateTime.of(
+                        today,
+                        LocalTime.of(14 + i + i % 2, 30 * ((i + 1) % 2), 0)
+                );
+                float price = .5f * (float) (i + 2);
+                scheduleService.addSession(startTime, price, i + 1);
+            }
         }
+
+        List<Session> intersections = scheduleService.listOfIntersections();
+
         scheduleService.disconnect();
     }
 
