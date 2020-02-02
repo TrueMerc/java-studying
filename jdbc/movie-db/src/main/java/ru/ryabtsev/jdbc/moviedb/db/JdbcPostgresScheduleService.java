@@ -14,10 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JdbcPostgresScheduleService extends JdbcPostgresDatabaseInteraction implements ScheduleService {
-    private static final int FILM_ID_ID = 1;
-    private static final int DATE_TIME_ID = 2;
-    private static final int PRICE_ID = 3;
-
     // 'Add new session' query parameters.
     private static final String ADD_SESSION_SQL =
             "INSERT INTO movies.schedule(film_id, date_time, price) VALUES(?, ?, ?)";
@@ -41,8 +37,11 @@ public class JdbcPostgresScheduleService extends JdbcPostgresDatabaseInteraction
     private static final int FIND_ALL_INTERSECTIONS_SQL_SECOND_DATE_TIME_FIELD = 5;
     private static final int FIND_ALL_INTERSECTIONS_SQL_SECOND_PRICE_FIELD = 6;
 
+    // 'Find too long breaks' query parameters.
+    private static final String FIND_TO_LONG_BREAKS_SQL = "";
+
     // 'Get all sessions' query parameters.
-    private static final String GET_ALL_SESSIONS_SQL = "SELECT * FROM movies.schedule";
+    private static final String GET_ALL_SESSIONS_SQL = "SELECT film_id, date_time, price FROM movies.schedule";
     private static final int GET_ALL_SESSIONS_SQL_FILM_ID_FIELD = 1;
     private static final int GET_ALL_SESSIONS_SQL_DATE_TIME_FIELD = 2;
     private static final int GET_ALL_SESSIONS_SQL_PRICE_FIELD = 3;

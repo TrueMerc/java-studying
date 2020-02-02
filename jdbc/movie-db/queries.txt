@@ -1,0 +1,61 @@
+-- Задача 1
+SELECT s1.film_id, s1.date_time, s1.price, s2.film_id, s2.date_time, s2.price
+FROM
+	movies.schedule s1 INNER JOIN movies.films f1 ON s1.film_id = f1.id,
+	movies.schedule s2 INNER JOIN movies.films f2 ON s2.film_id = f2.id 
+WHERE
+	s1.id <> s2.id AND s2.date_time > s1.date_time AND s2.date_time < s1.date_time + (f1.duration::TEXT||'minute')::INTERVAL
+ORDER BY s1.date_time;
+
+-- Задача 2
+SELECT s1.film_id, s1.date_time, s1.price, f1.duration, s2.film_id, s2.date_time, s2.price, f2.duration, s2.date_time - (s1.date_time + ((f1.duration)::TEXT||'minute')::INTERVAL) AS break
+FROM 
+	movies.schedule s1 INNER JOIN movies.films f1 ON s1.film_id = f1.id , 
+	movies.schedule s2 INNER JOIN movies.films f2 ON s2.film_id = f2.id
+WHERE
+	s2.id IN (SELECT id FROM movies.schedule s3 WHERE s3.date_time > s1.date_time ORDER BY s3.date_time - s1.date_time ASC LIMIT 1)
+	AND  s2.date_time - (s1.date_time + ((f1.duration)::TEXT||'minute')::INTERVAL) > '30 minute'::INTERVAL
+ORDER BY break DESC
+
+-- Задача 3
+(SELECT title, count(*) AS tickets_sold, AVG(tps.tickets_per_session) AS average_tickets_sold, SUM(price) AS film_total_amount
+FROM
+	movies.tickets t INNER JOIN movies.schedule s ON t.session_id = s.id INNER JOIN movies.films f ON s.film_id = f.id
+	INNER JOIN (SELECT session_id, count(*) AS tickets_per_session
+		FROM
+		movies.tickets t1 INNER JOIN movies.schedule s1 ON t1.session_id = s1.id
+	GROUP BY session_id) AS tps ON tps.session_id = s.id
+GROUP BY f.id
+ORDER BY film_total_amount desc)
+UNION
+(SELECT 'Итого', count(*) AS tickets_sold, AVG(tps.tickets_per_session) AS average_tickets_sold, SUM(price) AS film_total_amount
+FROM movies.schedule s INNER JOIN movies.tickets t ON s.id = t.session_id
+	INNER JOIN (SELECT session_id, count(*) AS tickets_per_session
+		FROM
+		movies.tickets t1 INNER JOIN movies.schedule s1 ON t1.session_id = s1.id
+	GROUP BY session_id) AS tps ON tps.session_id = s.id
+)
+ORDER BY film_total_amount asc;
+
+-- Задача 4
+(SELECT '9-15', count(*) AS tickets_number, sum(price) AS total_amount, min(s.date_time) AS time_anchor
+FROM 
+	movies.tickets t INNER JOIN movies.schedule s ON t.session_id = s.id
+WHERE s.date_time BETWEEN '2020-02-02 09:00:00' AND '2020-02-02 15:00:00')
+UNION
+(SELECT '15-18', count(*) AS tickets_number, sum(price) AS total_amount, min(s.date_time) AS time_anchor
+FROM 
+	movies.tickets t INNER JOIN movies.schedule s ON t.session_id = s.id
+WHERE s.date_time BETWEEN '2020-02-02 15:00:00' AND '2020-02-02 18:00:00')
+UNION
+(SELECT '18-21', count(*) AS tickets_number, sum(price) AS total_amount, min(s.date_time) AS time_anchor
+FROM 
+	movies.tickets t INNER JOIN movies.schedule s ON t.session_id = s.id
+WHERE s.date_time BETWEEN '2020-02-02 18:00:00' AND '2020-02-02 21:00:00')
+UNION
+(SELECT '21-24', count(*) AS tickets_number, sum(price) AS total_amount, min(s.date_time) AS time_anchor
+FROM 
+	movies.tickets t INNER JOIN movies.schedule s ON t.session_id = s.id
+WHERE s.date_time BETWEEN '2020-02-02 21:00:00' AND '2020-02-03 00:00:00')
+ORDER BY time_anchor;
+

@@ -1,5 +1,9 @@
 package ru.ryabtsev.jdbc.moviedb.db;
 
+import ru.ryabtsev.jdbc.moviedb.entities.Ticket;
+
+import java.util.List;
+
 /**
  * Provides interface for interaction with database ticket entities.
  */
@@ -14,4 +18,6 @@ public interface TicketService {
     void connect() throws Exception;
 
     void disconnect() throws Exception;
+
+    List<Ticket> getAll();
 }
