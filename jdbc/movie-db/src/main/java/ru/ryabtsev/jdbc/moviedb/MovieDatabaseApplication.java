@@ -7,19 +7,22 @@ import ru.ryabtsev.jdbc.moviedb.configs.DatabaseConnectionConfiguration;
 import ru.ryabtsev.jdbc.moviedb.configs.UserConfiguration;
 import ru.ryabtsev.jdbc.moviedb.db.*;
 import ru.ryabtsev.jdbc.moviedb.entities.Film;
+import ru.ryabtsev.jdbc.moviedb.entities.IntersectedSessions;
 import ru.ryabtsev.jdbc.moviedb.entities.Session;
+import ru.ryabtsev.jdbc.moviedb.entities.Ticket;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 
 /**
  * Implements the fourth homework of 'Coding Interview' course
  */
 public class MovieDatabaseApplication
 {
-    private static final int FILMS_NUMBER = 5;
+    private static final int FILMS_NUMBER = 6;
     private static final String DATABASE_DRIVER = "org.postgresql.Driver";
     private static final String DATABASE_TYPE = "postgresql";
     private static final String DATABASE_NAME = "movies";
@@ -46,43 +49,23 @@ public class MovieDatabaseApplication
         "FOREIGN KEY(session_id) REFERENCES movies.schedule(id)"
     };
 
-
     @SneakyThrows
     public static void main( String[] args )
     {
         createDatabaseIfNotExists();
+        createFilmsIfNotExists();
+        createScheduleIfNotExists();
+        createTicketsIfNotExists();
 
         FilmsService filmsService = new JdbcPostgresFilmsService(getConfiguration());
         filmsService.connect();
-
-        List<Film> films = filmsService.getAll();
-        if(films.isEmpty()) {
-            for (int i = 0; i < FILMS_NUMBER; ++i) {
-                filmsService.addFilm("Film " + i, 30 * (i % 3) + 60);
-            }
-        }
-
-        filmsService.disconnect();
-
-        LocalDate today = LocalDate.now();
-
-        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration());
+        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration(), filmsService);
         scheduleService.connect();
 
-        List<Session> sessions = scheduleService.getAll();
-        if(sessions.isEmpty()) {
-            for (int i = 0; i < FILMS_NUMBER; ++i) {
-                LocalDateTime startTime = LocalDateTime.of(
-                        today,
-                        LocalTime.of(14 + i + i % 2, 30 * ((i + 1) % 2), 0)
-                );
-                float price = .5f * (float) (i + 2);
-                scheduleService.addSession(startTime, price, i + 1);
-            }
-        }
+        List<IntersectedSessions> intersections = scheduleService.listOfIntersections();
+        printIntersectedSessionsList(intersections);
 
-        List<Session> intersections = scheduleService.listOfIntersections();
-
+        filmsService.disconnect();
         scheduleService.disconnect();
     }
 
@@ -90,15 +73,6 @@ public class MovieDatabaseApplication
     private static void createDatabaseIfNotExists() {
         DatabaseService databaseService = new JdbcPostgresDatabaseService(getConfiguration());
         databaseService.connect();
-        System.out.println("Connection established.");
-
-        if(databaseService.isSchemaExist(DEFAULT_SCHEMA_NAME)) {
-            System.out.println("Schema does exist.");
-        }
-        else {
-            System.out.println("Schema does not exist.");
-            databaseService.createSchema(DEFAULT_SCHEMA_NAME);
-        }
 
         for(int i = 0; i < DEFAULT_TABLE_NAMES.length; ++i) {
             if(!databaseService.isTableExist(DEFAULT_TABLE_NAMES[i])) {
@@ -108,11 +82,98 @@ public class MovieDatabaseApplication
         databaseService.disconnect();
     }
 
+    @SneakyThrows
+    private static void createFilmsIfNotExists() {
+
+        final String[] filmNames = {
+                "Full metal jacket", "Filth", "Pulp fiction",
+                "Snatch", "Platoon", "Red state"
+        };
+
+        FilmsService filmsService = new JdbcPostgresFilmsService(getConfiguration());
+        filmsService.connect();
+
+        IntUnaryOperator calculateDuration = (int index) -> {
+            final int baseDurationInMinutes = 60;
+            final int period = 3;
+            final int additionalDurationInMinutes = 30;
+
+            return baseDurationInMinutes + additionalDurationInMinutes * (index % 3);
+        };
+
+        List<Film> films = filmsService.getAll();
+        if(films.isEmpty()) {
+            for (int i = 0; i < FILMS_NUMBER; ++i) {
+                filmsService.addFilm(filmNames[i], calculateDuration.applyAsInt(i));
+            }
+        }
+
+        filmsService.disconnect();
+    }
+
+    @SneakyThrows
+    private static void createScheduleIfNotExists() {
+        FilmsService filmsService = new JdbcPostgresFilmsService(getConfiguration());
+        filmsService.connect();
+        ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration(), filmsService);
+        scheduleService.connect();
+
+        List<Session> sessions = scheduleService.getAll();
+        if(sessions.isEmpty()) {
+            List<Film> films = filmsService.getAll();
+            LocalDate today = LocalDate.now();
+            for (int i = 0; i < films.size() - 1; ++i) {
+                LocalDateTime startTime = LocalDateTime.of(
+                        today,
+                        LocalTime.of(14 + i + i % 2, 30 * ((i + 1) % 2), 0)
+                );
+                final float price = .5f * (float) (i + 2);
+                scheduleService.addSession(startTime, price, i + 1);
+            }
+            final LocalTime lastSessionTime = LocalTime.of(22, 0, 0);
+            scheduleService.addSession(LocalDateTime.of(today, lastSessionTime) ,5, films.size() - 1);
+            final LocalTime firstSessionTime = LocalTime.of( 9, 0, 0);
+            scheduleService.addSession(LocalDateTime.of(today, firstSessionTime), 5, 1);
+        }
+    }
+
+    @SneakyThrows
+    private static void createTicketsIfNotExists() {
+        TicketService ticketService = new JdbcPostgresTicketService(getConfiguration());
+        ticketService.connect();
+
+        List<Ticket> tickets = ticketService.getAll();
+        if(tickets.isEmpty()) {
+            FilmsService filmsService = new JdbcPostgresFilmsService(getConfiguration());
+            filmsService.connect();
+            ScheduleService scheduleService = new JdbcPostgresScheduleService(getConfiguration(), filmsService);
+            scheduleService.connect();
+            List<Session> sessions = scheduleService.getAll();
+
+            for(int i = 0; i < sessions.size(); ++i) {
+                for(int count = 0; count < 3; ++count) {
+                    ticketService.addTicket(i + 1);
+                }
+            }
+
+            filmsService.disconnect();
+            scheduleService.disconnect();
+        }
+
+        ticketService.disconnect();
+    }
+
     private static DatabaseConnectionConfiguration getConfiguration() {
         final ConnectionConfiguration connectionConfig = new ConnectionConfiguration(DATABASE_HOST, DATABASE_PORT);
         final DatabaseConfiguration databaseConfig =
                 new DatabaseConfiguration(DATABASE_DRIVER, DATABASE_TYPE, DATABASE_NAME);
         final UserConfiguration userConfig = new UserConfiguration(DATABASE_USERNAME, DATABASE_PASSWORD);
         return new DatabaseConnectionConfiguration(connectionConfig, databaseConfig, userConfig);
+    }
+
+    private static void printIntersectedSessionsList(List<IntersectedSessions> intersectedSessions) {
+        for(IntersectedSessions sessions : intersectedSessions) {
+            System.out.println(sessions.getFirst() + " intersects with " + sessions.getSecond());
+        }
     }
 }
