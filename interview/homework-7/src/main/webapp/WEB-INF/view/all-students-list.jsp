@@ -23,7 +23,7 @@
                     <td>${student.name}</td>
                     <td>${student.mark}</td>
                     <td>
-                        <a href="/students/showStudentById?id=${student.id}">Edit</a>
+                        <a href="/students/showStudent?id=${student.id}">Edit</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="/students/deleteStudentById?id=${student.id}">Delete</a>
                     </td>
